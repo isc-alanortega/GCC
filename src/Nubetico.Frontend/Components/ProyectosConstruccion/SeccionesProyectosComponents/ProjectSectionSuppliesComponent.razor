@@ -1,0 +1,136 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.Shared
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+<RadzenStack>
+    <RadzenTabs TabPosition="@TabPosition.Top" RenderMode="TabRenderMode.Client">
+        <Tabs>
+            <RadzenTabsItem Text="Materiales">
+                <RadzenStack>
+                    <PanelFiltrosNubeticoComponent>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" Wrap="FlexWrap.Wrap">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                                <RadzenRow>
+                                    <RadzenColumn SizeSM="4" SizeXS="6">
+                                        <RadzenFormField Text="Tipo" Style="width: 100%;">
+                                            <RadzenTextBox Trim="true" type="search" />
+                                        </RadzenFormField>
+                                    </RadzenColumn>
+
+                                    <RadzenColumn SizeSM="4" SizeXS="6">
+                                        <RadzenFormField Text="Material" Style="width: 100%;">
+                                            <RadzenTextBox Trim="true" type="search" />
+                                        </RadzenFormField>
+                                    </RadzenColumn>
+
+                                    <RadzenColumn SizeSM="4" SizeXS="6">
+                                        <RadzenFormField Text="Estado" Style="width: 100%;">
+                                            <RadzenTextBox Trim="true" type="search" />
+                                        </RadzenFormField>
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Vertical" Gap="1px">
+                                <RadzenButton Text=@Localizer!["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" Style="margin-top: 13px" />
+                            </RadzenStack>
+                        </RadzenStack>
+                    </PanelFiltrosNubeticoComponent>
+
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenDataGrid @ref="SectionsGrid"
+                                        IsLoading="false"
+                                        Data="Phases"
+                                        @bind-Value="@PhasesSelected"
+                                        AllowSorting="false"
+                                        AllowFiltering="false"
+                                        AllowPaging="true"
+                                        PageSize="20"
+                                        PagerHorizontalAlign="HorizontalAlign.Center"
+                                        ShowPagingSummary="true"
+                                        ColumnWidth="200px"
+                                        SelectionMode="DataGridSelectionMode.Single"
+                                        Style="min-width: 200px"
+                                        EmptyText="Sin regristros">
+                            <Columns>
+                                <RadzenDataGridColumn Property="Tipo" Title="Tipo" />
+                                <RadzenDataGridColumn Property="Material" Title="Material" />
+                                <RadzenDataGridColumn Property="Estimado" Title="Estimado" />
+                                <RadzenDataGridColumn Property="Real" Title="Real" />
+                                <RadzenDataGridColumn Property="Diferencia" Title="Diferencia" />
+                            </Columns>
+                        </RadzenDataGrid>
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenTabsItem>
+
+            <RadzenTabsItem Text="Pedidos">
+                <RadzenStack>
+                    <PanelFiltrosNubeticoComponent>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" Wrap="FlexWrap.Wrap">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                                <RadzenRow>
+                                    <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                                        <RadzenFormField Text="Fecha" Style="width: 100%;">
+                                            <RadzenDatePicker TValue="DateTime?"
+                                                              ShowTime="false"
+                                                              HourFormat="24"
+                                                              DateFormat="dd/MM/yyyy"
+                                                              Min="DateTime.Today.AddYears(-10)"
+                                                              Name="RadzenDatePickerChangeEvent"
+                                                              Style="width: 100%"
+                                                              AllowClear="true" />
+                                        </RadzenFormField>
+                                    </RadzenColumn>
+
+                                    <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                                        <RadzenFormField Text="Tipo" Style="width: 100%;">
+                                            <RadzenTextBox Trim="true" type="search" />
+                                        </RadzenFormField>
+                                    </RadzenColumn>
+
+                                    <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                                        <RadzenFormField Text="Material" Style="width: 100%;">
+                                            <RadzenTextBox Trim="true" type="search"  />
+                                        </RadzenFormField>
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Vertical" Gap="1px">
+                                <RadzenButton Text=@Localizer!["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" Style="margin-top: 13px" />
+                            </RadzenStack>
+                        </RadzenStack>
+                    </PanelFiltrosNubeticoComponent>
+
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenDataGrid @ref="PedidoGrid"
+                                        @bind-Value="@PedidoSelected"
+                                        Data="Pedido"
+                                        IsLoading="false"
+                                        AllowSorting="false"
+                                        AllowFiltering="false"
+                                        AllowPaging="true"
+                                        PageSize="20"
+                                        PagerHorizontalAlign="HorizontalAlign.Center"
+                                        ShowPagingSummary="true"
+                                        ColumnWidth="200px"
+                                        SelectionMode="DataGridSelectionMode.Single"
+                                        Style="min-width: 200px"
+                                        EmptyText="Sin regristros">
+                            <Columns>
+                                <RadzenDataGridColumn Property="Numero" Title="Numero" />
+                                <RadzenDataGridColumn Property="Fecha" Title="Fecha" />
+                                <RadzenDataGridColumn Property="Fase" Title="Fase" />
+                                <RadzenDataGridColumn Property="Solicita" Title="Solicita" />
+                                <RadzenDataGridColumn Property="Material" Title="Material" />
+                                <RadzenDataGridColumn Property="CantidadSolicitada" Title="Cant. Solicitada" />
+                                <RadzenDataGridColumn Property="CantidadAutorizada" Title="Cant. Autorizada" />
+                                <RadzenDataGridColumn Property="CantidadSurtida" Title="Cant. Surtida" />
+                                <RadzenDataGridColumn Property="FechaSurtida" Title="Fecha Surtida" />
+                            </Columns>
+                        </RadzenDataGrid>
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
+</RadzenStack>

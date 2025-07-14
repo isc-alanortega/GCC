@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es-mx">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nubetico</title>
+    <base href="/" />
+    <link href="/assets/nubetico/fonts/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link href="/assets/nubetico/fonts/fontawesome/css/regular.min.css" rel="stylesheet" />
+    <link href="/assets/nubetico/fonts/fontawesome/css/sharp-light.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/software-base.css">
+    <link rel="stylesheet" href="/assets/nubetico/css/app.css" />
+    <link rel="stylesheet" href="/assets/nubetico/css/loader.css" />
+    <script src="/assets/nubetico/js/themeChanger.js"></script>
+    <script src="/assets/nubetico/js/clearCache.js"></script>
+    <script src="/assets/nubetico/js/handleBeforeUnload.js"></script>
+    <script src="/assets/nubetico/js/getWindowWidth.js"></script>
+    <script src="assets/nubetico/js/turnstile.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+
+<body class="rz-scrollbars">
+    <div id="app">
+        <div class="rz-app-loading">
+            <div class="loader">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+                <div class="bar4"></div>
+                <div class="bar5"></div>
+                <div class="bar6"></div>
+                <div class="bar7"></div>
+                <div class="bar8"></div>
+                <div class="bar9"></div>
+                <div class="bar10"></div>
+                <div class="bar11"></div>
+                <div class="bar12"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        @if (Env.IsDevelopment())
+        {
+        <text>
+            An unhandled exception has occurred. See browser dev tools for details.
+        </text>
+        }
+        else
+        {
+        <text>
+            An error has occurred. This app may no longer respond until reloaded.
+        </text>
+        }
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="/_framework/blazor.webassembly.js"></script>
+    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+</body>
+
+</html>

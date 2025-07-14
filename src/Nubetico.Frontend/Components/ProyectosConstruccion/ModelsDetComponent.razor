@@ -1,0 +1,131 @@
+﻿@using Nubetico.Frontend.Components.Core.Dialogs
+@using Nubetico.Frontend.Components.Core.Shared;
+@using Nubetico.Shared.Dto.ProyectosConstruccion;
+@using Nubetico.Frontend.Services.Core;
+@using Microsoft.AspNetCore.Http;
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Models;
+@inherits NbBaseComponent
+@inject DocumentsService documentsService
+@inject NotificationService notificationService
+
+<RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
+    <Tabs>
+        @*GENERAL TAB*@
+        <RadzenTabsItem Text="General">
+            <RadzenTemplateForm TItem="ModelDto" Data="@ModelData" @ref="ModelForm">
+                <RadzenStack>
+                    @if (this.EstadoControl != TipoEstadoControl.Alta)
+                    {
+                        <RadzenRow>
+                            <RadzenColumn Style="width: 100%; min-width: 150px; max-width: 300px">
+                                <RadzenFormField Text="Folio" Style="width: 100%">
+                                    <RadzenTextBox Disabled="true"
+                                                   @bind-Value="@ModelData.Folio" />
+                                </RadzenFormField>
+                            </RadzenColumn>
+                        </RadzenRow>
+                    }
+
+                    <RadzenRow Wrap="FlexWrap.Wrap">
+                        <RadzenColumn Style="width: 100%; min-width: 150px; max-width: 300px">
+                            <RadzenFormField Text="@Localizer["Subdivisions.Text.Name"]" Style="width: 100%">
+                                <RadzenTextBox Disabled="@IsDisabled()"
+                                               @bind-Value="@ModelData.Name"
+                                               Change="@((value) => ModelData.Name = value?.Trim().ToUpper())"
+                                               Name="Name"
+                                               Trim="true"
+                                               MaxLength="50" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="Name" Text="@Localizer!["Shared.Text.NameRequired"]" Style="color: red" />
+                        </RadzenColumn>
+
+                        <RadzenColumn Style="width: 100%; max-width: 120px; min-width: 120px">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="height: 100%">
+                                <RadzenCheckBox Name="EnabledField" @bind-Value="@ModelData.Enabled" />
+                                <RadzenLabel Text="@Localizer["Core.Users.Enabled"]"
+                                             Component="EnabledField"
+                                             class="rz-ms-2" />
+                            </RadzenStack>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow>
+                        <RadzenFormField Text="@Localizer["Shared.Textos.Description"]" Style="width: 100%; min-width: 150px; max-width: 750px">
+                            <RadzenTextArea Style="width: 100%"
+                                            @bind-Value="@ModelData.Description"
+                                            Change="@((value) => ModelData!.Description = value.Trim().ToUpper())" />
+                        </RadzenFormField>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenTemplateForm>
+        </RadzenTabsItem>
+
+        @*BUDGET TAB*@
+        <RadzenTabsItem Text="@Localizer["Models.Text.Budget"]">
+            <LoadingDialogComponent @ref="_loading" />
+
+            <RadzenStack>
+                <RadzenDataGrid @ref="@SuppliesGrid"
+                                AllowGrouping="true"
+                                AllowFiltering="true"
+                                AllowColumnResize="true"
+                                FilterMode="FilterMode.Advanced"
+                                AllowSorting="true"
+                                Data="@ModelData.ModelSupplies"
+                                LogicalFilterOperator="LogicalFilterOperator.Or"
+                                TItem="InsumosModelos"
+                                HideGroupedColumn="true"
+                                GroupRowRender="OnGroupRowRender"
+                                ShowGroupExpandColumn="true"
+                                Style="height: fit-content; max-height: calc(100vh - 455px); min-height: 300px; overflow: auto">
+                    <Columns>
+                        <RadzenDataGridColumn Property="Group" Title="@Localizer["Models.Text.Group"]" />
+                        <RadzenDataGridColumn Property="Category" Title="@Localizer["Models.Text.Category"]" />
+                        <RadzenDataGridColumn Property="Unit_Price" Title="@Localizer["Models.Text.PU"]" />
+                        <RadzenDataGridColumn Property="Supply" Title="@Localizer["Supplies.Text.Supply"]" />
+                        <RadzenDataGridColumn Property="Unit" Title="@Localizer["Supplies.Text.Unit"]" />
+                        <RadzenDataGridColumn Property="Type" Title="@Localizer["Shared.Textos.Tipo"]" />
+                        <RadzenDataGridColumn Property="Volume" Title="@Localizer["Supplies.Text.Volume"]" />
+                        <RadzenDataGridColumn Property="Price" Title="@Localizer["Forwarders.Price"]" />
+                        <RadzenDataGridColumn Property="Amount" Title="@Localizer["Supplies.Text.Amount"]" />
+                    </Columns>
+                </RadzenDataGrid>
+
+                <RadzenUpload Accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                              Change=@OnFileChange
+                              Auto="true"
+                              MaxFileCount="10485760"
+                              ChooseText="@Localizer["Supplies.Text.Import"]"
+                              Icon="upload"
+                              InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})"
+                              Disabled="@IsFormInProgress"
+                              Style="width: fit-content; max-width: 250px; min-width: 120px; align-content: center" />
+            </RadzenStack>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="@Localizer["Supplies.Text.Supply"]">
+            <RadzenDataGrid @ref="@SuppliesSimplifyGrid"
+                            AllowGrouping="true"
+                            AllowFiltering="true"
+                            AllowColumnResize="true"
+                            FilterMode="FilterMode.Advanced"
+                            AllowSorting="true"
+                            Data="@GetTableSuppliesSum()"
+                            LogicalFilterOperator="LogicalFilterOperator.Or"
+                            TItem="ModelSuppliesSimplify"
+                            HideGroupedColumn="true"
+                            GroupRowRender="OnGroupRowRender"
+                            AllGroupsExpanded="true"
+                            ShowGroupExpandColumn="true"
+                            Style="height: fit-content; max-height: calc(100vh - 455px); min-height: 300px; overflow: auto">
+                <Columns>
+                    <RadzenDataGridColumn Property="Type" Title="@Localizer["Shared.Textos.Tipo"]" />
+                    <RadzenDataGridColumn Property="Supply" Title="@Localizer["Supplies.Text.Supply"]" />
+                    <RadzenDataGridColumn Property="Unit" Title="@Localizer["Supplies.Text.Unit"]" />
+                    <RadzenDataGridColumn Property="Volume" Title="@Localizer["Supplies.Text.Volume"]" />
+                    <RadzenDataGridColumn Property="Price" Title="@Localizer["Forwarders.Price"]" />
+                    <RadzenDataGridColumn Property="Amount" Title="@Localizer["Supplies.Text.Amount"]" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>

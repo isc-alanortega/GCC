@@ -1,0 +1,156 @@
+﻿@using Newtonsoft.Json
+@using Nubetico.Frontend.Services.Core;
+@using Nubetico.Shared.Dto.Common
+@using Nubetico.Shared.Dto.Core;
+
+@page "/activate-account/{Token}"
+@layout EmptyLayout
+@inject AuthService AuthService
+@inject DialogService DialogService
+@inject IStringLocalizer<SharedResources> Localizer
+@inject NavigationManager NavigationManager
+
+<div style=" display: flex; justify-content: center; align-items: center; height: 100vh; ">
+    @if (!Verificado.HasValue)
+    {
+        <RadzenLabel class="rz-color-danger" Text="Verificando token, un momento..." />
+        <p></p>
+    }
+    else
+    {
+        if (Verificado.Value)
+        {
+            <RadzenRow Gap="0" class="rz-my-12 rz-mx-auto rz-border-radius-6 rz-shadow-10" Style="width: 100%; max-width: 400px; overflow: hidden;">
+                <RadzenColumn>
+                    <RadzenCard class="" Style="height: 100%;">
+                        <RadzenText TextStyle="TextStyle.H5">Activar cuenta</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body2">@Localizer["Core.Login.Instructions"]</RadzenText>
+                        <RadzenFormField Text="Nueva contraseña" Style="width: 100%;">
+                            <ChildContent>
+                                <RadzenPassword @bind-Value="model.Pswd"></RadzenPassword>
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("Pswd", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenFormField Text="Confirmar Contraseña" Style="width: 100%;">
+                            <ChildContent>
+                                <RadzenPassword @bind-Value="model.PswdConfirm"></RadzenPassword>
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("PswdConfirm", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenText class="rz-color-danger" TextStyle="TextStyle.Body2">@ErrorMessage</RadzenText>
+                        <RadzenStack class="rz-mt-4" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                            <RadzenButton class="trz-mb-6" Text="@Localizer["Shared.Botones.Aceptar"]" ButtonType="ButtonType.Button" Click="ExecuteAsync" IsBusy=@isBusy />
+                        </RadzenStack>
+                    </RadzenCard>
+                </RadzenColumn>
+            </RadzenRow>
+        }
+        else
+        {
+            <RadzenLabel class="rz-color-danger" Text="@ErrorMessage" />
+        }
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public string Token { get; set; }
+
+    public bool isBusy { get; set; } = false;
+    private bool? Verificado { get; set; }
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    private UpdatePswdByTokenDto model { get; set; } = new UpdatePswdByTokenDto();
+    public Dictionary<string, List<string>> FormValidationErrors = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        VerifyTokenRequestDto verifyTokenRequestDto = new VerifyTokenRequestDto
+            {
+                Token = Token
+            };
+
+        var tokenValidationResponseDto = await AuthService.GetTokenVerifiedAsync(verifyTokenRequestDto);
+
+        if (tokenValidationResponseDto.Success)
+        {
+            Verificado = (bool)tokenValidationResponseDto.Data;
+
+            if (Verificado == false)
+                ErrorMessage = "Core.Errors.TokenUsed";
+
+            model.Token = Guid.Parse(Token);
+        }
+        else
+        {
+            Verificado = false;
+
+            if (tokenValidationResponseDto.StatusCode == 400)
+                ErrorMessage = "Core.Errors.BadToken";
+
+            if (tokenValidationResponseDto.StatusCode == 404)
+                ErrorMessage = "Core.Errors.TokenNotFound";
+
+            if (tokenValidationResponseDto.StatusCode == 500)
+                ErrorMessage = tokenValidationResponseDto.Message;
+        }
+    }
+
+    private async Task ExecuteAsync()
+    {
+        isBusy = true;
+        FormValidationErrors.Clear();
+        ErrorMessage = string.Empty;
+
+        var response = await AuthService.PostNewPswdAsync(model);
+
+        if (response.Success)
+        {
+            await DialogService.Alert(response.Message, null, new AlertOptions { ShowTitle = false, OkButtonText = Localizer["Shared.Botones.Aceptar"] });
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            if (response.StatusCode == 400)
+            {
+                var errores = JsonConvert.DeserializeObject<List<ValidationFailureDto>>(response.Data.ToString());
+                if (errores != null)
+                    ReadFormValidationErrors(errores);
+            }
+            else
+            {
+                this.ErrorMessage = response.Message;
+            }
+            isBusy = false;
+        }
+    }
+
+    private void ReadFormValidationErrors(List<ValidationFailureDto> errores)
+    {
+        FormValidationErrors.Clear();
+
+        foreach (var error in errores)
+        {
+            if (string.IsNullOrWhiteSpace(error.PropertyName) || string.IsNullOrWhiteSpace(error.ErrorMessage))
+                continue;
+
+            if (!FormValidationErrors.ContainsKey(error.PropertyName))
+            {
+                FormValidationErrors[error.PropertyName] = new List<string>();
+            }
+
+            FormValidationErrors[error.PropertyName].Add(error.ErrorMessage);
+        }
+    }
+}

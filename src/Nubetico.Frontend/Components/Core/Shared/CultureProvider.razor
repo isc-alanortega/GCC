@@ -1,0 +1,15 @@
+﻿@using System.Globalization
+
+@inject IStringLocalizer<SharedResources> Localizer
+@inject IJSRuntime JsRuntime
+
+@if (showComponent)
+{
+    <RadzenStack>
+        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">
+            @(CultureInfo.CurrentCulture.Name == "en-US" ? "English" : "Español")
+        </RadzenText>
+
+        <RadzenSwitch @bind-Value=@setEnglish Change=@(args => ChangeLanguage(args)) InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", $"{(CultureInfo.CurrentCulture.Name == "en-US" ? "Cambiar a español" : "Change to english" )}" }})" />
+    </RadzenStack>
+}

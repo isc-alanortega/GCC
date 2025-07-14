@@ -1,0 +1,20 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.ProyectosConstruccion.SeccionesProyectosComponents
+@using Nubetico.Shared.Dto.ProyectosConstruccion.ProjectSectionDetails
+@inherits NbBaseComponent
+
+<RadzenTabs TabPosition="@TabPosition.Top" RenderMode="TabRenderMode.Client">
+    <Tabs>
+         <RadzenTabsItem Text="General">
+            <ProjectSectionDetailsComponent Section="SectionDetails" />
+         </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Lotes">
+             <ProjectSectionLot LotsData="SectionLots"/>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Insumos">
+            <ProjectSectionSuppliesComponent />
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>

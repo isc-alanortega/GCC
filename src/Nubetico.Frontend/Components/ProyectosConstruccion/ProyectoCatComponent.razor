@@ -1,0 +1,109 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto
+@using Nubetico.Frontend.Models.Enums.Core
+@using Nubetico.Frontend.Components.Shared
+@inherits NbBaseComponent
+
+@*HEADER*@
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">@LocalizerServices!["Shared.Textos.Project"]</RadzenText>
+
+@*FILTERS*@
+<PanelFiltrosNubeticoComponent>
+    <RadzenRow AlignItems="AlignItems.Normal" JustifyContent="@GetJustifyContentRow()">
+        <RadzenColumn SizeMD="10" SizeXS="12">
+            <RadzenRow>
+                <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                    <RadzenFormField Text="@LocalizerServices!["Shared.Textos.BusinessUnit"]" Style="width: 100%;" class="radzen-form-field-required">
+                        <RadzenDropDown Style="width: 100%;"
+                                        @bind-Value="@RequestForm.BusinessUnitId"
+                                        Data="@Branch"
+                                        ValueProperty="Id"
+                                        TextProperty="Name"
+                                        AllowFiltering="true"
+                                        AllowClear="true" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                    <RadzenFormField Text="@LocalizerServices!["Subdivisions.Text.Subdivision"]" Style="width: 100%;">
+                        <RadzenDropDown Style="width: 100%;"
+                                        @bind-Value="@RequestForm.SubdivisionId"
+                                        ValueProperty="Id"
+                                        TextProperty="Name"
+                                        Data="@Subdivision"
+                                        AllowFiltering="true"
+                                        AllowClear="true" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                    <RadzenFormField Text="@LocalizerServices!["Shared.Textos.Project"]" Style="width: 100%;">
+                        <RadzenTextBox Placeholder="@LocalizerServices["Shared.Textos.Project"]"
+                                       @bind-Value="@RequestForm.Nombre"
+                                       Style="width: 100%;"
+                                       type="search" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                    <RadzenFormField Text="@LocalizerServices!["Shared.Textos.State"]" Style="width: 100%;">
+                        <RadzenDropDown @bind-Value="@RequestForm.Estado"
+                                        ValueProperty="Id"
+                                        TextProperty="Name"
+                                        Data="@Status"
+                                        Style="width: 100%;"
+                                        AllowFiltering="true"
+                                        AllowClear="true" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenColumn>
+        <RadzenColumn SizeMD="2" SizeXS="2">
+            <RadzenButton Icon="search"
+                          Text="@LocalizerServices!["Shared.Textos.Buscar"]"
+                          Style="margin-top: 11px;"
+                          Click="OnClickFilterProjectsAsync" />
+        </RadzenColumn>
+    </RadzenRow>
+</PanelFiltrosNubeticoComponent>
+
+@*GRID PROJECT*@
+<RadzenDataGrid @ref="GridCatProyectos"
+                IsLoading="@IsLoading"
+                Count="@Count"
+                Data="@ProyectsList"
+                LoadData="@LoadData"
+                AllowSorting="true"
+                AllowFiltering="false"
+                AllowPaging="true"
+                PageSize="20"
+                PagerHorizontalAlign="HorizontalAlign.Center"
+                ShowPagingSummary="true"
+                ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single"
+                EmptyText="@LocalizerServices!["Subdivisions.Text.EmptyGrid"]"
+                Style="height: fit-content; max-height: calc(100vh - 455px); min-height: 300px; overflow: auto"
+                RowDoubleClick="@(async (DataGridRowMouseEventArgs<ProyectsGridDto> args) => await OnDataGridRowDoubleClick(args))"
+                @bind-Value="@SelectedProyect">
+
+    <Columns>
+        <RadzenDataGridColumn Property="ProyectGuid" Title="UUID" TextAlign="TextAlign.Center" Visible="false" />
+        <RadzenDataGridColumn Property="Folio" Title="ID" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Name" Title="@LocalizerServices!["Shared.Textos.Project"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="BusinessUnit" Title="@LocalizerServices!["Shared.Textos.BusinessUnit"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Subdivision" Title="@LocalizerServices!["Subdivisions.Text.Subdivision"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Type" Title="@LocalizerServices!["Shared.Textos.Tipo"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="ProjectedStartDate" Title="Inicio" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="ProjectedEndDate" Title="Fin" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="State" Title="@LocalizerServices!["Shared.Textos.State"]" TextAlign="TextAlign.Center" />
+    </Columns>
+</RadzenDataGrid>
+
+
+@code {
+    private JustifyContent GetJustifyContentRow() => BreakpointService!.GetCurrentBreakpoint() switch
+    {
+        Breakpoint.Xs => JustifyContent.Center,
+        _ => JustifyContent.Normal
+    };
+}

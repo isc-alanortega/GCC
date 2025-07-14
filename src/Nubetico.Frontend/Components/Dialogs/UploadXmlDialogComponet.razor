@@ -1,0 +1,107 @@
+﻿@using System.Globalization
+<div>
+    <RadzenStack Gap="1.5rem">
+        <RadzenCard class="rz-my-0">
+            <RadzenStack Gap="1.5rem">
+                <RadzenStack class="rz-w-100" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap">
+                    <RadzenRow Gap="1rem">
+                        <RadzenColumn SizeSM="12" SizeMD="8" class="rz-w-50">
+                            @Localizer!["Shared.Textos.Supplier"]
+                            <RadzenTextBox Value=@XmlService!.InvoiceData.Emisor Style="width: 100%" aria-label="Proveedor" Disabled="true" />
+                        </RadzenColumn>
+
+                        <RadzenColumn SizeSM="12" SizeMD="4" class="rz-w-50">
+                            RFC
+                            <RadzenTextBox Value=@XmlService!.InvoiceData.RfcEmisor Style="width: 100%" aria-label="RFC" Disabled="true" />                           
+                        </RadzenColumn>
+
+                        <RadzenColumn Size="4">
+                            @Localizer!["Shared.Textos.Nuevo"] CFDI
+                            <RadzenUpload Multiple="false"
+                                          Accept=".xml"
+                                          Icon="upload"
+                                          Change="@OnInvoiceChangeAsync"
+                                          InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", @Localizer!["Shared.Textos.Upload"] }})"
+                                          Style="width: 90%"
+                                          ChooseText="@Localizer!["Shared.Textos.Upload"]" />
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenStack>
+            <RadzenStack>
+            </RadzenStack>
+        </RadzenCard>
+        <RadzenCard class="rz-my-0">
+            <RadzenStack Gap="1.5rem" Orientation="Orientation.Vertical">
+                <RadzenStack class="rz-w-100" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Fecha"]
+                        <RadzenTextBox Value="@XmlDate?.ToString("dd/MM/yy")" aria-label="Fecha" Disabled="true" />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Tipo"]
+                        <RadzenTextBox Value="@XmlService!.GetNameTypeInvoice()" aria-label="Tipo" Disabled="true" />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Invoice.Serie"]
+                        <RadzenTextBox Value=@XmlService!.InvoiceData.Serie aria-label="Serie" Disabled="true" />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Folio"]
+                        <RadzenTextBox Value=@XmlService!.InvoiceData.Folio aria-label="Folio" Disabled="true" />
+                    </RadzenStack>
+                </RadzenStack>
+
+                <RadzenStack class="rz-w-100" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+                    <RadzenStack Style="width: 67%" Orientation="Orientation.Vertical" Gap="4px">
+                        UUID
+                        <RadzenTextBox Value=@XmlService!.InvoiceData.UUID aria-label="UUID" Disabled="true" />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Invoice.Vencimiento"]
+                        <RadzenTextBox Value=@ExpirationDate?.ToString("dd/MM/yy") aria-label="Vencimiento" Disabled="true" />
+                    </RadzenStack>
+                </RadzenStack>
+
+                <RadzenStack class="rz-w-100" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.SubTotal"]
+                        <RadzenTextBox Value="@string.Format("{0:C}", XmlSubtotal ?? 0)" aria-label="Fecha" Disabled="true" />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Invoice.Traslado"]
+                        <RadzenTextBox Value="@string.Format("{0:C}", XmlTransfer ?? 0)" aria-label="Tipo" Disabled="true" />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Invoice.Retencion"]
+                        <RadzenTextBox Value="@string.Format("{0:C}", XmlWithholding ?? 0)" aria-label="Serie" Disabled="true" />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Total"]
+                        <RadzenTextBox Value="@string.Format("{0:C}", XmlTotal ?? 0)" aria-label="Folio" Disabled="true" />
+                    </RadzenStack>
+                </RadzenStack>
+
+                <RadzenStack class="rz-w-100" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Invoice.Currency"]
+                        <RadzenTextBox Value=@XmlService!.InvoiceData.Moneda aria-label="Fecha" Disabled="true" />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        @Localizer!["Shared.Textos.Invoice.TipoCambio"]
+                        <RadzenTextBox Value=@XmlService!.InvoiceData.TipoCambio aria-label="Tipo" Disabled="true" />
+                    </RadzenStack>
+                </RadzenStack>
+
+                <RadzenStack class="rz-w-100" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap">
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        <RadzenButton Click=@(async () => await OnUploadInvoiceAsync()) Text="Guardar" Icon="Save" ButtonStyle="ButtonStyle.Primary" Disabled=@(!IsReadyXmlData) />
+                    </RadzenStack>
+                    <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                        <RadzenButton Click=@(() => DialogService?.Close()) Text="Cancelar" Icon="dangerous" ButtonStyle="ButtonStyle.Danger" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenCard>
+    </RadzenStack>
+</div>

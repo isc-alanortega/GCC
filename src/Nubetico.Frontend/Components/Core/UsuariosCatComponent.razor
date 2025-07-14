@@ -1,0 +1,62 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.Shared
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+@inherits NbBaseComponent
+
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">@Localizer["Core.Users"]</RadzenText>
+<PanelFiltrosNubeticoComponent>
+    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" RowGap="0">
+        <RadzenColumn SizeSM="3" SizeXS="12" Style="min-width: 150px; max-width: 405px">
+            <RadzenFormField Text="@Localizer["Core.Users.FullName"]" Style="width: 100%; max-width: 400px">
+                <RadzenTextBox Style="width: 100%" @bind-value=@Filtro.Nombre type="search" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn SizeSM="3" SizeXS="12" Style="min-width: 150px; max-width: 405px">
+            <RadzenFormField Text="@Localizer["Core.Users.UserAccount"]" Style="width: 100%; max-width: 400px">
+                <RadzenTextBox Style="width: 100%" @bind-value=@Filtro.Username type="search" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn SizeSM="3" SizeXS="12" Style="min-width: 150px; max-width: 405px">
+            <RadzenFormField Text="@Localizer["Core.Users.UserStatus"]" Style="width: 100%; max-width: 400px">
+                <RadzenDropDown Data="@this.SelectEstadosUsuario"
+                                TextProperty="Text"
+                                ValueProperty="Value"
+                                AllowClear="true"
+                                @bind-Value="@Filtro.IdEstadoUsuario" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn SizeSM="3" SizeXS="12">
+            <RadzenButton Click="@(() => RefreshGridAsync("NombreCompleto asc", this.RowsPerPage, 0))" Text=@Localizer["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" IsBusy=@IsLoading BusyText="@Localizer["Shared.Textos.Buscando"]" Style="margin-top: 12px" />
+        </RadzenColumn>
+    </RadzenRow>
+</PanelFiltrosNubeticoComponent>
+
+<RadzenDataGrid @ref="GridUsuarios" 
+                IsLoading=@IsLoading
+                Culture="@System.Globalization.CultureInfo.CurrentCulture"
+                Count="@Count"
+                Data="@ListaUsuarios"
+                LoadData="@LoadDataAsync"
+                AllowSorting="true"
+                AllowFiltering="false"
+                AllowPaging="true"
+                PageSize="@this.RowsPerPage"
+                PagerHorizontalAlign="HorizontalAlign.Center"
+                ShowPagingSummary="true"
+                ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single"
+                TItem="UsuarioNubeticoGridDto"
+                RowDoubleClick="DataGridRowDoubleClick"
+                @bind-Value=@UsuariosSeleccionados>
+    <Columns>
+        <RadzenDataGridColumn Property="UUID" Title="ID" TextAlign="TextAlign.Center" Visible="false" />
+        <RadzenDataGridColumn Property="NombreCompleto" Title="@Localizer["Core.Users.FullName"]" />
+        <RadzenDataGridColumn Property="Username" Title="@Localizer["Core.Users.Account"]" />
+        <RadzenDataGridColumn Property="EstadoUsuario" Title="@Localizer["Shared.Textos.Estado"]" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="data">
+                <RadzenBadge BadgeStyle="@(data.IdEstadoUsuario == 1 ? BadgeStyle.Success : data.IdEstadoUsuario == 0 ? BadgeStyle.Danger : BadgeStyle.Warning)" Text="@(data.EstadoUsuario)" Style="text-transform: none;" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>

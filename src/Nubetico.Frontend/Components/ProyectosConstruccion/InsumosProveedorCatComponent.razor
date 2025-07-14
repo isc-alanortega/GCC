@@ -1,0 +1,44 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@inherits NbBaseComponent
+
+@inject IStringLocalizer<SharedResources> Localizer
+
+<RadzenPanel>
+	<HeaderTemplate>
+		<RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+			<RadzenIcon Icon=@("\uf4df") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+			<b>Insumos</b>
+		</RadzenText>
+	</HeaderTemplate>
+	<ChildContent>
+		<RadzenCard class="rz-mt-4">
+			<RadzenDataGrid @ref="GridInsumos"
+							IsLoading="@IsLoading"
+							Count="@Count"
+							Data="@SuppliesList"
+							LoadData="@LoadData"
+							AllowSorting="true"
+							AllowPaging="true"
+							PageSize="20"
+							ShowPagingSummary="true"
+							SelectionMode="DataGridSelectionMode.Single"
+							TItem="InsumosDto"
+							EmptyText="No hay resultados"
+							Style="height: calc(100vh - 424px); overflow: auto;">
+				<Columns>
+					<RadzenDataGridColumn Property="ID" Title="ID" Visible="false" TextAlign="TextAlign.Center" />
+					<RadzenDataGridColumn Property="Code" Title="@Localizer!["Supplies.Text.Code"]" TextAlign="TextAlign.Center" />
+					<RadzenDataGridColumn Property="Description" Title="@Localizer!["Shared.Textos.Description"]" TextAlign="TextAlign.Left" />
+					<RadzenDataGridColumn Property="Unit" Title="@Localizer!["Supplies.Text.Unit"]" TextAlign="TextAlign.Center" />
+					<RadzenDataGridColumn Title="@Localizer!["Shared.Textos.Fecha"]" TextAlign="TextAlign.Center" />
+					<RadzenDataGridColumn Title="@Localizer!["Shared.Textos.Price"]" TextAlign="TextAlign.Center" />
+					<RadzenDataGridColumn Property="Type" Title="@Localizer!["Shared.Textos.Tipo"]" MinWidth="150px" TextAlign="TextAlign.Center">
+						<Template Context="data">
+							<RadzenBadge BadgeStyle="@GetBadgeStyle(data.Id_Type ?? 0)" Text="@data.Type" Style="text-transform: none;" />
+						</Template>
+					</RadzenDataGridColumn>
+				</Columns>
+			</RadzenDataGrid>
+		</RadzenCard>
+	</ChildContent>
+</RadzenPanel>

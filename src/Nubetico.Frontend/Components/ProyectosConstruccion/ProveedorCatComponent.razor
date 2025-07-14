@@ -1,0 +1,58 @@
+﻿@using Nubetico.Shared.Dto.ProyectosConstruccion;
+@using Nubetico.Frontend.Components.Core.Shared;
+@using Nubetico.Frontend.Components.Shared
+
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+
+@inherits NbBaseComponent
+
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">@Localizer["Core.ProyectosConstruccion.Proveedores"]</RadzenText>
+<PanelFiltrosNubeticoComponent>
+    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" RowGap="0">
+        <RadzenColumn SizeSM="3" SizeXS="12" Style="min-width: 150px; max-width: 405px">
+            <RadzenFormField Text="@Localizer["Shared.Textos.Name"]" Style="width: 100%; max-width: 400px">
+                <RadzenTextBox Style="width: 100%" @bind-value=@Filtro.Nombre type="search" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn SizeSM="3" SizeXS="12" Style="min-width: 150px; max-width: 405px">
+            <RadzenFormField Text="@Localizer["Core.ProyectosConstruccion.RFC"]" Style="width: 100%; max-width: 400px">
+                <RadzenTextBox Style="width: 100%" @bind-value=@Filtro.RFC type="search" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn SizeSM="3" SizeXS="12">
+            <RadzenButton Click="@(() => RefreshGridAsync("NombreCompleto asc", this.RowsPerPage, 0))" Text=@Localizer["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" IsBusy=@IsLoading BusyText="@Localizer["Shared.Textos.Buscando"]" Style="margin-top: 12px" />
+        </RadzenColumn>
+    </RadzenRow>
+</PanelFiltrosNubeticoComponent>
+
+<RadzenDataGrid @ref="GridProveedores"
+                IsLoading=@IsLoading
+                Culture="@System.Globalization.CultureInfo.CurrentCulture"
+                Count="@Count"
+                Data="@ListaProveedores"
+                LoadData="@LoadDataAsync"
+                AllowSorting="true"
+                AllowFiltering="false"
+                AllowPaging="true"
+                PageSize="@this.RowsPerPage"
+                PagerHorizontalAlign="HorizontalAlign.Center"
+                ShowPagingSummary="true"
+                ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single"
+                TItem="ProveedoresDto"
+                RowDoubleClick="DataGridRowDoubleClick"
+                @bind-Value=@ProveedoresSeleccionados>
+    <Columns>
+        <RadzenDataGridColumn Property="UUID" Title="ID" TextAlign="TextAlign.Center" Visible="false" />
+        <RadzenDataGridColumn Property="Folio" Title="@Localizer["Shared.Textos.Folio"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Nombre" Title="@Localizer["Core.Users.FullName"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="RFC" Title="@Localizer["Core.ProyectosConstruccion.RFC"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="EstadoProveedor" Title="@Localizer["Shared.Textos.Estado"]" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="data">
+                <RadzenBadge BadgeStyle="@(data.IdEstadoProveedor == 1 ? BadgeStyle.Success : data.IdEstadoProveedor == 0 ? BadgeStyle.Danger : BadgeStyle.Warning)" Text="@(data.EstadoProveedor)" Style="text-transform: none;" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+

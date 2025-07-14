@@ -1,0 +1,79 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@inherits NbBaseComponent
+@inject IStringLocalizer<SharedResources> localizer
+@inject NotificationService NotificationService
+@inject DialogService DialogService
+
+@* ******************************************************************************************************************* *@
+@* Encabezado *@
+@* ******************************************************************************************************************* *@
+
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">Facturas de Proveedores</RadzenText>
+
+<RadzenCard class="rz-my-6">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            Fecha Inicial
+            <RadzenDatePicker TValue="DateTime?" Value=@fechaInicial ShowTime="false" HourFormat="24" DateFormat="dd/MM/yyyy" Min="DateTime.Today.AddYears(-10)" Max="DateTime.Today.AddDays(7)" Change="@(args => fechaInicial = args)" Name="RadzenDatePickerChangeEvent" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            Fecha Final
+            <RadzenDatePicker TValue="DateTime?" Value=@fechaFinal ShowTime="false" HourFormat="24" DateFormat="dd/MM/yyyy" Min="DateTime.Today.AddYears(-10)" Max="DateTime.Today.AddDays(7)" Change="@(args => fechaFinal = args)" Name="RadzenDatePickerChangeEvent" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            Estatus
+            <RadzenDropDown @bind-Value="@estadoSeleccionado" Data="@ListaEstadosFacturas" Size="ButtonSize.Small" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            <div>&nbsp;</div>
+            <RadzenButton Click=@(args => ActualizarGrid(@estadoSeleccionado)) Text="Buscar" Icon="search" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            <div>&nbsp;</div>
+            <RadzenButton Click=@OpenUploadXmModal Text="Nuevo CFDI" Icon="add" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard>
+
+@* ******************************************************************************************************************* *@
+@* Grid para el listado de facturas *@
+@* ******************************************************************************************************************* *@
+
+@* LoadData="@LoadData" *@
+<RadzenDataGrid @ref="GridFacturasProveedores"
+                IsLoading=@IsLoading
+                Count="@Count"
+                Data="@ListaFacturas"
+                LoadData="@LoadData"
+                AllowSorting="true"
+                AllowFiltering="false"
+                AllowPaging="true"
+                PageSize="20"
+                PagerHorizontalAlign="HorizontalAlign.Center"
+                ShowPagingSummary="true"
+                ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single"
+                EmptyText="No se encontraron registros con los valores seleccionados"
+                @bind-Value=@FacturaSeleccionada>
+
+    <Columns>
+        <RadzenDataGridColumn Property="IDMovimiento" Title="ID" TextAlign="TextAlign.Center" Width="40px" />
+        <RadzenDataGridColumn Property="Referencia" Title="Referencia" TextAlign="TextAlign.Center" Width="80px" />
+        <RadzenDataGridColumn Property="UUID" Title="UUID" TextAlign="TextAlign.Center" Width="250px" />
+        <RadzenDataGridColumn Property="Importe" Title="Importe" FormatString="{0:C}" TextAlign="TextAlign.Right" Width="80px" />
+        <RadzenDataGridColumn Property="Moneda" Title="Moneda" TextAlign="TextAlign.Center" Width="70px" />
+        <RadzenDataGridColumn Property="Fecha" Title="Fecha Facturacion" TextAlign="TextAlign.Center" Width="140px" FormatString="{0:dd/MM/yyyy}" />
+        <RadzenDataGridColumn Property="FechaVencimiento" Title="Fecha Vencimiento" TextAlign="TextAlign.Center" Width="140px" FormatString="{0:dd/MM/yyyy}" />
+        <RadzenDataGridColumn Property="EstadoLeyenda" Title="Estatus" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="data">
+                <RadzenBadge BadgeStyle="@(GetBadgeColor(@data.EstadoLeyenda))" Text="@data.EstadoLeyenda" Style="text-transform: none;" />
+            </Template>
+        </RadzenDataGridColumn>
+        @* <RadzenDataGridColumn Property="" Title="PDF" TextAlign="TextAlign.Center" Width="50px">
+            <Template Context="data">
+                <i class="fas fa-file-pdf"></i>
+            </Template>
+        </RadzenDataGridColumn> *@
+    </Columns>
+</RadzenDataGrid>
+

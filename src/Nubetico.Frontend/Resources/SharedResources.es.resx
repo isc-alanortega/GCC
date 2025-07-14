@@ -1,0 +1,894 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Core.Login.WelcomeMessage" xml:space="preserve">
+    <value>Te damos la bienvenida</value>
+  </data>
+  <data name="Core.Login.Instructions" xml:space="preserve">
+    <value>Ingrese sus credenciales para continuar.</value>
+  </data>
+  <data name="Core.Login.IniciarSesion" xml:space="preserve">
+    <value>Iniciar Sesión</value>
+  </data>
+  <data name="Core.Login.Usuario" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="Core.Login.Password" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="Core.Login.Token" xml:space="preserve">
+    <value>Código de verificación</value>
+  </data>
+  <data name="Shared.Botones.Volver" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="Shared.Botones.Continuar" xml:space="preserve">
+    <value>Continuar</value>
+  </data>
+  <data name="Shared.Botones.Aceptar" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="Shared.Botones.Cancelar" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Core.ChangePassword" xml:space="preserve">
+    <value>Cambiar Contraseña</value>
+  </data>
+  <data name="Core.Profile" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Core.CloseSession" xml:space="preserve">
+    <value>Cerrar Sesión</value>
+  </data>
+  <data name="Core.Login.ErrorCredentialsEmpty" xml:space="preserve">
+    <value>Ingrese sus credenciales para continuar</value>
+  </data>
+  <data name="Core.Login.ErrorTokenEmpty" xml:space="preserve">
+    <value>Ingrese su token para continuar</value>
+  </data>
+  <data name="Shared.Textos.Buscar" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="Shared.Textos.Buscando" xml:space="preserve">
+    <value>Buscando</value>
+  </data>
+  <data name="Core.Users" xml:space="preserve">
+    <value>Usuarios</value>
+  </data>
+  <data name="Core.Users.User" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="Core.Users.Username" xml:space="preserve">
+    <value>Cuenta de Usuario</value>
+  </data>
+  <data name="Core.Users.FullName" xml:space="preserve">
+    <value>Nombre Completo</value>
+  </data>
+  <data name="Forwarders.TerrestrialBookings" xml:space="preserve">
+    <value>Bookings Terrestres</value>
+  </data>
+  <data name="Forwarders.MaritimeBookings" xml:space="preserve">
+    <value>Bookings Marítimos</value>
+  </data>
+  <data name="Shared.Textos.Filtrar" xml:space="preserve">
+    <value>Filtrar</value>
+  </data>
+  <data name="Shared.Textos.OcultarFiltro" xml:space="preserve">
+    <value>Ocultar filtro</value>
+  </data>
+  <data name="Shared.Textos.MostrarFiltro" xml:space="preserve">
+    <value>Mostrar filtro</value>
+  </data>
+  <data name="Forwarders.OrderId" xml:space="preserve">
+    <value>No. Orden</value>
+  </data>
+  <data name="Forwarders.Origin" xml:space="preserve">
+    <value>Origen</value>
+  </data>
+  <data name="Forwarders.Destination" xml:space="preserve">
+    <value>Destino</value>
+  </data>
+  <data name="Forwarders.Mode" xml:space="preserve">
+    <value>Modalidad</value>
+  </data>
+  <data name="Forwarders.Client" xml:space="preserve">
+    <value>Cliente</value>
+  </data>
+  <data name="Forwarders.Price" xml:space="preserve">
+    <value>Precio</value>
+  </data>
+  <data name="Forwarders.Credit" xml:space="preserve">
+    <value>Crédito</value>
+  </data>
+  <data name="Forwarders.Suppliers" xml:space="preserve">
+    <value>Proveedores</value>
+  </data>
+  <data name="Forwarders.OtherServices" xml:space="preserve">
+    <value>Otros Servicios</value>
+  </data>
+  <data name="Forwarders.AccountsPayable" xml:space="preserve">
+    <value>Cuentas por pagar</value>
+  </data>
+  <data name="Forwarders.AccountsReceivable" xml:space="preserve">
+    <value>Cuentas por cobrar</value>
+  </data>
+  <data name="Forwarders.Customers" xml:space="preserve">
+    <value>Clientes</value>
+  </data>
+  <data name="Forwarders.Cities" xml:space="preserve">
+    <value>Ciudades</value>
+  </data>
+  <data name="Shared.Botones.Cerrar" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Shared.Botones.CerrarTab" xml:space="preserve">
+    <value>Cerrar pestaña</value>
+  </data>
+  <data name="Shared.Dialog.PestaniaActualCerrando" xml:space="preserve">
+    <value>La pestaña actual está por cerrar, ¿Desea continuar?</value>
+  </data>
+  <data name="Shared.Dialog.Atencion" xml:space="preserve">
+    <value>Atención</value>
+  </data>
+  <data name="Core.Users.Enabled" xml:space="preserve">
+    <value>Habilitado</value>
+  </data>
+  <data name="Shared.Textos.Acciones" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+  <data name="Shared.Botones.VerDetalle" xml:space="preserve">
+    <value>Ver detalle</value>
+  </data>
+  <data name="Shared.Dialog.CerrarTodasPestanias" xml:space="preserve">
+    <value>Todas las pestañas se cerraran, ¿Desea continuar?</value>
+  </data>
+  <data name="Shared.Dialog.CerrarOtrasPestanias" xml:space="preserve">
+    <value>Todas las pestañas excepto la activa se cerraran, ¿Desea continuar?</value>
+  </data>
+  <data name="Shared.Botones.CerrarTabActivo" xml:space="preserve">
+    <value>Cerrar pestaña activa</value>
+  </data>
+  <data name="Shared.Botones.CerrarOtrosTabs" xml:space="preserve">
+    <value>Cerrar todas las pestañas excepto activa</value>
+  </data>
+  <data name="Shared.Botones.CerrarTodosTabs" xml:space="preserve">
+    <value>Cerrar todas las pestañas</value>
+  </data>
+  <data name="Documents.Error.SaveCfdi" xml:space="preserve">
+    <value>Ocurrió un problema al intentar guardar el CFDI</value>
+  </data>
+  <data name="Shared.Textos.Fecha" xml:space="preserve">
+    <value>Fecha</value>
+  </data>
+  <data name="Shared.Textos.Folio" xml:space="preserve">
+    <value>Folio</value>
+  </data>
+  <data name="Shared.Textos.Invoice.Currency" xml:space="preserve">
+    <value>Moneda</value>
+  </data>
+  <data name="Shared.Textos.Invoice.Retencion" xml:space="preserve">
+    <value>Retención</value>
+  </data>
+  <data name="Shared.Textos.Invoice.Serie" xml:space="preserve">
+    <value>Serie</value>
+  </data>
+  <data name="Shared.Textos.Invoice.TipoCambio" xml:space="preserve">
+    <value>Tipo de cambio</value>
+  </data>
+  <data name="Shared.Textos.Invoice.Traslado" xml:space="preserve">
+    <value>Traslado</value>
+  </data>
+  <data name="Shared.Textos.Invoice.Vencimiento" xml:space="preserve">
+    <value>Vencimiento</value>
+  </data>
+  <data name="Shared.Textos.Nuevo" xml:space="preserve">
+    <value>Nuevo</value>
+  </data>
+  <data name="Shared.Textos.SubTotal" xml:space="preserve">
+    <value>SubTotal</value>
+  </data>
+  <data name="Shared.Textos.Supplier" xml:space="preserve">
+    <value>Proveedor</value>
+  </data>
+  <data name="Shared.Textos.Tipo" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Shared.Textos.Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Invoice.Type.Expense" xml:space="preserve">
+    <value>Egreso</value>
+  </data>
+  <data name="Invoice.Type.Income" xml:space="preserve">
+    <value>Ingreso</value>
+  </data>
+  <data name="Invoice.Type.Payment" xml:space="preserve">
+    <value>Pago</value>
+  </data>
+  <data name="Invoice.Type.Payroll" xml:space="preserve">
+    <value>Nómina</value>
+  </data>
+  <data name="Invoice.Type.Transfer" xml:space="preserve">
+    <value>Traslado</value>
+  </data>
+  <data name="Shared.Textos.Upload" xml:space="preserve">
+    <value>Subir documento</value>
+  </data>
+  <data name="Subdivisions.Text.Number" xml:space="preserve">
+    <value>Número</value>
+  </data>
+  <data name="Subdivisions.Text.Subdivision" xml:space="preserve">
+    <value>Fraccionamiento</value>
+  </data>
+  <data name="Shared.Textos.Activo" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="Shared.Textos.Deshabilitado" xml:space="preserve">
+    <value>Deshabilitado</value>
+  </data>
+  <data name="Shared.Textos.Habilitado" xml:space="preserve">
+    <value>Habilitado</value>
+  </data>
+  <data name="Shared.Textos.Inactivo" xml:space="preserve">
+    <value>Inactivo</value>
+  </data>
+  <data name="Shared.Textos.Estado" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Documents.Error.ReadingDocument" xml:space="preserve">
+    <value>Error al leer el documento</value>
+  </data>
+  <data name="Shared.Comandos.Agregar" xml:space="preserve">
+    <value>Alta</value>
+  </data>
+  <data name="Shared.Comandos.Abrir" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
+  <data name="Shared.Comandos.Editar" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="Shared.Comandos.Guardar" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Shared.Comandos.Cerrar" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Shared.Comandos.Buscar" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="Shared.Comandos.Refrescar" xml:space="preserve">
+    <value>Refrescar</value>
+  </data>
+  <data name="Shared.Comandos.Borrar" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="Shared.Comandos.Exportar" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="Shared.Comandos.Cancelar" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Subdivisions.Text.Stages" xml:space="preserve">
+    <value>Etapas</value>
+  </data>
+  <data name="Subdivisions.Text.EmptyGrid" xml:space="preserve">
+    <value>No se encontraron resultados</value>
+  </data>
+  <data name="Subdivisions.Text.Title" xml:space="preserve">
+    <value>Fraccionamientos</value>
+  </data>
+  <data name="Subdivisions.Text.Logo" xml:space="preserve">
+    <value>Logotipo</value>
+  </data>
+  <data name="Subdivisions.Text.Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Subdivisions.Text.Zipcode" xml:space="preserve">
+    <value>Código Postal</value>
+  </data>
+  <data name="Subdivisions.Text.Stage" xml:space="preserve">
+    <value>Etapa</value>
+  </data>
+  <data name="Subdivisions.Text.Block" xml:space="preserve">
+    <value>Manzana</value>
+  </data>
+  <data name="Subdivisions.Text.Model" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="Subdivisions.Text.Lot" xml:space="preserve">
+    <value>Lote</value>
+  </data>
+  <data name="Subdivisions.Dialog.Selectrow" xml:space="preserve">
+    <value>Seleccione una fila.</value>
+  </data>
+  <data name="Subdivisions.Notify.Info" xml:space="preserve">
+    <value>Información</value>
+  </data>
+  <data name="Subdivisions.Saved.Subdivision" xml:space="preserve">
+    <value>Fraccionamiento guardado exitosamente.</value>
+  </data>
+  <data name="Subdivisions.Error.SaveSubdivision" xml:space="preserve">
+    <value>Ocurrió un problema al intentar guardar el Fraccionamiento.</value>
+  </data>
+  <data name="Shared.Textos.Project" xml:space="preserve">
+    <value>Proyecto</value>
+  </data>
+  <data name="Shared.Textos.ActualEndDate" xml:space="preserve">
+    <value>Fecha terminación real</value>
+  </data>
+  <data name="Shared.Textos.ActualStartDate" xml:space="preserve">
+    <value>Fecha inicio real</value>
+  </data>
+  <data name="Shared.Textos.BusinessUnit" xml:space="preserve">
+    <value>Unidad de negocio</value>
+  </data>
+  <data name="Shared.Textos.Construction" xml:space="preserve">
+    <value>Construcción</value>
+  </data>
+  <data name="Shared.Textos.Description" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="Shared.Textos.InCharge" xml:space="preserve">
+    <value>Encargado</value>
+  </data>
+  <data name="Shared.Textos.Label" xml:space="preserve">
+    <value>Etiqueta</value>
+  </data>
+  <data name="Shared.Textos.Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Shared.Textos.New" xml:space="preserve">
+    <value>Nuevo</value>
+  </data>
+  <data name="Shared.Textos.ProjectedEndDate" xml:space="preserve">
+    <value>Fecha final proyectada</value>
+  </data>
+  <data name="Shared.Textos.ProjectedStartDate" xml:space="preserve">
+    <value>Fecha inicio proyectada</value>
+  </data>
+  <data name="Shared.Textos.State" xml:space="preserve">
+    <value>Estatus</value>
+  </data>
+  <data name="Shared.Textos.TotalUnits" xml:space="preserve">
+    <value>Total de unidades</value>
+  </data>
+  <data name="ProjectPhases.Text.NotFoundPhases" xml:space="preserve">
+    <value>El proyecto no tiene fases</value>
+  </data>
+  <data name="ProjectSections.Text.NotFoundSections" xml:space="preserve">
+    <value>El proyecto no tiene secciones</value>
+  </data>
+  <data name="Shared.Textos.NotFoundRecords" xml:space="preserve">
+    <value>No se encontraron registros con los valores seleccionados</value>
+  </data>
+  <data name="Shared.Textos.Phases" xml:space="preserve">
+    <value>Fases</value>
+  </data>
+  <data name="Shared.Textos.Sections" xml:space="preserve">
+    <value>Secciones</value>
+  </data>
+  <data name="Setcions.Text.AddSection" xml:space="preserve">
+    <value>Agregar nueva sección</value>
+  </data>
+  <data name="Stage.Text.Sequence" xml:space="preserve">
+    <value>Secuencia</value>
+  </data>
+  <data name="Subdivisions.Text.New" xml:space="preserve">
+    <value>Nueva</value>
+  </data>
+  <data name="Shared.Textos.GeneralContractor" xml:space="preserve">
+    <value>Contratista</value>
+  </data>
+  <data name="Shared.Dialog.ApplicationClossing" xml:space="preserve">
+    <value>Cambios no guardados se perderán, ¿Continuar?</value>
+  </data>
+  <data name="Subdivisions.Error.UploadImage" xml:space="preserve">
+    <value>Ocurrió un error al subir la imagen.</value>
+  </data>
+  <data name="Subdivisions.Text.Options" xml:space="preserve">
+    <value>Opciones</value>
+  </data>
+  <data name="Subdivisions.Text.Required" xml:space="preserve">
+    <value>Campo requerido</value>
+  </data>
+  <data name="Subdivisions.Dialog.Warning" xml:space="preserve">
+    <value>Aviso</value>
+  </data>
+  <data name="Subdivisions.Warning.RemoveBlocks" xml:space="preserve">
+    <value>Las Manzanas agregadas a esta Etapa también se eliminarán, ¿Desea Continuar?</value>
+  </data>
+  <data name="Lots.Text.Front" xml:space="preserve">
+    <value>Frente</value>
+  </data>
+  <data name="Lots.Text.Bottom" xml:space="preserve">
+    <value>Fondo</value>
+  </data>
+  <data name="Lots.Saved.Lot" xml:space="preserve">
+    <value>Lote guardado exitosamente.</value>
+  </data>
+  <data name="Lots.Error.SaveLot" xml:space="preserve">
+    <value>Ocurrió un problema al intentar guardar el Lote.</value>
+  </data>
+  <data name="Lots.Text.Surface" xml:space="preserve">
+    <value>Superficie</value>
+  </data>
+  <data name="Lots.Text.Amenities" xml:space="preserve">
+    <value>Amenidades</value>
+  </data>
+  <data name="Shared.Textos.PagingSummaryFormat" xml:space="preserve">
+    <value>Página {0} de {1} ({2} elementos)</value>
+  </data>
+  <data name="Core.Users.UserAccount" xml:space="preserve">
+    <value>Cuenta de Usuario</value>
+  </data>
+  <data name="Core.Users.Account" xml:space="preserve">
+    <value>Cuenta</value>
+  </data>
+  <data name="Core.Users.UserStatus" xml:space="preserve">
+    <value>Estado de Usuario</value>
+  </data>
+  <data name="Shared.Textos.Filtros" xml:space="preserve">
+    <value>Filtros</value>
+  </data>
+  <data name="Subdivisions.Error.InvalidName" xml:space="preserve">
+    <value>El nombre ingresado ya se encuentra registrado.</value>
+  </data>
+  <data name="Lots.Text.General" xml:space="preserve">
+    <value>Datos Generales</value>
+  </data>
+  <data name="Lots.Text.Location" xml:space="preserve">
+    <value>Ubicación</value>
+  </data>
+  <data name="Address.Text.Title" xml:space="preserve">
+    <value>Domicilio</value>
+  </data>
+  <data name="Lots.Text.Map" xml:space="preserve">
+    <value>Mapa</value>
+  </data>
+  <data name="Address.Text.Street" xml:space="preserve">
+    <value>Calle</value>
+  </data>
+  <data name="Address.Text.StreetNumber" xml:space="preserve">
+    <value>No. Exterior</value>
+  </data>
+  <data name="Address.Text.BetweenStreet" xml:space="preserve">
+    <value>Entre Calle</value>
+  </data>
+  <data name="Address.Text.AndStreet" xml:space="preserve">
+    <value>Y Calle</value>
+  </data>
+  <data name="Address.Text.Neighborhood" xml:space="preserve">
+    <value>Colonia</value>
+  </data>
+  <data name="Address.Text.State" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Address.Text.City" xml:space="preserve">
+    <value>Municipio</value>
+  </data>
+  <data name="Address.Text.UnitNumber" xml:space="preserve">
+    <value>No. Interior</value>
+  </data>
+  <data name="Address.Error.LengthZipcode" xml:space="preserve">
+    <value>El Código Postal debe tener 5 dígitos.</value>
+  </data>
+  <data name="Address.Text.IsInvoicing" xml:space="preserve">
+    <value>Es Facturación</value>
+  </data>
+  <data name="Core.Users.UserInfo" xml:space="preserve">
+    <value>Datos de Usuario</value>
+  </data>
+  <data name="Core.Users.Email" xml:space="preserve">
+    <value>Correo Electrónico</value>
+  </data>
+  <data name="Core.Users.FirstName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Core.Users.LastName" xml:space="preserve">
+    <value>Primer Apellido</value>
+  </data>
+  <data name="Core.Users.SecondLastName" xml:space="preserve">
+    <value>Segundo Apellido</value>
+  </data>
+  <data name="Core.Users.TwoFactorAuth" xml:space="preserve">
+    <value>Verificación en dos pasos</value>
+  </data>
+  <data name="Core.Users.Blocked" xml:space="preserve">
+    <value>Bloqueado</value>
+  </data>
+  <data name="Core.Users.Languaje" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="Core.Users.UserParameters" xml:space="preserve">
+    <value>Parametros de usuario</value>
+  </data>
+  <data name="Core.Users.TimeZone" xml:space="preserve">
+    <value>Zona horaria</value>
+  </data>
+  <data name="Core.Users.TabNavigation" xml:space="preserve">
+    <value>Navegación por pestañas</value>
+  </data>
+  <data name="Core.Users.Enable2FA" xml:space="preserve">
+    <value>Activar verificación en dos pasos</value>
+  </data>
+  <data name="Shared.Botones.Habilitar" xml:space="preserve">
+    <value>Habilitar</value>
+  </data>
+  <data name="Shared.Botones.Deshabilitar" xml:space="preserve">
+    <value>Deshabilitar</value>
+  </data>
+  <data name="Core.Users.ShowQrCode" xml:space="preserve">
+    <value>Mostrar Código QR</value>
+  </data>
+  <data name="Core.Users.EnableTwoFactorAfterCreation" xml:space="preserve">
+    <value>Podrás activar la verificación en dos pasos una vez que el usuario sea dado de alta.</value>
+  </data>
+  <data name="Core.Users.AddUser" xml:space="preserve">
+    <value>Alta Usuario</value>
+  </data>
+  <data name="Core.Users.TwoFactorAuth.DownloadApp" xml:space="preserve">
+    <value>Descarga de la Google PlayStore (Android) o App Store (iOS) Microsoft Authenticator, Google Authenticator u otra aplicación móvil para generar códigos de autenticación en dos pasos.</value>
+  </data>
+  <data name="Core.Users.TwoFactorAuth.ScanQr" xml:space="preserve">
+    <value>Posteriormente escanea este Código QR con la aplicación elegida.</value>
+  </data>
+  <data name="Core.Users.TwoFactorAuth.Confirm" xml:space="preserve">
+    <value>Una vez que se haya vinculado el Código QR en tu dispositivo móvil, captura el código generado y haz clic en Aceptar</value>
+  </data>
+  <data name="Models.Text.Budget" xml:space="preserve">
+    <value>Presupuesto</value>
+  </data>
+  <data name="Models.Text.Group" xml:space="preserve">
+    <value>Grupo</value>
+  </data>
+  <data name="Models.Text.Category" xml:space="preserve">
+    <value>Partida</value>
+  </data>
+  <data name="Subdivisions.Text.Add" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="Supplies.Text.Code" xml:space="preserve">
+    <value>Código</value>
+  </data>
+  <data name="Supplies.Text.Unit" xml:space="preserve">
+    <value>Unidad</value>
+  </data>
+  <data name="Models.Text.PU" xml:space="preserve">
+    <value>Precio Unitario</value>
+  </data>
+  <data name="Supplies.Text.Supply" xml:space="preserve">
+    <value>Insumo</value>
+  </data>
+  <data name="Supplies.Text.Volume" xml:space="preserve">
+    <value>Volumen</value>
+  </data>
+  <data name="Supplies.Text.Amount" xml:space="preserve">
+    <value>Importe</value>
+  </data>
+  <data name="Supplies.Text.Import" xml:space="preserve">
+    <value>Importar</value>
+  </data>
+  <data name="Supplies.Missing.Group" xml:space="preserve">
+    <value>Falta ingresar Grupo.</value>
+  </data>
+  <data name="Supplies.Missing.Category" xml:space="preserve">
+    <value>Falta ingresar Partida.</value>
+  </data>
+  <data name="Supplies.Missing.PU" xml:space="preserve">
+    <value>Falta ingresar Precio Unitario.</value>
+  </data>
+  <data name="Supplies.Missing.Supply" xml:space="preserve">
+    <value>Falta ingresar Insumo.</value>
+  </data>
+  <data name="Supplies.Missing.Unit" xml:space="preserve">
+    <value>Falta ingresar Unidad de Medida.</value>
+  </data>
+  <data name="Supplies.Missing.Volume" xml:space="preserve">
+    <value>Falta ingresar Volumen.</value>
+  </data>
+  <data name="Supplies.Error.InvalidVolum" xml:space="preserve">
+    <value>El Volumen ingresado no es válido.</value>
+  </data>
+  <data name="Supplies.Missing.Price" xml:space="preserve">
+    <value>Falta ingresar Precio.</value>
+  </data>
+  <data name="Supplies.Error.InvalidPrice" xml:space="preserve">
+    <value>El Precio ingresado no es válido.</value>
+  </data>
+  <data name="Excel.Text.Row" xml:space="preserve">
+    <value>Revise la fila:</value>
+  </data>
+  <data name="Excel.Error.Uncontrolled" xml:space="preserve">
+    <value>Ocurrió un error al importar el Excel. Inténtelo de nuevo o contacte con soporte.</value>
+  </data>
+  <data name="Excel.Import.Successfull" xml:space="preserve">
+    <value>Excel importado correctamente.</value>
+  </data>
+  <data name="Core.Users.ErrorVerifyAccount" xml:space="preserve">
+    <value>Verifique la cuenta antes de continuar.</value>
+  </data>
+  <data name="Shared.Dialog.SaveChanges" xml:space="preserve">
+    <value>¿Seguro que desea guardar?</value>
+  </data>
+  <data name="Core.Users.ErrorUserAccountExists" xml:space="preserve">
+    <value>La cuenta de usuario '__ACCOUNT__' ya existe.</value>
+  </data>
+  <data name="Core.Users.ErrorUserAccountWait" xml:space="preserve">
+    <value>La cuenta de usuario '__ACCOUNT__' se encuentra en espera de confirmación.</value>
+  </data>
+  <data name="Shared.Textos.Exito" xml:space="preserve">
+    <value>Éxito</value>
+  </data>
+  <data name="Shared.Textos.RegistroGuardado" xml:space="preserve">
+    <value>Registro guardado exitosamente</value>
+  </data>
+  <data name="Shared.Text.Supplies" xml:space="preserve">
+    <value>Insumos</value>
+  </data>
+  <data name="Shared.Text.UnitMeasurement" xml:space="preserve">
+    <value>Unida de medida</value>
+  </data>
+  <data name="Shared.Text.Supply" xml:space="preserve">
+    <value>Insumo</value>
+  </data>
+  <data name="Excel.Import.Succesful" xml:space="preserve">
+    <value>Excel importado correctamente.</value>
+  </data>
+  <data name="Supply.Text.TypeRequired" xml:space="preserve">
+    <value>El tipo es requerido</value>
+  </data>
+  <data name="Supply.Text.CodeRequired" xml:space="preserve">
+    <value>El código es requerido</value>
+  </data>
+  <data name="Supply.Text.DescriptionRequired" xml:space="preserve">
+    <value>La descripción es requerida</value>
+  </data>
+  <data name="Shared.Text.UnknowError" xml:space="preserve">
+    <value>Error desconocido</value>
+  </data>
+  <data name="Shared.Text.SaveSucces" xml:space="preserve">
+    <value>Datos guardados con exito.</value>
+  </data>
+  <data name="Shared.Text.ProblemOcurred" xml:space="preserve">
+    <value>Ocurrio un problema</value>
+  </data>
+  <data name="Core.Users.Errors.BadTokenRequest" xml:space="preserve">
+    <value>La petición con el Token no es válida</value>
+  </data>
+  <data name="Core.Users.Errors.TokenOrUserNotValid" xml:space="preserve">
+    <value>Token o usuario no válidos</value>
+  </data>
+  <data name="Core.Users.Errors.OnSettingToken" xml:space="preserve">
+    <value>Hubo un error al establecer el token de usuario.</value>
+  </data>
+  <data name="Core.Users.TokenSetupComplete" xml:space="preserve">
+    <value>El token ha sido configurado correctamente.</value>
+  </data>
+  <data name="Core.Users.AskErase2fa" xml:space="preserve">
+    <value>El Código de la autenticación en dos pasos del usuario se eliminará, ¿Continuar?</value>
+  </data>
+  <data name="Core.Users.Erased2faSaveToConfirm" xml:space="preserve">
+    <value>Código de autenticación en dos pasos de usuario eliminado, guarde este registro para confirmar.</value>
+  </data>
+  <data name="Model.Text.Error.Open" xml:space="preserve">
+    <value>No fue posible abrir el modelo</value>
+  </data>
+  <data name="Model.Text.Error.SelectToOpen" xml:space="preserve">
+    <value>Debes de seleccionar un modelo para poder abrirlo en una pestaña nueva</value>
+  </data>
+  <data name="Model.Text.Error.SelectToEdit" xml:space="preserve">
+    <value>Debes de seleccionar un modelo para poder abrirlo en una pestaña nueva para editarlo</value>
+  </data>
+  <data name="Shared.Text.NameRequired" xml:space="preserve">
+    <value>El nombre es requerido</value>
+  </data>
+  <data name="Core.Users.Permissions" xml:space="preserve">
+    <value>Permisos</value>
+  </data>
+  <data name="Core.Users.Permission" xml:space="preserve">
+    <value>Permiso</value>
+  </data>
+  <data name="Shared.Textos.Asignar" xml:space="preserve">
+    <value>Asignar</value>
+  </data>
+  <data name="Shared.Textos.Eliminar" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Core.Branches.Branch" xml:space="preserve">
+    <value>Sucursal</value>
+  </data>
+  <data name="Core.Users.Menus" xml:space="preserve">
+    <value>Menus</value>
+  </data>
+  <data name="Core.Users.ErrorSelectBranchPermission" xml:space="preserve">
+    <value>Selecciona una sucursal para asignar el permiso.</value>
+  </data>
+  <data name="Core.Users.ErrorPermissionAlreadyAssigned" xml:space="preserve">
+    <value>El permiso ya está asignado para la sucursal seleccionada.</value>
+  </data>
+  <data name="Core.Users.PermissionsAssign" xml:space="preserve">
+    <value>Permisos por Asignar</value>
+  </data>
+  <data name="Core.Users.AssignedPermissions" xml:space="preserve">
+    <value>Permisos Asignados</value>
+  </data>
+  <data name="Core.Branches.Enabledbranches" xml:space="preserve">
+    <value>Sucursales habilitadas</value>
+  </data>
+  <data name="Core.Users.ErrorSelectBranch" xml:space="preserve">
+    <value>Seleccione una sucursal para asignar</value>
+  </data>
+  <data name="Core.Users.ErrorBranchAlreadyAssigned" xml:space="preserve">
+    <value>La sucursal seleccionada ya fue asignada.</value>
+  </data>
+  <data name="Core.Branches" xml:space="preserve">
+    <value>Sucursales</value>
+  </data>
+  <data name="Shared.Text.ModelRequired" xml:space="preserve">
+    <value>El modelo es requerido</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.Contratistas" xml:space="preserve">
+    <value>Contratistas</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.Nombre" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.Proveedores" xml:space="preserve">
+    <value>Proveedores</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.RFC" xml:space="preserve">
+    <value>RFC</value>
+  </data>
+  <data name="Shared.Texts.SavingModelData" xml:space="preserve">
+    <value>Guardando datos del modelo</value>
+  </data>
+  <data name="Shared.Texts.ExtractingExcelData" xml:space="preserve">
+    <value>Extrayendo datos del Excel</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.ContratistasAgregar" xml:space="preserve">
+    <value>Agregar Contratista</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.Contratista" xml:space="preserve">
+    <value>Contratista</value>
+  </data>
+  <data name="Shared.Text.WarningRemoveBlockQuestion" xml:space="preserve">
+    <value>¿Estas seguro que deseas eliminar la etapa?, una vez borrada no se podrá recuperar.</value>
+  </data>
+  <data name="Shared.Text.WarningRemoveManzanas" xml:space="preserve">
+    <value>¿Estas seguro que deseas eliminar la manzana?, una vez borrada no se podrá recuperar.</value>
+  </data>
+  <data name="Shared.Textos.RegimenFiscal" xml:space="preserve">
+    <value>Régimen Fiscal</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.Proveedor" xml:space="preserve">
+    <value>Proveedor</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.ProveedoresAgregar" xml:space="preserve">
+    <value>Agregar Proveedor</value>
+  </data>
+  <data name="Shared.Textos.Price" xml:space="preserve">
+    <value>Precio</value>
+  </data>
+  <data name="Core.Users.Verified" xml:space="preserve">
+    <value>Verificado</value>
+  </data>
+  <data name="Core.Users.Verify" xml:space="preserve">
+    <value>Verificar</value>
+  </data>
+</root>

@@ -1,0 +1,224 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Models.Class.Core
+@using Nubetico.Frontend.Services.Core
+@using static Nubetico.Frontend.Components.Core.Shared.NbBaseComponent
+@attribute [Authorize]
+@implements IDisposable
+@inject ComponentService ComponentService
+@inject ContextMenuService ContextMenuService
+@inject IStringLocalizer<SharedResources> localizer
+@inject DialogService Dialog
+
+@if (tabsNubeticoList.Count != 0)
+{
+    <MenuSuperiorComponent />
+
+    <RadzenTabs @ref="tabsControl" @bind-SelectedIndex="tabsSelectedIndex" RenderMode="TabRenderMode.Client"
+    Change="OnTabChanged" ContextMenu="@(args => { if (tabsNubeticoList.Count > 0) ShowContextMenuWithContent(args); })">
+        <Tabs>
+            @for (int index = 0; index < tabsNubeticoList.Count; index++)
+            {
+                var tabNubetico = tabsNubeticoList[index];
+                <RadzenTabsItem Text="@tabNubetico.Text" Icon="@(!string.IsNullOrEmpty(tabNubetico.Icono) ? char.ConvertFromUtf32(Convert.ToInt32(tabNubetico.Icono, 16)) : "")">
+                    @tabNubetico.Componente
+                </RadzenTabsItem>
+            }
+        </Tabs>
+    </RadzenTabs>
+}
+
+@code {
+    private RadzenTabs tabsControl;
+    public List<TabNubetico> tabsNubeticoList = new List<TabNubetico>();
+    private int tabsSelectedIndex = 0;
+
+    protected override void OnInitialized()
+    {
+        ComponentService.OnMenuTabSelected += AddTab;
+        ComponentService.MenuChanged += () => InvokeAsync(StateHasChanged);
+        ComponentService.TabNameChanged += RenameCurrentTab;
+        ComponentService.TabStateChanged += (tabState) => SetTabState(tabState);
+        ComponentService.CloseCurrentTab += async (withWarning) => await CloseCurrentTabAsync(withWarning);
+    }
+
+    public void RenameCurrentTab(string tabName, string iconText)
+    {
+        tabsNubeticoList[tabsSelectedIndex].Text = tabName;
+        tabsNubeticoList[tabsSelectedIndex].Icono = iconText;
+        base.StateHasChanged();
+    }
+
+    public void SetTabState(TipoEstadoControl tabState)
+    {
+        tabsNubeticoList[tabsSelectedIndex].EstadoControl = tabState;
+    }
+
+    /// <summary>
+    /// Evento que ocurre cuando el usuario cambia de tab, se refresque el menu
+    /// </summary>
+    /// <param name="index"></param>
+    private void OnTabChanged(int index)
+    {
+        var activeTab = tabsNubeticoList.ElementAtOrDefault(index);
+
+        if (activeTab?.InstanciaComponente is NbBaseComponent baseComponent)
+        {
+            baseComponent.TriggerMenuUpdate();
+        }
+        else
+        {
+            ComponentService.SetMenuItems(new List<RadzenMenuItem>());
+        }
+    }
+
+    /// <summary>
+    /// Método que agrega un tab nubetico al home
+    /// </summary>
+    /// <param name="tabNubetico">Objeto con las propiedades del componente a renderizar</param>
+    private void AddTab(TabNubetico tabNubetico)
+    {
+        if (tabNubetico.Repetir)
+        {
+            tabsNubeticoList.Add(tabNubetico);
+            tabsSelectedIndex = tabsNubeticoList.Count - 1;
+            base.StateHasChanged();
+            return;
+        }
+
+        var instanciaTab = tabsNubeticoList
+        .Select((tab, index) => new { Tab = tab, Index = index })
+        .FirstOrDefault(m => m.Tab.TipoControl == tabNubetico.TipoControl);
+
+        if (instanciaTab != null)
+        {
+            tabsSelectedIndex = instanciaTab.Index;
+        }
+        else
+        {
+            tabsNubeticoList.Add(tabNubetico);
+            tabsSelectedIndex = tabsNubeticoList.Count - 1;
+        }
+
+        base.StateHasChanged();
+    }
+
+
+    /// <summary>
+    /// Acciones a realizar de acuerdo a la opción seleccionada del menu contextual de tabs
+    /// </summary>
+    /// <param name="args">Eventos del MenuItem seleccionado</param>
+    /// <returns></returns>
+    private async Task OnTabsMenuItemClick(MenuItemEventArgs args)
+    {
+        switch (args.Value)
+        {
+            case 1:
+                await CloseCurrentTabAsync(tabsNubeticoList[tabsSelectedIndex].EstadoControl == NbBaseComponent.TipoEstadoControl.Alta || tabsNubeticoList[tabsSelectedIndex].EstadoControl == NbBaseComponent.TipoEstadoControl.Edicion);
+                break;
+            case 2:
+                await CloseOtherTabsAsync();
+                break;
+            case 3:
+                await CloseAllTabsAsync();
+                break;
+            default:
+                break;
+        }
+
+        ContextMenuService.Close();
+    }
+
+    /// <summary>
+    /// Cerrar la pestaña nubetico activa
+    /// </summary>
+    private async Task CloseCurrentTabAsync(bool withWarning = false)
+    {
+        bool canClose = true;
+
+        if (withWarning)
+        {
+            bool? result = await Dialog.Confirm(
+            localizer["Shared.Dialog.PestaniaActualCerrando"],
+            localizer["Shared.Dialog.Atencion"],
+            new ConfirmOptions
+                    {
+                        OkButtonText = localizer["Shared.Botones.Aceptar"],
+                        CancelButtonText = localizer["Shared.Botones.Cancelar"]
+                    });
+
+            canClose = result ?? false;
+        }
+
+        if (canClose)
+        {
+            int index = tabsSelectedIndex;
+
+            tabsNubeticoList.RemoveAt(index);
+            tabsSelectedIndex = index > 0 ? index - 1 : 0;
+            base.StateHasChanged();
+            OnTabChanged(tabsSelectedIndex);
+        }
+    }
+
+    /// <summary>
+    /// Cerrar todas las pestañas nubetico excepto activa
+    /// </summary>
+    private async Task CloseOtherTabsAsync()
+    {
+        bool? result = await Dialog.Confirm(localizer["Shared.Dialog.CerrarOtrasPestanias"], localizer["Shared.Dialog.Atencion"],
+        new ConfirmOptions() { OkButtonText = localizer["Shared.Botones.Aceptar"], CancelButtonText = localizer["Shared.Botones.Cancelar"] });
+
+        if (result ?? false)
+        {
+            if (tabsSelectedIndex > 0)
+            {
+                tabsNubeticoList.RemoveRange(0, tabsSelectedIndex);
+                tabsSelectedIndex = 0;
+            }
+
+            if (tabsSelectedIndex < tabsNubeticoList.Count - 1)
+            {
+                tabsNubeticoList.RemoveRange(tabsSelectedIndex + 1, tabsNubeticoList.Count - (tabsSelectedIndex + 1));
+            }
+
+            base.StateHasChanged();
+        }
+    }
+
+
+    /// <summary>
+    /// Cerrar todas las pestañas nubetico
+    /// </summary>
+    private async Task CloseAllTabsAsync()
+    {
+        bool? result = await Dialog.Confirm(localizer["Shared.Dialog.CerrarTodasPestanias"], localizer["Shared.Dialog.Atencion"],
+        new ConfirmOptions() { OkButtonText = localizer["Shared.Botones.Aceptar"], CancelButtonText = localizer["Shared.Botones.Cancelar"] });
+
+        if (result ?? false)
+        {
+            tabsNubeticoList.Clear();
+            tabsSelectedIndex = 0;
+            base.StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Cuando se termina la instancia, se remueve la suscripción al servicio intermediario entre el el menu y el home
+    /// </summary>
+    public void Dispose()
+    {
+        ComponentService.OnMenuTabSelected -= AddTab;
+    }
+
+    private void ShowContextMenuWithContent(MouseEventArgs args) => ContextMenuService.Open(args, ds =>
+    @<RadzenMenu Click="OnTabsMenuItemClick">
+        <RadzenMenuItem Text="@localizer["Shared.Botones.CerrarTabActivo"]" Icon=@("\uf65f") Value=1></RadzenMenuItem>
+        @if(tabsNubeticoList.Count > 1)
+    {
+        <RadzenMenuItem Text="@localizer["Shared.Botones.CerrarTodosTabs"]" Icon=@("\uf660") Value=3></RadzenMenuItem>
+    }
+    </RadzenMenu>
+    );
+}

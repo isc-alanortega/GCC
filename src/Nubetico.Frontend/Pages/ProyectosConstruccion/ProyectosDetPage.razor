@@ -1,0 +1,17 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.ProyectosConstruccion
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto
+@using Nubetico.Shared.Enums.Core
+@inherits NbBaseComponent
+
+<RadzenTabs TabPosition="@TabPosition.Top" RenderMode="TabRenderMode.Client">
+    <Tabs>
+         <RadzenTabsItem Text="General">
+            <ProyectoDetComponent ProjectData="ProjectData" StateForm="this.EstadoControl"/>
+         </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Secciones">
+            <ProyectoTabSeccionesComponent ProjectData="ProjectData" StateForm="@this.EstadoControl"/>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>

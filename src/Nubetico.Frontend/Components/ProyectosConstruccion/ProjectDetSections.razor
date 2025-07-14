@@ -1,0 +1,175 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.Layouts
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto
+@inherits NbBaseComponent
+
+<div>
+    <RadzenCard>
+        <RadzenStack>
+            @*  <RadzenStack Gap="1rem">
+            <RadzenRow RowGap="1rem">
+            <RadzenColumn Size="6">
+            <RadzenFormField Text="@LocalizerServices!["Shared.Textos.Folio"]" Style="width: 100%;">
+            <RadzenTextBox Trim="true"
+            Value="@SectionData!.Folio"
+            Style="width: 100%"
+            aria-label="@LocalizerServices!["Shared.Textos.Folio"]"
+            Disabled="true" />
+            </RadzenFormField>
+            </RadzenColumn>
+            </RadzenRow>
+            </RadzenStack> *@
+            <RadzenTemplateForm @ref="@SectionForm" TItem="ProjectSectionDataDto" Data="@SectionData">
+                <RadzenRow>
+                    <RadzenColumn Size="12">
+                        <RadzenFormField Text="@LocalizerServices!["Shared.Textos.Name"]" Style="width: 100%;">
+                            <RadzenTextBox Style="width: 100%"
+                                           Value="@SectionData!.Name?.ToUpper()"
+                                           ValueChanged="@((value) => SectionData.Name = value?.Trim().ToUpper())"
+                                           aria-label="@LocalizerServices!["Shared.Textos.Name"]"
+                                           Disabled="@IsDisabledForm()"
+                                           Name="Name"/>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="Name" Text="El nombre de la sección es requerido" Style="color: red" />
+                    </RadzenColumn>
+
+                    <RadzenColumn Size="12">
+                        <RadzenFormField Text="@LocalizerServices!["Shared.Textos.Description"]" Style="width: 100%;">
+                            <RadzenTextArea Value="@SectionData!.Description?.ToUpper()"
+                                            ValueChanged="@((value) => SectionData.Description = value?.Trim().ToUpper())"
+                                            Style="width: 100%; height: 6.5em; resize: none;"
+                                            aria-label="@LocalizerServices!["Shared.Textos.Description"]"
+                                            Disabled="@IsDisabledForm()" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@LocalizerServices!["Shared.Textos.ProjectedStartDate"]" Style="width: 100%;">
+                            <RadzenDatePicker TValue="DateTime?"
+                                              ShowTime="false" HourFormat="24"
+                                              DateFormat="dd/MM/yyyy"
+                                              Min="DateTime.Today.AddYears(-10)"
+                                              Name="ProjectedStartDate"
+                                              @bind-Value="@SectionData!.ProjectedStartDate"
+                                              Style="width: 100%"
+                                              Disabled="@IsDisabledForm()" />
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="ProjectedStartDate" Text="El fecha de inicio proyectada es requerida" Style="color: red" />
+                    </RadzenColumn>
+
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@LocalizerServices!["Shared.Textos.ProjectedEndDate"]" Style="width: 100%;">
+                            <RadzenDatePicker TValue="DateTime?"
+                                              ShowTime="false"
+                                              HourFormat="24"
+                                              DateFormat="dd/MM/yyyy"
+                                              Min="DateTime.Today.AddYears(-10)"
+                                              Name="ProjectedEndDate"
+                                              @bind-Value="@SectionData!.ProjectedEndDate"
+                                              Style="width: 100%"
+                                              Disabled="@IsDisabledForm()" />
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="ProjectedEndDate" Text="El nombre del proyecto es requerido" Style="color: red" />
+                    </RadzenColumn>
+
+                    @if (ActionForm != TipoEstadoControl.Alta)
+                    {
+                        <RadzenColumn Size="6">
+                            <RadzenFormField Text="@LocalizerServices!["Shared.Textos.ActualStartDate"]" Style="width: 100%;">
+                                <RadzenDatePicker TValue="DateTime?"
+                                                  ShowTime="false"
+                                                  HourFormat="24"
+                                                  DateFormat="dd/MM/yyyy"
+                                                  Min="DateTime.Today.AddYears(-10)"
+                                                  Name="RadzenDatePickerChangeEvent"
+                                                  @bind-Value="@SectionData!.RealStartDate"
+                                                  Style="width: 100%"
+                                                  Disabled="@IsDisabledForm()" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+
+                        <RadzenColumn Size="6">
+                            <RadzenFormField Text="@LocalizerServices!["Shared.Textos.ActualEndDate"]" Style="width: 100%;">
+                                <RadzenDatePicker TValue="DateTime?"
+                                                  ShowTime="false"
+                                                  HourFormat="24"
+                                                  DateFormat="dd/MM/yyyy"
+                                                  Min="DateTime.Today.AddYears(-10)"
+                                                  Name="RadzenDatePickerChangeEvent"
+                                                  @bind-Value="@SectionData!.RealEndDate"
+                                                  Style="width: 100%"
+                                                  Disabled="@IsDisabledForm()" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    }
+
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@LocalizerServices!["Shared.Textos.GeneralContractor"]" Style="width: 100%;">
+                            <RadzenDropDown Style="width: 100%;"
+                                            @bind-Value="@SectionData!.GeneralContractor"
+                                            Data="@GeneralContractorList"
+                                            ValueProperty="Id"
+                                            TextProperty="Name"
+                                            Disabled="@IsDisabledForm()"
+                                            Name="GeneralContractor" />
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="GeneralContractor" Text="El contratista es requerido" Style="color: red" />
+                    </RadzenColumn>
+
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@LocalizerServices!["Shared.Textos.State"]" Style="width: 100%;">
+                            <RadzenDropDown Style="width: 100%;"
+                                            @bind-Value="@SectionData!.Status"
+                                            Data="@StatusList"
+                                            ValueProperty="Id"
+                                            TextProperty="Name"
+                                            Disabled="@IsDisabledForm()"
+                                            Name="Status" />
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="Status" Text="El estatus es requerido" Style="color: red" />
+                    </RadzenColumn>
+
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="Lotes" Style="width: 100%;">
+                            <RadzenDropDown Style="width: 100%;"
+                                            @bind-Value="@values"
+                                            Data="@LotsData"
+                                            ValueProperty="LotId"
+                                            TextProperty="LotNumber" 
+                                            Multiple=true 
+                                            AllowClear=true
+                                            Name="Lots"/>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="Lots" Text="Selecciona por lo menos un lote" Style="color: red;" />
+                    </RadzenColumn>
+
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@LocalizerServices!["Subdivisions.Text.Model"]" Style="width: 100%;">
+                            <RadzenDropDown Style="width: 100%;"
+                                            @bind-Value="@SectionData!.ModelId"
+                                            Data="@Models"
+                                            ValueProperty="Id"
+                                            TextProperty="Name"
+                                            Disabled="@IsDisabledForm()"
+                                            Name="Model" />
+                        </RadzenFormField>
+                    <RadzenRequiredValidator Component="Model" Text="@LocalizerServices["Shared.Text.ModelRequired"]" Style="color: red" />
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenTemplateForm>
+        </RadzenStack>
+    </RadzenCard>
+
+    @if (IsDialogOrigen == true && ActionForm != TipoEstadoControl.Lectura)
+    {
+        <br />
+        <RadzenStack class="rz-w-100" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap">
+            <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                <RadzenButton Click=@(FactoryTypeSaveWithDialog) Text="Guardar" Icon="Save" ButtonStyle="ButtonStyle.Primary" Disabled=@IsDisabledForm() />
+            </RadzenStack>
+            <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                <RadzenButton Click=@(() => DialogService?.Close()) Text="Cancelar" Icon="dangerous" ButtonStyle="ButtonStyle.Danger" />
+            </RadzenStack>
+        </RadzenStack>
+    }
+</div>

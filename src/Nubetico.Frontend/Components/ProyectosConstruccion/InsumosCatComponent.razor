@@ -1,0 +1,78 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared;
+@using Nubetico.Shared.Dto.ProyectosConstruccion;
+@using Nubetico.Frontend.Components.Shared
+@inherits NbBaseComponent
+
+@*HEADER*@
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">@($"{Localizer!["Shared.Text.Supplies"]}")</RadzenText>
+<PanelFiltrosNubeticoComponent>
+	<RadzenStack>
+		<RadzenRow Style="display: flex; flex-wrap: wrap">
+			<RadzenColumn>
+				<RadzenRow>
+					<RadzenColumn>
+						<RadzenFormField Text="@Localizer!["Supplies.Text.Code"]" Style="width: 100%;">
+							<RadzenTextBox Style="width: 100%"
+										   @bind-Value="@RequestForm.Code"
+										   type="search"
+										   Trim="true" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn>
+						<RadzenFormField Text="@Localizer!["Shared.Textos.Description"]" Style="width: 100%;">
+							<RadzenTextBox Style="width: 100%"
+										   @bind-Value="@RequestForm.Description"
+										   type="search"
+										   Trim="true" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn>
+						<RadzenFormField Text="@Localizer!["Shared.Textos.Tipo"]" Style="width: 100%">
+							<RadzenDropDown Data=@TypesSupplies
+											TextProperty="Description"
+											ValueProperty="Value"
+											AllowClear="true"
+											@bind-Value="@RequestForm.TypeId" />
+						</RadzenFormField>
+					</RadzenColumn>
+				</RadzenRow>
+			</RadzenColumn>
+            <RadzenColumn SizeLG="6" SizeMD="2" Style="width: 100%; min-width: fit-content">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start" Gap="0.5rem" Style="height: 100%; padding-top: 10px">
+					<RadzenButton Click=OnClickLoadData
+                                  Text="@Localizer!["Shared.Textos.Buscar"]"
+                                  Icon="search" />
+                </RadzenStack>
+            </RadzenColumn>
+		</RadzenRow>
+	</RadzenStack>
+</PanelFiltrosNubeticoComponent>
+<RadzenStack>
+	<RadzenDataGrid @ref="Grid"
+					IsLoading="@IsLoading"
+					Count="@Count"
+					Data="@SuppliesList"
+					LoadData="@LoadData"
+					AllowSorting="true"
+					AllowPaging="true"
+					PageSize="20"
+					ShowPagingSummary="true"
+					SelectionMode="DataGridSelectionMode.Single"
+					TItem="InsumosDto"
+					RowDoubleClick="DataGridRowDoubleClick"
+					EmptyText="No hay resultados"
+					Style="height: calc(100vh - 424px); overflow: auto;"
+					@bind-Value="@SelectedSupply">
+		<Columns>
+			<RadzenDataGridColumn Property="ID" Title="ID" Visible="false" />
+			<RadzenDataGridColumn Property="Code" Title="@Localizer!["Supplies.Text.Code"]" />
+			<RadzenDataGridColumn Property="Description" Title="@Localizer!["Shared.Textos.Description"]" />
+			<RadzenDataGridColumn Property="Unit" Title="@Localizer!["Supplies.Text.Unit"]" />
+			<RadzenDataGridColumn Property="Type" Title="@Localizer!["Shared.Textos.Tipo"]" MinWidth="150px">
+				<Template Context="data">
+					<RadzenBadge BadgeStyle="@GetBadgeStyle(data.Id_Type ?? 0)" Text="@data.Type" Style="text-transform: none;" />
+				</Template>
+			</RadzenDataGridColumn>
+		</Columns>
+	</RadzenDataGrid>
+</RadzenStack>

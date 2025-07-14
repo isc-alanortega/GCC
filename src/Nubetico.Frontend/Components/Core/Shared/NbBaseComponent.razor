@@ -1,0 +1,114 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Nubetico.Frontend.Models.Class.Core;
+@using Nubetico.Frontend.Models.Static.Core
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Common
+@using Radzen.Blazor;
+@using System.Security.Claims;
+@inherits ComponentBase
+@inject AuthStateProvider AuthStateProvider
+@inject ComponentService ComponentService
+@inject NotificationService NotificationService
+
+@code {
+    public string IconoBase = "f05a";
+    public List<RadzenMenuItem> OpcionesMenu = new List<RadzenMenuItem>();
+
+    private TipoEstadoControl _estadoControl = TipoEstadoControl.Lectura;
+
+    // Propiedad para almacenar errores generados con fluent validation
+    public Dictionary<string, List<string>> FormValidationErrors = new();
+
+    // Permite desencadenar un evento cuando la propiedad cambia
+    public TipoEstadoControl EstadoControl
+    {
+        get => _estadoControl;
+        set
+        {
+            if (_estadoControl != value)
+            {
+                _estadoControl = value;
+                OnEstadoControlChanged();
+            }
+        }
+    }
+
+    protected void ReadFormValidationErrors(List<ValidationFailureDto> errores)
+    {
+        FormValidationErrors.Clear();
+
+        foreach (var error in errores)
+        {
+            if (string.IsNullOrWhiteSpace(error.PropertyName) || string.IsNullOrWhiteSpace(error.ErrorMessage))
+                continue;
+
+            if (!FormValidationErrors.ContainsKey(error.PropertyName))
+            {
+                FormValidationErrors[error.PropertyName] = new List<string>();
+            }
+
+            FormValidationErrors[error.PropertyName].Add(error.ErrorMessage);
+        }
+    }
+
+    protected void OnEstadoControlChanged()
+    {
+        ComponentService.SetCurrentTabState(this._estadoControl);
+    }
+
+    protected async Task<ClaimsPrincipal?> GetUsuarioAutenticadoAsync()
+    {
+        return await AuthStateProvider.GetAuthenticatedUserAsync();
+    }
+
+    protected void AgregarTabNubetico(TabNubetico tabNubetico)
+    {
+        ComponentService.AddComponenteTabNubetico(tabNubetico);
+    }
+
+    protected void SetNombreTabNubetico(string tabName)
+    {
+        string iconText = EstadoControl == TipoEstadoControl.Alta
+            ? $"{MenuItemsFactory.MenuIconDictionary["agregar"]}"
+                : EstadoControl == TipoEstadoControl.Edicion
+                    ? $"{MenuItemsFactory.MenuIconDictionary["editar"]}"
+                    : IconoBase;
+
+
+        ComponentService.SetCurrentTabName(tabName, iconText);
+    }
+
+    protected void CerrarTabNubetico()
+    {
+        ComponentService.SetCloseCurrentTab(this.EstadoControl == TipoEstadoControl.Alta || this.EstadoControl == TipoEstadoControl.Edicion);
+    }
+
+    protected void SetMenuItems(List<RadzenMenuItem> menuItems)
+    {
+        ComponentService.SetMenuItems(menuItems);
+    }
+
+    public void TriggerMenuUpdate()
+    {
+        // Configura el menú actual de este componente
+        ComponentService.SetMenuItems(GetMenuItems());
+    }
+
+    // Método que cada componente hijo puede sobreescribir para proporcionar sus propios elementos de menú
+    protected virtual List<RadzenMenuItem> GetMenuItems()
+    {
+        return new List<RadzenMenuItem>();
+    }
+
+    protected void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+    }
+
+    public enum TipoEstadoControl
+    {
+        Lectura = 0,
+        Edicion = 1,
+        Alta = 2
+    }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Blue Orange Pottery",
+  "short_name": "Blue Orange Pottery",
+  "id": "./../../",
+  "start_url": "./../../",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4c5454",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/assets/blueorange/img/favicon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/assets/blueorange/img/favicon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}

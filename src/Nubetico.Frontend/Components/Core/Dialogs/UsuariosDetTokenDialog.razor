@@ -1,0 +1,86 @@
+﻿@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+@using static Nubetico.Frontend.Components.Core.Shared.NbBaseComponent
+@inject IStringLocalizer<SharedResources> Localizer
+@inject UsuariosService UsuariosService
+
+<RadzenRow AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="1rem" class="rz-mb-5">
+    <RadzenColumn SizeMD="6">
+        <RadzenCard class="rz-mt-4">
+            <RadzenImage Path="@GeneratedTwoFactorCode.QrImage64" Style="width: 15rem;" AlternateText="QR" />
+        </RadzenCard>
+    </RadzenColumn>
+    <RadzenColumn SizeMD="6">
+        <RadzenStack class="rz-mb-6">
+            <RadzenText TagName="TagName.H6" class="rz-mb-1">@Localizer["Core.Users.TwoFactorAuth.DownloadApp"]</RadzenText>
+            <RadzenText TagName="TagName.H6" class="rz-mb-1">@Localizer["Core.Users.TwoFactorAuth.ScanQr"]</RadzenText>
+            @if (this.EstadoControl != TipoEstadoControl.Lectura)
+            {
+                <RadzenText TagName="TagName.H6" class="rz-mb-1">@Localizer["Core.Users.TwoFactorAuth.Confirm"]</RadzenText>
+                <RadzenSecurityCode @bind-Value=@userTwoFactorCodeDto.Code Type="SecurityCodeType.Numeric" Count="6" Gap="0.5rem" />
+            }
+        </RadzenStack>
+        @if (this.EstadoControl != TipoEstadoControl.Lectura)
+        {
+            <RadzenStack class="rz-mt-5" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                <RadzenButton Text="@Localizer["Shared.Botones.Aceptar"]" ButtonStyle="ButtonStyle.Primary" Click="OnConfirmarClick"></RadzenButton>
+            </RadzenStack>
+        }
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+    [Parameter]
+    public Guid GuidUsuario { get; set; } = Guid.Empty;
+
+    [Parameter]
+    public GeneratedTwoFactorCodeDto GeneratedTwoFactorCode { get; set; } = new GeneratedTwoFactorCodeDto();
+
+    [Parameter]
+    public TipoEstadoControl EstadoControl { get; set; } = TipoEstadoControl.Lectura;
+
+    [Parameter]
+    public DialogService DialogService { get; set; }
+
+    [Inject]
+    protected NotificationService NotificationService { get; set; }
+
+    private UserTwoFactorCodeDto userTwoFactorCodeDto = new UserTwoFactorCodeDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        userTwoFactorCodeDto.GuidUsuario = GuidUsuario;
+        userTwoFactorCodeDto.Key = GeneratedTwoFactorCode.KeyGenerated;
+    }
+
+    private async Task OnConfirmarClick(MouseEventArgs args)
+    {
+        var response = await UsuariosService.PostValidarSetTokenUsuarioAsync(userTwoFactorCodeDto);
+
+        if (!response.Success)
+        {
+            string errorMessage = string.Empty;
+
+            switch (response.StatusCode)
+            {
+                case 400:
+                    errorMessage = Localizer["Core.Users.Errors.BadTokenRequest"];
+                    break;
+                case 404:
+                    errorMessage = Localizer["Core.Users.Errors.TokenOrUserNotValid"];
+                    break;
+                case 500:
+                    errorMessage = Localizer["Core.Users.Errors.OnSettingToken"];
+                    break;
+            }
+
+            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = errorMessage, Duration = 10000 });
+            return;
+        }
+        else
+        {
+            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = Localizer["Shared.Textos.Exito"], Detail = Localizer["Core.Users.TokenSetupComplete"], Duration = 10000 });
+            DialogService.Close();
+        }
+    }
+}

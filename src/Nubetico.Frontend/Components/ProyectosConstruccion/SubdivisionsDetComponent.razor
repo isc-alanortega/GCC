@@ -1,0 +1,220 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared;
+@using Nubetico.Frontend.Services.ProyectosConstruccion;
+@using Nubetico.Frontend.Services.Core;
+@using Nubetico.Shared.Dto.ProyectosConstruccion
+@inherits NbBaseComponent
+@inject SubdivisionsService subdivisionsService
+@inject LotsService lotService
+@inject UsuariosService usersService
+@inject IStringLocalizer<SharedResources> Localizer
+@inject NotificationService notificationService
+@inject DialogService dialogService
+
+<RadzenTabs Change="@OnTabChange" TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
+    <Tabs>
+        @*GENERAL TAB*@
+        <RadzenTabsItem Text="General">
+            <RadzenTemplateForm TItem="SubdivisionsDto" Data=@SubdivisionData Submit=@OnClickSubmit @ref="GeneralSubdivisionForm">
+                @*SUBDIVISION*@
+                <RadzenStack Style="max-width: 740px; max-height: auto">
+                    @*SUBDIVISION*@
+                    <RadzenRow Wrap="FlexWrap.Wrap">
+                        <RadzenColumn>
+                            <RadzenFormField Text=@($"{Localizer["Subdivisions.Text.Subdivision"]} *") Style="width: 100%;">
+                                <RadzenTextBox @bind-Value="@SubdivisionData.Subdivision"
+                                               Name="SubdivisionField"
+                                               Style="width: 100%"
+                                               ReadOnly="@GetDisabled()" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="SubdivisionField"
+                                                     Text=@($"*{Localizer["Subdivisions.Text.Required"]}")
+                                                     Style="color: red">
+                            </RadzenRequiredValidator>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow>
+                        @*LOGO*@
+                        <RadzenColumn>
+                            <RadzenCard Variant="Variant.Outlined" Style="max-width: 270px">
+                                <RadzenText TextStyle="TextStyle.Body2">@Localizer["Subdivisions.Text.Logo"]</RadzenText>
+                                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Style="padding-top: 10px">
+                                    @if (!string.IsNullOrEmpty(LogoPreview))
+                                    {
+                                        <RadzenImage Path=""
+                                                     Style="min-width: 130px; min-height: 130px; max-width: 150px; max-height: 150px; border-radius: 15%" />
+                                    }
+                                    <RadzenColumn Style="display: flex; flex-direction: column; justify-content: flex-end">
+                                        @* Change="@(args => OnValueChange(args, "LOGO"))" *@
+                                        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                                            <RadzenUpload Url="upload/images"
+                                                          Accept="image/*"
+                                                          Icon="upload"
+                                                          ChooseText=""
+                                                          Style="width: 100%"
+                                                          InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})"
+                                                          Complete="@(args => OnCompleteUpload(args))"
+                                                          Disabled="@GetDisabled()">
+                                            </RadzenUpload>
+                                            <RadzenButton Click=@OnClickDeleteLogo
+                                                          Icon="close"
+                                                          Disabled="@GetDisabled()" />
+                                        </RadzenStack>
+                                    </RadzenColumn>
+                                </RadzenStack>
+                            </RadzenCard>
+                        </RadzenColumn>
+                        @*POSTAL CODE*@
+                        <RadzenColumn>
+                            <RadzenStack Gap="0" Style="max-width: 250px; padding-bottom: 15px">
+                                <RadzenFormField Text="@($"{Localizer["Subdivisions.Text.Zipcode"]} *")" Style="width: 100%">
+                                    <RadzenNumeric TValue="int?"
+                                                   @bind-Value=@SubdivisionData.PostalCode
+                                                   Name="ZipCodeField"
+                                                   ShowUpDown="false"
+                                                   Disabled="@GetDisabled()" />
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="ZipCodeField"
+                                                         Text=@($"*{Localizer["Subdivisions.Text.Required"]}")
+                                                         Style="color: red">
+                                </RadzenRequiredValidator>
+                            </RadzenStack>
+                            @*ENABLED JustifyContent="JustifyContent.End"*@
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                <RadzenCheckBox @bind-Value=@SubdivisionData.Enabled
+                                                Name="chkPostalCode"
+                                                ReadOnly="true" />
+                                <RadzenLabel Text="@Localizer["Shared.Textos.Habilitado"]"
+                                             Component="chkPostalCode"
+                                             class="rz-ms-2" />
+                            </RadzenStack>
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenTemplateForm>
+        </RadzenTabsItem>
+
+        @*STAGES TAB*@
+        <RadzenTabsItem Text="@Localizer["Subdivisions.Text.Stages"]">
+            <RadzenRow>
+                @*GRID STAGES*@
+                <RadzenColumn Style="width: 100%; min-width: 400px">
+                    <RadzenRow>
+                        <RadzenColumn Style="width: 100%; min-width: 300px">
+                            <RadzenDataGrid @ref="@GridStages"
+                                            Data="@SubdivisionData.Stages"
+                                            AllowSorting="false"
+                                            AllowFiltering="false"
+                                            AllowPaging="true"
+                                            PageSize="20"
+                                            PagerHorizontalAlign="HorizontalAlign.Center"
+                                            ShowPagingSummary="true"
+                                            SelectionMode="DataGridSelectionMode.Single"
+                                            TItem="SubdivisionStage"
+                                            EmptyText="@Localizer["Subdivisions.Text.EmptyGrid"]"
+                                            Style="width: 100%"
+                                            @bind-Value="@SelectedStage">
+                                <Columns>
+                                    <RadzenDataGridColumn Property="Stage" Title="@Localizer["Subdivisions.Text.Stages"]" Width="250px" MinWidth="100px" />
+                                    <RadzenDataGridColumn TItem="SubdivisionStage" Title="@Localizer["Subdivisions.Text.Options"]" Width="100px" MinWidth="60px" Visible="@(!GetDisabled())">
+                                        <Template Context="Stage">
+                                            <RadzenStack Orientation="Orientation.Horizontal"
+                                                         Wrap="FlexWrap.Wrap"
+                                                         JustifyContent="JustifyContent.End"
+                                                         Gap="0"
+                                                         Style="display: flex; flex-wrap: wrap; width: 100%; min-width: 60px; align-items: end">
+                                                <RadzenButton Click="() => OnClickEditStage(Stage)"
+                                                              Variant="Variant.Text"
+                                                              Icon="edit_square"
+                                                              ButtonStyle="ButtonStyle.Warning" />
+                                                <RadzenButton Click="() => OnClickRemoveStage(Stage)"
+                                                              Variant="Variant.Text"
+                                                              Icon="remove"
+                                                              ButtonStyle="ButtonStyle.Danger" />
+                                                <RadzenButton Click="() => OnClickUpperSequence(Stage)"
+                                                              Variant="Variant.Text"
+                                                              Icon="keyboard_arrow_up"
+                                                              ButtonStyle="ButtonStyle.Dark" />
+                                                <RadzenButton Click="() => OnClickDownSequence(Stage)"
+                                                              Variant="Variant.Text"
+                                                              Icon="keyboard_arrow_down"
+                                                              ButtonStyle="ButtonStyle.Dark" />
+                                            </RadzenStack>
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenColumn>
+                        @*BUTTON ADD STAGE*@
+                        <RadzenColumn Size="2" Style="width: 100%; min-width: 100px">
+                            <RadzenButton Click=@OnClickAddStage
+                                          Icon="add"
+                                          Text="@Localizer["Subdivisions.Text.Add"]"
+                                          Disabled="@GetDisabled()" />
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenColumn>
+                @*GRID BLOCKS*@
+                <RadzenColumn Style="width: 100%; min-width: 400px">
+                    <RadzenRow>
+                        <RadzenColumn Style="width: 100%; min-width: 300px">
+                            <RadzenDataGrid @ref="GridBlocks"
+                                            Data="@GetSelectedStageBlocks()"
+                                            AllowSorting="false"
+                                            AllowFiltering="false"
+                                            AllowPaging="true"
+                                            PageSize="20"
+                                            PagerHorizontalAlign="HorizontalAlign.Center"
+                                            ShowPagingSummary="true"
+                                            SelectionMode="DataGridSelectionMode.Single"
+                                            TItem="SubdivisionBlock"
+                                            EmptyText="@Localizer["Subdivisions.Text.EmptyGrid"]"
+                                            Style="width: 100%"
+                                            @bind-Value="@SelectedBlock">
+                                <Columns>
+                                    <RadzenDataGridColumn Property="Block" Title="@($"{Localizer["Subdivisions.Text.Block"]}s")" Width="250px" MinWidth="100px" />
+                                    <RadzenDataGridColumn TItem="SubdivisionBlock" Title="@Localizer["Subdivisions.Text.Options"]" Width="100px" MinWidth="60px" Visible="!GetDisabled()">
+                                        <Template Context="Block">
+                                            <RadzenStack Orientation="Orientation.Horizontal"
+                                                         Wrap="FlexWrap.Wrap"
+                                                         JustifyContent="JustifyContent.End"
+                                                         Gap="0"
+                                                         Style="width: 100%; min-width: 60px; align-items: end">
+                                                <RadzenButton Click="() => OnClickEditBlock(Block)"
+                                                              Variant="Variant.Text"
+                                                              Icon="edit_square"
+                                                              ButtonStyle="ButtonStyle.Warning" />
+                                                <RadzenButton Click="() => OnClickRemoveBlock(Block)"
+                                                              Variant="Variant.Text"
+                                                              Icon="remove"
+                                                              ButtonStyle="ButtonStyle.Danger" />
+                                            </RadzenStack>
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenColumn>
+                        <RadzenColumn Size="2" Style="width: 100%; min-width: 100px">
+                            <RadzenButton Click=@OnClickAddBlock
+                                          Icon="add"
+                                          Text="@Localizer["Subdivisions.Text.Add"]"
+                                          Disabled="@GetAddBlockDisabled()" />
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenTabsItem>
+
+        @*LOTS TAB*@
+        <RadzenTabsItem Text="@($"{Localizer["Subdivisions.Text.Lot"]}s")">
+            <LotsCatComponent EstadoControl="EstadoControl"
+                              SubdivisionFilter="@SubdivisionData.ID"
+                              DisabledSubdivisionFilter="true"
+                              VisibleExtraOptions="true">
+            </LotsCatComponent>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="@($"{Localizer["Shared.Textos.Project"]}s")">
+
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>

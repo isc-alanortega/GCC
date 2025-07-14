@@ -1,0 +1,441 @@
+﻿@using Newtonsoft.Json
+@using Nubetico.Frontend.Components.Core.Dialogs
+@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+@using Nubetico.Shared.Static.Core
+@inherits NbBaseComponent
+
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="General">
+            <RadzenRow AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="1rem" class="rz-mb-5">
+                <RadzenColumn SizeMD="6">
+                    <RadzenPanel AllowCollapse="false">
+                        <HeaderTemplate>
+                            <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+                                <RadzenIcon Icon=@("\ue283") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+                                <b>@Localizer["Core.Users.UserInfo"]</b>
+                                @if (UsuarioDto.UUID != null)
+                                {
+                                    <RadzenBadge BadgeStyle="@(UsuarioDto.IdEstadoUsuario == 1 ? BadgeStyle.Success : UsuarioDto.IdEstadoUsuario == 0 ? BadgeStyle.Danger : BadgeStyle.Warning)" Text="@(UsuarioDto.EstadoUsuario)" Style="margin-left: 10px; text-transform: none;" />
+                                }
+
+                            </RadzenText>
+                        </HeaderTemplate>
+                        <ChildContent>
+                            <RadzenCard class="rz-mt-4">
+                                <RadzenFormField Text="@Localizer["Core.Users.Username"]" Style="width: 100%;">
+                                    <ChildContent>
+                                        @if (this.EstadoControl == TipoEstadoControl.Alta)
+                                        {
+                                            <RadzenTextBox @bind-Value="UsuarioDto.Username" Name="Username" Change="OnVerifiedAccountChanged" />
+                                        }
+                                        else
+                                        {
+                                            <RadzenTextBox @bind-Value="UsuarioDto.Username" Name="Username" Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura || this.EstadoControl == TipoEstadoControl.Edicion)" />
+                                        }
+                                    </ChildContent>
+                                    <End>
+                                        @if (this.EstadoControl == TipoEstadoControl.Alta)
+                                        {
+                                            <RadzenButton Click=@OnClickValidarUsuarioAsync Disabled="@(CuentaEsValidada)" Variant="Variant.Text" Size="ButtonSize.Small">
+                                                <RadzenIcon Icon="@(CuentaEsValidada ? IconoValido : IconoBuscar )" class="rz-me-2 fa-light" />
+                                                <span class="rz-button-text">@(CuentaEsValidada ? Localizer["Core.Users.Verified"] : Localizer["Core.Users.Verify"])</span>
+                                            </RadzenButton>
+                                        }
+                                    </End>
+                                    <Helper>
+                                        @if (FormValidationErrors.TryGetValue("Username", out var errorMessages))
+                                        {
+                                            <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+
+                                            @* Un campo puede tener más de un error de validación *@
+                                            @* @foreach (var error in errorMessages)
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@error" />
+                                } *@
+                                        }
+                                    </Helper>
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="@Localizer["Core.Users.Email"]" Style="width: 100%;">
+                                    <ChildContent>
+                                        <RadzenTextBox @bind-Value="UsuarioDto.Email" Disabled="@(!PermitirCapturaPersonales)" />
+                                    </ChildContent>
+                                    <Helper>
+                                        @if (FormValidationErrors.TryGetValue("Email", out var errorMessages))
+                                        {
+                                            <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                        }
+                                    </Helper>
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="@Localizer["Core.Users.FirstName"]" Style="width: 100%;">
+                                    <ChildContent>
+                                        <RadzenTextBox @bind-Value="UsuarioDto.Nombres" Disabled="@(!PermitirCapturaPersonales)" />
+                                    </ChildContent>
+                                    <Helper>
+                                        @if (FormValidationErrors.TryGetValue("Nombres", out var errorMessages))
+                                        {
+                                            <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                        }
+                                    </Helper>
+                                </RadzenFormField>
+                                <RadzenFormField Text="@Localizer["Core.Users.LastName"]" Style="width: 100%;">
+                                    <ChildContent>
+                                        <RadzenTextBox @bind-Value="UsuarioDto.PrimerApellido" Disabled="@(!PermitirCapturaPersonales)" />
+                                    </ChildContent>
+                                    <Helper>
+                                        @if (FormValidationErrors.TryGetValue("PrimerApellido", out var errorMessages))
+                                        {
+                                            <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                        }
+                                    </Helper>
+                                </RadzenFormField>
+                                <RadzenFormField Text="@Localizer["Core.Users.SecondLastName"]" Style="width: 100%;">
+                                    <ChildContent>
+                                        <RadzenTextBox @bind-Value="UsuarioDto.SegundoApellido" Disabled="@(!PermitirCapturaPersonales)" />
+                                    </ChildContent>
+                                    <Helper>
+                                        @if (FormValidationErrors.TryGetValue("SegundoApellido", out var errorMessages))
+                                        {
+                                            <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                        }
+                                    </Helper>
+                                </RadzenFormField>
+                                <div class="rz-mt-4 rz-align-items-start">
+                                    <RadzenLabel Text="@Localizer["Core.Users.Blocked"]" Component="CheckBoxHabilitado" class="rz-ms-1" />
+                                    <RadzenCheckBox @bind-Value=@UsuarioDto.Bloqueado Name="CheckBoxHabilitado" Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" />
+                                </div>
+                            </RadzenCard>
+                        </ChildContent>
+                        <SummaryTemplate></SummaryTemplate>
+                    </RadzenPanel>
+                </RadzenColumn>
+                <RadzenColumn SizeMD="6">
+                    @* <RadzenPanel AllowCollapse="false">
+            <HeaderTemplate>
+                <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+                    <RadzenIcon Icon="@("<i class=\"fa-sharp fa-light fa-key\"></i>")" IconColor="@Colors.Primary" class="rz-me-2" /><b>Contraseña</b>
+                </RadzenText>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard class="rz-mt-4">
+                    <RadzenFormField Text="Contraseña" Style="width: 100%;">
+                        <RadzenPassword @bind-Value="UsuarioDto.Password" Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)"></RadzenPassword>
+                    </RadzenFormField>
+                    <RadzenFormField Text="Confirmar Contraseña" Style="width: 100%;">
+                        <RadzenPassword @bind-Value="UsuarioDto.Password" Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)"></RadzenPassword>
+                    </RadzenFormField>
+                </RadzenCard>
+            </ChildContent>
+            <SummaryTemplate></SummaryTemplate>
+        </RadzenPanel> *@
+
+                    <RadzenPanel AllowCollapse="false">
+                        <HeaderTemplate>
+                            <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+                                <RadzenIcon Icon=@("\uf4fe") IconColor="@Colors.Primary" class="rz-me-2 fa-light" /><b>@Localizer["Core.Users.UserParameters"]</b>
+                            </RadzenText>
+                        </HeaderTemplate>
+                        <ChildContent>
+                            <RadzenCard class="rz-mt-4">
+                                <RadzenFormField Text="@Localizer["Core.Users.Languaje"]" Style="width: 100%;">
+                                    <RadzenDropDown Data="@Constants.Languages"
+                                                    TextProperty="Name"
+                                                    ValueProperty="Code"
+                                                    @bind-Value="@UsuarioDto.Parametros.CulturaDefault"
+                                                    TValue="string"
+                                                    Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" />
+                                </RadzenFormField>
+
+                                <RadzenFormField Text="@Localizer["Core.Users.TimeZone"]" Style="width: 100%;">
+                                    <RadzenDropDown Data="@Constants.TimeZones"
+                                                    TextProperty="DisplayName"
+                                                    ValueProperty="Id"
+                                                    @bind-Value="@UsuarioDto.Parametros.ZonaHorariaDefault"
+                                                    TValue="string"
+                                                    Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" />
+                                </RadzenFormField>
+
+                                <div class="rz-mt-4 rz-align-items-start">
+                                    <RadzenLabel Text="@Localizer["Core.Users.TabNavigation"]" Component="CheckBoxTabsActivos" class="rz-ms-1" />
+                                    <RadzenCheckBox @bind-Value="@UsuarioDto.Parametros.NavegarPorTabs"
+                                                    Name="CheckBoxTabsActivos"
+                                                    Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" />
+                                </div>
+                            </RadzenCard>
+                        </ChildContent>
+                        <SummaryTemplate></SummaryTemplate>
+                    </RadzenPanel>
+
+                    <RadzenPanel class="rz-mt-4" AllowCollapse="false">
+                        <HeaderTemplate>
+                            <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+                                <RadzenIcon Icon=@("\uf029") IconColor="@Colors.Primary" class="rz-me-2 fa-light" /><b>@Localizer["Core.Users.TwoFactorAuth"]</b>
+                            </RadzenText>
+                        </HeaderTemplate>
+                        <ChildContent>
+                            <RadzenCard class="rz-mt-4">
+                                @if (UsuarioDto?.UUID != null)
+                                {
+                                    if (string.IsNullOrEmpty(UsuarioDto.TwoFactorKey))
+                                    {
+                                        <RadzenText Text="@Localizer["Core.Users.Enable2FA"]" />
+                                        <RadzenButton Click="@(() => ShowCodeDialogAsync(true))" ButtonType="ButtonType.Button" Text="@Localizer["Shared.Botones.Habilitar"]" class="rz-mt-4"></RadzenButton>
+                                    }
+                                    else
+                                    {
+                                        <RadzenButton Click="@(() => ShowCodeDialogAsync(false))" ButtonType="ButtonType.Button" Text="@Localizer["Core.Users.ShowQrCode"]" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
+                                        <RadzenButton Click="@(() => Delete2faCodeAsync())" Disabled="this.EstadoControl == TipoEstadoControl.Lectura" ButtonType="ButtonType.Button" Text="@Localizer["Shared.Botones.Deshabilitar"]" ButtonStyle="ButtonStyle.Danger"></RadzenButton>
+                                    }
+                                }
+                                else
+                                {
+                                    <RadzenText Text="@Localizer["Core.Users.EnableTwoFactorAfterCreation"]" />
+                                }
+                            </RadzenCard>
+                        </ChildContent>
+                        <SummaryTemplate></SummaryTemplate>
+                    </RadzenPanel>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="@Localizer["Core.Users.Permissions"]">
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeSM="12" SizeMD="4" SizeLG="3" SizeXL="3">
+                    <RadzenPanel AllowCollapse="false">
+                        <HeaderTemplate>
+                            <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+                                <RadzenIcon Icon=@("\ue489") IconColor="@Colors.Primary" class="rz-me-2 fa-light" /><b>@Localizer["Core.Users.Menus"]</b>
+                            </RadzenText>
+                        </HeaderTemplate>
+                        <ChildContent>
+                            <RadzenCard class="rz-mt-4">
+                                <RadzenTree AllowCheckBoxes="true" Data=@SelectMenus @bind-CheckedValues=@CheckedMenuDtoValues Style="@(EstadoControl == TipoEstadoControl.Lectura ? "pointer-events: none; opacity: 0.9;" : "")">
+                                    <RadzenTreeLevel TextProperty="Nombre" HasChildren=@(menu => (menu as MenuDto)?.Children?.Any() == true) ChildrenProperty="Children" Expanded=@(menu => (menu as MenuDto)?.Children?.Any() == true) />
+                                </RadzenTree>
+                            </RadzenCard>
+                        </ChildContent>
+                        <SummaryTemplate></SummaryTemplate>
+                    </RadzenPanel>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeSM="12" SizeMD="8" SizeLG="6" SizeXL="6">
+                    <RadzenPanel AllowCollapse="false">
+                        <HeaderTemplate>
+                            <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+                                <RadzenIcon Icon=@("\uf2f7") IconColor="@Colors.Primary" class="rz-me-2 fa-light" /><b>@Localizer["Core.Users.Permissions"]</b>
+                            </RadzenText>
+                        </HeaderTemplate>
+                        <ChildContent>
+                            <RadzenCard class="rz-mt-4">
+                                <RadzenRow>
+                                    <RadzenColumn Size="12" SizeSM="12" SizeMD="5" SizeLG="5" SizeXL="5">
+                                        <RadzenCard>
+                                            <RadzenTree Data=@SelectMenuPermisos @bind-Value=@MenuPermisoSelected>
+                                                <RadzenTreeLevel TextProperty="Nombre" HasChildren=@(menu => (menu as MenuPermisosDto)?.Children?.Any() == true) ChildrenProperty="Children" Expanded=@(menu => (menu as MenuPermisosDto)?.Children?.Any() == true) />
+                                            </RadzenTree>
+                                        </RadzenCard>
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeSM="12" SizeMD="7" SizeLG="7" SizeXL="7">
+                                        @if (MenuPermisoSelected != null)
+                                        {
+                                            <RadzenCard>
+
+                                                <RadzenText TextStyle="TextStyle.H6" class="rz-mb-4 rz-display-flex rz-align-items-center rz-m-0">
+                                                    <RadzenIcon Icon=@("\uf002") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+                                                    <b>@Localizer["Core.Users.PermissionsAssign"]</b>
+                                                </RadzenText>
+                                                <RadzenFormField Text="@Localizer["Core.Branches.Branch"]" class="rz-mb-2" Style="width: 100%; max-width: 400px">
+                                                    <RadzenDropDown Data=@this.UsuarioDto?.Sucursales TValue="SucursalDto"
+                                                                    TextProperty="@nameof(SucursalDto.Descripcion)" 
+                                                                    ValueProperty="@nameof(SucursalDto.IdSucursal)"
+                                                                    ReadOnly="@(this.EstadoControl == TipoEstadoControl.Lectura)" 
+                                                                    Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" 
+                                                                    @bind-SelectedItem=@this.SucursalPermisosSeleccionada />
+                                                </RadzenFormField>
+                                                <RadzenTable style="max-height:335px" GridLines="@Radzen.DataGridGridLines.Vertical" AllowAlternatingRows="true">
+                                                    <RadzenTableHeader>
+                                                        <RadzenTableHeaderRow>
+                                                            <RadzenTableHeaderCell>
+                                                                @Localizer["Core.Users.Permission"]
+                                                            </RadzenTableHeaderCell>
+                                                            <RadzenTableHeaderCell>
+
+                                                            </RadzenTableHeaderCell>
+                                                        </RadzenTableHeaderRow>
+                                                    </RadzenTableHeader>
+                                                    <RadzenTableBody>
+                                                        @foreach (var permiso in ((MenuPermisosDto?)MenuPermisoSelected)?.Permisos ?? Enumerable.Empty<PermisoDto>())
+                                                        {
+                                                            <RadzenTableRow>
+                                                                <RadzenTableCell>
+                                                                    @(permiso.Descripcion)
+                                                                </RadzenTableCell>
+                                                                <RadzenTableCell Style="text-align:center; vertical-align:middle">
+                                                                    <RadzenButton Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" 
+                                                                                  Click=@(args => AsignarPermiso(permiso)) 
+                                                                                  ButtonStyle="ButtonStyle.Primary" 
+                                                                                  Size="ButtonSize.Small">
+                                                                        <RadzenIcon Icon=@("\u002b") class="fa-light"></RadzenIcon>
+                                                                        <span>@Localizer["Shared.Textos.Asignar"]</span>
+                                                                    </RadzenButton>
+                                                                </RadzenTableCell>
+                                                            </RadzenTableRow>
+                                                        }
+                                                    </RadzenTableBody>
+                                                </RadzenTable>
+                                            </RadzenCard>
+
+                                            <RadzenCard class="rz-mt-4">
+                                                <RadzenText TextStyle="TextStyle.H6" class="rz-mb-4 rz-display-flex rz-align-items-center rz-m-0">
+                                                    <RadzenIcon Icon=@("\uf00c") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+                                                    <b>@Localizer["Core.Users.AssignedPermissions"]</b>
+                                                </RadzenText>
+                                                <RadzenTable GridLines="@Radzen.DataGridGridLines.Vertical" AllowAlternatingRows="true">
+                                                    <RadzenTableHeader>
+                                                        <RadzenTableHeaderRow>
+                                                            <RadzenTableHeaderCell>
+                                                                @Localizer["Core.Users.Permission"]
+                                                            </RadzenTableHeaderCell>
+                                                            <RadzenTableHeaderCell>
+                                                                @Localizer["Core.Branches.Branch"]
+                                                            </RadzenTableHeaderCell>
+                                                            <RadzenTableHeaderCell>
+
+                                                            </RadzenTableHeaderCell>
+                                                        </RadzenTableHeaderRow>
+                                                    </RadzenTableHeader>
+                                                    <RadzenTableBody>
+                                                        @foreach (var permisoAsignado in this.UsuarioDto.Permisos.Where(m => m.IdMenu == ((MenuPermisosDto?)MenuPermisoSelected)?.IdMenu))
+                                                        {
+                                                            <RadzenTableRow>
+                                                                <RadzenTableCell>
+                                                                    @(permisoAsignado.Permiso)
+                                                                </RadzenTableCell>
+                                                                <RadzenTableCell>
+                                                                    @(permisoAsignado.Sucursal)
+                                                                </RadzenTableCell>
+                                                                <RadzenTableCell Style="text-align:center; vertical-align:middle">
+                                                                    <RadzenButton Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" 
+                                                                                  Click=@(args => QuitarPermiso(permisoAsignado.IdPermiso, permisoAsignado.IdSucursal)) 
+                                                                                   ButtonStyle="ButtonStyle.Danger" 
+                                                                                  Size="ButtonSize.Small" >
+                                                                        <RadzenIcon Icon=@("\uf2ed") class="fa-light"></RadzenIcon>
+                                                                        <span>@Localizer["Shared.Textos.Eliminar"]</span>
+                                                                              </RadzenButton>
+                                                                </RadzenTableCell>
+                                                            </RadzenTableRow>
+                                                        }
+                                                    </RadzenTableBody>
+                                                </RadzenTable>
+                                            </RadzenCard>
+                                        }
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            </RadzenCard>
+                        </ChildContent>
+                        <SummaryTemplate></SummaryTemplate>
+                    </RadzenPanel>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeSM="12" SizeMD="4" SizeLG="3" SizeXL="3">
+                    <RadzenPanel AllowCollapse="false">
+                        <HeaderTemplate>
+                            <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+                                <RadzenIcon Icon=@("\ue0cc") IconColor="@Colors.Primary" class="rz-me-2 fa-light" /><b>@Localizer["Core.Branches"]</b>
+                            </RadzenText>
+                        </HeaderTemplate>
+                        <ChildContent>
+                            <RadzenCard class="rz-mt-4">
+                                <RadzenRow>
+                                    <RadzenColumn >
+                                        <RadzenCard>
+                                            <RadzenStack class="rz-mb-2" Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" JustifyContent="JustifyContent.Normal" Wrap="FlexWrap.NoWrap">
+                                                <RadzenFormField Text="@Localizer["Core.Branches.Branch"]" Style="width: 72%; max-width: 400px">
+                                                    <RadzenDropDown Data=@SucursalesList TValue="SucursalDto"
+                                                                    TextProperty="@nameof(SucursalDto.Descripcion)"
+                                                                    ValueProperty="@nameof(SucursalDto.IdSucursal)"
+                                                                    ReadOnly="@(this.EstadoControl == TipoEstadoControl.Lectura)"
+                                                                    Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)"
+                                                                    @bind-SelectedItem=@this.SucursalSeleccionada />
+                                                </RadzenFormField>
+                                                <RadzenButton Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" 
+                                                              Click=@(args => AsignarSucursal()) 
+                                                              ButtonStyle="ButtonStyle.Primary"
+                                                              Style="margin-top: 12px">
+
+                                                    <RadzenIcon Icon=@("\u002b") class="fa-light"></RadzenIcon>
+                                                    <span>@Localizer["Shared.Textos.Asignar"]</span>
+                                                </RadzenButton>
+                                            </RadzenStack>
+                                            
+                                            <RadzenTable GridLines="@Radzen.DataGridGridLines.Vertical" AllowAlternatingRows="true">
+                                                <RadzenTableHeader>
+                                                    <RadzenTableHeaderRow>
+                                                        <RadzenTableHeaderCell>
+                                                            @Localizer["Core.Branches.Branch"]
+                                                        </RadzenTableHeaderCell>
+                                                        <RadzenTableHeaderCell>
+                                                        </RadzenTableHeaderCell>
+                                                    </RadzenTableHeaderRow>
+                                                </RadzenTableHeader>
+                                                <RadzenTableBody>
+                                                    @foreach (var sucursal in this.UsuarioDto?.Sucursales)
+                                                    {
+                                                        <RadzenTableRow>
+                                                            <RadzenTableCell>
+                                                                @(sucursal.Descripcion)
+                                                            </RadzenTableCell>
+                                                            <RadzenTableCell Style="text-align:center; vertical-align:middle">
+                                                                <RadzenButton Disabled="@(this.EstadoControl == TipoEstadoControl.Lectura)" 
+                                                                              Click=@(args => QuitarSucursal(sucursal.IdSucursal)) 
+                                                                              ButtonStyle="ButtonStyle.Danger" 
+                                                                              Size="ButtonSize.Small" >
+                                                                    <RadzenIcon Icon=@("\uf2ed") class="fa-light"></RadzenIcon>
+                                                                    <span>@Localizer["Shared.Textos.Eliminar"]</span>
+                                                            </RadzenButton>
+                                                            </RadzenTableCell>
+                                                        </RadzenTableRow>
+                                                    }
+                                                </RadzenTableBody>
+                                            </RadzenTable>
+                                        </RadzenCard>
+
+                          
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            </RadzenCard>
+                        </ChildContent>
+                        <SummaryTemplate></SummaryTemplate>
+                    </RadzenPanel>
+                </RadzenColumn>
+            </RadzenRow>
+
+        </RadzenTabsItem>
+
+    </Tabs>
+</RadzenTabs>
+
+
+@code {
+    private async Task ShowCodeDialogAsync(bool newCode)
+    {
+        var generatedTokenResponse = await UsuariosService.GetTokenUsuarioAsync(UsuarioDto?.UUID.ToString(), newCode);
+
+        if (!generatedTokenResponse.Success)
+            return;
+
+        var generatedTokenDto = JsonConvert.DeserializeObject<GeneratedTwoFactorCodeDto>(generatedTokenResponse.Data.ToString());
+
+        var result = await DialogService.OpenAsync(Localizer["Core.Users.TwoFactorAuth"], ds =>
+    @<UsuariosDetTokenDialog EstadoControl="newCode ? TipoEstadoControl.Alta : TipoEstadoControl.Lectura"
+                                 GuidUsuario="UsuarioDto?.UUID ?? Guid.Empty"
+                                 GeneratedTwoFactorCode="generatedTokenDto" DialogService="ds">
+    </UsuariosDetTokenDialog>
+    );
+
+        await RefreshUsuarioAsync();
+    }
+
+}

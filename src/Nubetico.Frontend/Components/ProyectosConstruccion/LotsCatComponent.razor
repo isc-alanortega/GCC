@@ -1,0 +1,133 @@
+﻿@using Nubetico.Frontend.Components.Shared
+@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Services.ProyectosConstruccion
+@using Nubetico.Shared.Dto.ProyectosConstruccion
+@inherits NbBaseComponent
+@inject LotsService lotsService
+@inject SubdivisionsService subdivisionsService
+@inject NotificationService notificationService
+@inject IStringLocalizer<SharedResources> Localizer
+
+@*HEADER*@
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5" Visible="@(!VisibleExtraOptions)">@($"{Localizer["Subdivisions.Text.Lot"]}s")</RadzenText>
+<PanelFiltrosNubeticoComponent>
+    <RadzenStack>
+        <RadzenRow Style="display: flex; flex-wrap: wrap">
+            <RadzenColumn>
+                @*DROP DOWNS*@
+                <RadzenRow RowGap="0.5rem" Style="display: flex; flex-wrap: wrap">
+                    <RadzenColumn Style="width: 100%; min-width: 200px; max-width: 400px">
+                        <RadzenFormField Text="@Localizer["Subdivisions.Text.Subdivision"]" Style="width: 100%">
+                            <RadzenDropDown Data=@SubdivisionsList
+                                            TextProperty="Value"
+                                            ValueProperty="Key"
+                                            AllowClear="true"
+                                            Change="@(() => OnValueChange("SUBDIVISION"))"
+                                            Disabled="@DisabledSubdivisionFilter"
+                                            @bind-Value="@Filter.SubdivisionID" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Style="width: 100%; min-width: 200px; max-width: 400px">
+                        <RadzenFormField Text="@Localizer["Subdivisions.Text.Stage"]" Style="width: 100%">
+                            <RadzenDropDown Data=@StagesList
+                                            TextProperty="Value"
+                                            ValueProperty="Key"
+                                            AllowClear="true"
+                                            Change="@(() => OnValueChange("STAGE"))"
+                                            @bind-Value="@Filter.StageID" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Style="width: 100%; min-width: 200px; max-width: 400px">
+                        <RadzenFormField Text="@Localizer["Subdivisions.Text.Block"]" Style="width: 100%">
+                            <RadzenDropDown Data=@BlocksList
+                                            TextProperty="Value"
+                                            ValueProperty="Key"
+                                            AllowClear="true"
+                                            @bind-Value="@Filter.BlockID" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Style="width: 100%; min-width: 200px; max-width: 400px">
+                        <RadzenFormField Text="@Localizer["Subdivisions.Text.Model"]" Style="width: 100%">
+                            <RadzenDropDown Data=@ModelsList
+                                            TextProperty="Value"
+                                            ValueProperty="Key"
+                                            AllowClear="true"
+                                            @bind-Value="@Filter.ModelID" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Style="width: 100%; min-width: 200px; max-width: 400px">
+                        <RadzenFormField Text="@Localizer["Subdivisions.Text.Lot"]" Style="width: 100%">
+                            <RadzenNumeric TValue="int?"
+                                           ShowUpDown="false"
+                                           Change="@(() => OnValueChange("LOTNUMBER"))"
+                                           @bind-Value="@Filter.LotNumber" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Style="width: 100%; min-width: 200px; max-width: 400px">
+                        <RadzenFormField Text="@Localizer["Shared.Textos.Estado"]" Style="width: 100%">
+                            <RadzenDropDown Data=@StatusList
+                                            TextProperty="Value"
+                                            ValueProperty="Key"
+                                            AllowClear="true"
+                                            @bind-Value="@Filter.StatusID" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenColumn>
+            @*BUTTONS*@
+            <RadzenColumn SizeLG="6" SizeMD="2" Style="width: 100%; min-width: fit-content">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start" Gap="0.5rem" Style="height: 100%; padding-top: 10px">
+                    <RadzenButton Click=OnFilterClick
+                                  Text="@Localizer["Shared.Textos.Buscar"]"
+                                  Icon="search" />
+                    <RadzenButton Click=OnClickPreloadedAdd
+                                  Text="@($"{Localizer["Shared.Textos.New"]} {Localizer["Subdivisions.Text.Lot"]}")"
+                                  Icon="add"
+                                  Visible="@VisibleExtraOptions"
+                                  Disabled="@GetDisabledAddLot()" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+</PanelFiltrosNubeticoComponent>
+
+<RadzenStack>
+    @*LOTS GRID*@
+    <RadzenDataGrid @ref="Grid"
+                    AllowFiltering="false"
+                    AllowPaging="true"
+                    AllowSorting="true"
+                    Count="@Count"
+                    Data="@LotsList"
+                    EmptyText="@Localizer["Subdivisions.Text.EmptyGrid"]"
+                    IsLoading="@IsLoading"
+                    LoadData="@LoadData"                    
+                    PageSize="20"
+                    PagerHorizontalAlign="HorizontalAlign.Center"
+                    RowDoubleClick="DataGridRowDoubleClick"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    Style="@GetDynamicStyle()"
+                    ShowPagingSummary="true"
+                    TItem="LotsDto"
+                    @bind-Value="@SelectedLot">
+        <Columns>
+            <RadzenDataGridColumn Property="UUID" Title="UUID" Visible="false" />
+            <RadzenDataGridColumn Property="Folio" Title="ID" Width="80px" MinWidth="80px"/>
+            <RadzenDataGridColumn Property="Subdivision" Title="@Localizer["Subdivisions.Text.Subdivision"]" MinWidth="150px" />
+            <RadzenDataGridColumn Property="Stage" Title="@Localizer["Subdivisions.Text.Stage"]" MinWidth="200px" />
+            <RadzenDataGridColumn Property="Block" Title="@Localizer["Subdivisions.Text.Block"]" MinWidth="150px" />
+            <RadzenDataGridColumn Property="Number" Title="@Localizer["Subdivisions.Text.Number"]" Width="80px" MinWidth="80px" />
+            <RadzenDataGridColumn Property="Model" Title="@Localizer["Subdivisions.Text.Model"]" MinWidth="200px" />
+            <RadzenDataGridColumn Property="FrontMeasure" Title="@Localizer["Lots.Text.Front"]" Width="100px" MinWidth="100px" />
+            <RadzenDataGridColumn Property="BottomMeasure" Title="@Localizer["Lots.Text.Bottom"]" Width="100px" MinWidth="100px" />
+            <RadzenDataGridColumn Property="SurfaceMeasure" Title="@Localizer["Lots.Text.Surface"]" Width="100px" MinWidth="100px" />
+            @*PENDIENTE CUSTOMIZAR EL BADGESTYLE*@
+            <RadzenDataGridColumn Property="Status" Title="@Localizer["Shared.Textos.Estado"]" MinWidth="150px">
+                <Template Context="data">
+                    <RadzenBadge BadgeStyle="BadgeStyle.Warning" Text="@data.Status" Style="text-transform: none;" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+

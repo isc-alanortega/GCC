@@ -1,0 +1,130 @@
+﻿@inherits NbBaseComponent
+
+@inject IStringLocalizer<SharedResources> Localizer
+
+<RadzenPanel>
+	<HeaderTemplate>
+		<RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+			<RadzenIcon Icon=@("\ue283") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+			<b>@Localizer["Lots.Text.General"]</b>
+		</RadzenText>
+	</HeaderTemplate>
+	<ChildContent>
+		<RadzenCard class="rz-mt-4">
+			<RadzenStack>
+				<RadzenRow Wrap="FlexWrap.Wrap">
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="@Localizer["Shared.Textos.Folio"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.Folio" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="@Localizer["Core.ProyectosConstruccion.RFC"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.RFC" />
+						</RadzenFormField>
+					</RadzenColumn>
+
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="@Localizer["Shared.Textos.Name"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.Nombre" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="@Localizer["Shared.Textos.Estado"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.EstadoProveedor" />
+						</RadzenFormField>
+					</RadzenColumn>
+				</RadzenRow>
+
+				<RadzenRow Wrap="FlexWrap.Wrap">
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Crédito en pesos" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.CreditoPesos" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Crédito en dólares" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.CreditoDolares" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="@Localizer["Shared.Textos.RegimenFiscal"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.RegimenFiscal" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Style="height: 100%">
+							<RadzenCheckBox @bind-Value=@ProveedorData.TieneCredito Name="TieneCredito" />
+							<RadzenLabel Text="Tiene crédito"
+										 Component="TieneCredito" class="rz-ms-2" />
+						</RadzenStack>
+					</RadzenColumn>
+				</RadzenRow>
+
+				<RadzenRow Wrap="FlexWrap.Wrap">
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Dias de crédito" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.DiasCredito" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Dias de gracia" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.DiasGracia" />
+						</RadzenFormField>
+					</RadzenColumn>
+
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Saldo en pesos" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.SaldoPesos" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Saldo en dólares" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.SaldoDolares" />
+						</RadzenFormField>
+					</RadzenColumn>
+				</RadzenRow>
+
+				<RadzenRow Wrap="FlexWrap.Wrap">
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Web" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.Web" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Correo" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.Correo" />
+						</RadzenFormField>
+					</RadzenColumn>
+
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Cuenta contable" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.CuentaContable" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+						<RadzenFormField Text="Forma de pago" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@ProveedorData.FormaPago" />
+						</RadzenFormField>
+					</RadzenColumn>
+				</RadzenRow>
+
+			</RadzenStack>
+		</RadzenCard>
+	</ChildContent>
+</RadzenPanel>

@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Core.Errors.BadRequestAuth" xml:space="preserve">
+    <value>Information was sent wrong to the authentication server</value>
+  </data>
+  <data name="Core.Errors.BadCredentials" xml:space="preserve">
+    <value>Wrong username or password</value>
+  </data>
+  <data name="Core.Errors.ServerAuthError" xml:space="preserve">
+    <value>An error occurred on the authentication server</value>
+  </data>
+  <data name="Core.Errors.ProfileOnTenantNotFound" xml:space="preserve">
+    <value>Profile user not found at tenant</value>
+  </data>
+  <data name="Core.Errors.BadRequest" xml:space="preserve">
+    <value>The information was not sent correctly to the server</value>
+  </data>
+  <data name="Core.Errors.WrongToken" xml:space="preserve">
+    <value>Wrong token</value>
+  </data>
+  <data name="Core.Error.Documents.ReadingDocument" xml:space="preserve">
+    <value>Error reading the document</value>
+  </data>
+  <data name="Core.Error.Documents.SaveCfdi" xml:space="preserve">
+    <value>A problem occurred while trying to save the CFDI.</value>
+  </data>
+  <data name="Core.Error.UnknowError" xml:space="preserve">
+    <value>Unknown error</value>
+  </data>
+  <data name="Core.Errors.InvalidTenat" xml:space="preserve">
+    <value>The tenant for the selected service was not found.</value>
+  </data>
+  <data name="ProveedoresFacturas.Error.InvalidRfcIssuer" xml:space="preserve">
+    <value>The issuer's RFC is invalid. The provider's RFC must match the issuer's RFC</value>
+  </data>
+  <data name="Core.Users.Username" xml:space="preserve">
+    <value>User Account</value>
+  </data>
+  <data name="Core.Users.Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Core.Users.Errors.UserExists" xml:space="preserve">
+    <value>User already exists</value>
+  </data>
+  <data name="Core.Users.Blocked" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.Branch" xml:space="preserve">
+    <value>The project bussinesunit </value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.InCharge" xml:space="preserve">
+    <value>The project in charge</value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.Name" xml:space="preserve">
+    <value>The project name</value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.ProjectedEndDate" xml:space="preserve">
+    <value>The projected end date of project</value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.ProjectedStartDate" xml:space="preserve">
+    <value>The projected start date of project</value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.Status" xml:space="preserve">
+    <value>The project status</value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.Subdivision" xml:space="preserve">
+    <value>The project subdivision</value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.TotalUnits" xml:space="preserve">
+    <value>The project total units</value>
+  </data>
+  <data name="ProyectosConstruccion.Projects.ErrorValidator.Type" xml:space="preserve">
+    <value>The project type</value>
+  </data>
+  <data name="ProyectosConstruccion.ProjectSection.ErrorValidator.GeneralContractor" xml:space="preserve">
+    <value>The section general contratcor</value>
+  </data>
+  <data name="ProyectosConstruccion.ProjectSection.ErrorValidator.Name" xml:space="preserve">
+    <value>The section name</value>
+  </data>
+  <data name="ProyectosConstruccion.ProjectSection.ErrorValidator.ProjectedEndDate" xml:space="preserve">
+    <value>The projected end date of section</value>
+  </data>
+  <data name="ProyectosConstruccion.ProjectSection.ErrorValidator.ProjectedStartDate" xml:space="preserve">
+    <value>The projected start date of section</value>
+  </data>
+  <data name="ProyectosConstruccion.ProjectSection.ErrorValidator.Status" xml:space="preserve">
+    <value>The section status</value>
+  </data>
+  <data name="ProyectosConstruccion.ProjectSectionPhase.ErrorValidator.Name" xml:space="preserve">
+    <value>The phase name</value>
+  </data>
+  <data name="ProjectSectionDetails.Error.NotFoundSectionDetails" xml:space="preserve">
+    <value>Not found the section</value>
+  </data>
+  <data name="Core.Users.CannotLogin" xml:space="preserve">
+    <value>User cannot log in because is __STATUS__</value>
+  </data>
+  <data name="Core.Users.Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Core.Users.FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="Core.Users.LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="Core.Users.SecondLastName" xml:space="preserve">
+    <value>Second Last Name</value>
+  </data>
+  <data name="ProyectosConstruccion.Project.Error.NoSaved" xml:space="preserve">
+    <value>It is not possible to save the projec</value>
+  </data>
+  <data name="ProyectosConstruccion.ProjectSection.Error.NoSaved" xml:space="preserve">
+    <value>It is not posible to save the section {0}</value>
+  </data>
+  <data name="Core.Users.PasswordUpdateSuccess" xml:space="preserve">
+    <value>Password updated successfully</value>
+  </data>
+  <data name="Core.Users.NewPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="Core.Users.ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="Core.Users.PasswordMismatch" xml:space="preserve">
+    <value>Both passwords do not match</value>
+  </data>
+  <data name="Core.Errors.UserNotLogged" xml:space="preserve">
+    <value>User not logged</value>
+  </data>
+  <data name="Core.Users.Errors.UpdateUserDirectory" xml:space="preserve">
+    <value>There was an error while updating the user account on Directory</value>
+  </data>
+  <data name="Core.Users.Errors.CreateUserDirectory" xml:space="preserve">
+    <value>There was an error while creating the user account on Directory</value>
+  </data>
+  <data name="Core.Users.Errors.OnSave" xml:space="preserve">
+    <value>There was an error while saving the user profile to the database.</value>
+  </data>
+  <data name="Core.Users.Errors.OnSaveToken" xml:space="preserve">
+    <value>An error occurred while saving the token to the database.</value>
+  </data>
+  <data name="Core.Users.Errors.UserGuidNotFound" xml:space="preserve">
+    <value>User GUID not found.</value>
+  </data>
+  <data name="ProyectosConstruccion.Models.Error.NotFound" xml:space="preserve">
+    <value>Model {0} not found</value>
+  </data>
+  <data name="ProyectosConstruccion.Models.Error.CantUpdate" xml:space="preserve">
+    <value>The model {0} could not be updated</value>
+  </data>
+  <data name="Core.Files.Errors.EmptyFile" xml:space="preserve">
+    <value>The file is empty</value>
+  </data>
+</root>

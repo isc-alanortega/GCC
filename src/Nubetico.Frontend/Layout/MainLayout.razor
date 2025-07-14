@@ -1,0 +1,100 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Frontend.Helpers
+@using System
+
+@inject AuthStateProvider AuthStateProvider
+@inject DialogService DialogService
+@inject HttpClient HttpClient
+@inject IStringLocalizer<SharedResources> Localizer
+@inject MenuService MenuService
+@inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
+@inject NotificationService NotificationService
+@inject GlobalBreakpointService BreakpointService
+@inject IJSRuntime JsRuntime;
+@implements IDisposable
+
+@inherits LayoutComponentBase
+
+<RadzenComponents />
+
+<RadzenLayout style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body''rz-sidebar rz-footer'">
+    <RadzenHeader>
+        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenColumn Size="6">
+                @if(!LeftSidebarExpanded)
+                {
+                    <RadzenStack class="rz-pl-2" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Normal" Gap="5px">
+                        <RadzenImage Path="@UrlLogoPrincipal" Style="height: 44px;" AlternateText="Logotipo del Sitio" />
+                        <RadzenSidebarToggle Click="ToggleSidebar"></RadzenSidebarToggle>
+                    </RadzenStack>
+                }
+                else
+                {
+                    <RadzenSidebarToggle Click="ToggleSidebar"></RadzenSidebarToggle>
+                }
+            </RadzenColumn>
+            <RadzenColumn Size="6">
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                    <RadzenSidebarToggle Icon="person" Class="rz-m-0" Click="OpenSideDialog" />
+
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenHeader>
+    <RadzenBody>
+        <RadzenRow class="rz-mx-auto">
+            <RadzenColumn Size="12">
+                @Body
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenBody>
+    <RadzenSidebar class="rz-background-color-primary" @bind-Expanded="@LeftSidebarExpanded" style="z-index: 2;">
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="height: 64px;">
+            <RadzenImage Path="@UrlLogoPrincipal" Style="height: 44px;" AlternateText="Logotipo del Sitio" />
+        </RadzenStack>
+
+        @* <RadzenStack AlignItems="Radzen.AlignItems.Center" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
+        <RadzenText TextStyle="TextStyle.DisplayH5" TagName="TagName.P" Style="color:white; padding: 0.3rem  0.3rem;">nubetico</RadzenText>
+        </RadzenStack> *@
+
+        <div style="padding: 12px">
+            <RadzenTextBox id="find" Placeholder="@Localizer["Shared.Textos.Buscar"]" type="search" @oninput="@FilterPanelMenu" style="width: 100%" Class="rz-search-input" aria-label="find" />
+        </div>
+        <RadzenPanelMenu Match="NavLinkMatch.Prefix">
+            @foreach (var category in opcionesMenu)
+            {
+                <NavigationItem @key=category @bind-Expanded=@category.Expanded MenuDto=@category>
+                    @if (category.Children != null)
+                    {
+                        @foreach (var menu in category.Children)
+                        {
+                            if (menu.Children != null)
+                            {
+                                <NavigationItem @key=menu @bind-Expanded=@menu.Expanded MenuDto=@menu>
+                                    @foreach (var child in menu.Children)
+                                    {
+                                        <NavigationItem @key=child @bind-Expanded=@child.Expanded MenuDto=@child />
+                                    }
+                                </NavigationItem>
+                            }
+                            else
+                            {
+                                <NavigationItem @key=menu @bind-Expanded=@menu.Expanded MenuDto=@menu />
+                            }
+                        }
+                    }
+                </NavigationItem>
+            }
+        </RadzenPanelMenu>
+
+    </RadzenSidebar>
+    <RadzenFooter Style="padding: 0.5rem">
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.Start" Wrap="FlexWrap.NoWrap" Gap="0px">
+            <RadzenLabel>nubetico @NubeticoAssemblyProperties.GetBuildDate()</RadzenLabel>
+            <RadzenIcon Icon="@("\u007c")" class="fa-sharp-light"></RadzenIcon>
+            <RadzenLabel>Copyright Ⓒ @DateTime.Now.Year</RadzenLabel>
+        </RadzenStack>
+    </RadzenFooter>
+</RadzenLayout>

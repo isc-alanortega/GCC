@@ -1,0 +1,158 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "CoreDbContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models\\Core",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Nubetico.DAL",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[Core].[Archivos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Archivos_Tipos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Domicilios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Domicilios_Colonias]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Domicilios_CP]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Domicilios_Estados]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Domicilios_Municipios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Entidades]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Forms]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Forms_Respuestas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Forms_Respuestas_Archivos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Forms_Templates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Formularios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Menus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Modulos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Parametros]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Permisos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Personas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Sucursales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Usuarios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Usuarios_Estados]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Usuarios_Menus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Usuarios_Permisos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Usuarios_Sucursales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Usuarios_Tokens]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[vMenusFormularios]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Core].[vUsuariosPermisos]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Core].[vUsuariosPersonas]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Core].[vUsuariosSucursales]",
+         "ObjectType": 3
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

@@ -1,0 +1,70 @@
+﻿@using Radzen
+@using Microsoft.AspNetCore.Components
+@inject DialogService dialogService
+
+@code {
+    /// <summary>
+    /// Estilos del modal
+    /// </summary>
+    [Parameter]
+    public string? ModalStyles { get; set; }
+
+    /// <summary>
+    /// Tamaño del progres bar (por defecto es ProgressBarCircularSize.Medium)
+    /// </summary>
+    [Parameter]
+    public ProgressBarCircularSize ProgressBarSize { get; set; } = ProgressBarCircularSize.Medium;
+
+    /// <summary>
+    /// Controla la visibilidad del diálogo
+    /// </summary>
+    private bool IsVisible { get; set; } = false;
+    private string? Message { get; set; }
+
+    private readonly string _defaultStyle = "min-height:auto;min-width:auto;width:auto";
+
+    /// <summary>
+    /// Método para mostrar el diálogo con el mensaje que pases
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="message"></param>
+    public async void Show(string? title = null, string? message = null)
+    {
+        Message = message;
+
+        if (IsVisible) return;
+        IsVisible = true;
+
+        await dialogService.OpenAsync( 
+            title: title ?? string.Empty,
+            options: new DialogOptions()
+            {
+                ShowTitle = title is not null,
+                Style = ModalStyles ?? _defaultStyle,
+                CloseDialogOnEsc = false
+            },
+            childContent: ds => 
+            @<RadzenStack Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+                <RadzenProgressBarCircular  Value="100"
+                                            ShowValue="false"
+                                            Mode="ProgressBarMode.Indeterminate"
+                                            Size="@ProgressBarSize" />
+                @if(Message is not null)
+                {
+                    <RadzenText Text=@Message />
+                }
+            </RadzenStack>
+        );
+    }
+
+    /// <summary>
+    /// Método para ocultar el diálogo
+    /// </summary>
+    public void Hide()
+    {
+        if (!IsVisible) return;
+
+        IsVisible = false;
+        dialogService.Close();
+    }
+}

@@ -1,0 +1,38 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Services.ProyectosConstruccion
+@using Nubetico.Shared.Dto.ProyectosConstruccion
+@inherits NbBaseComponent
+@inject SubdivisionsService subdivisionService
+@inject IStringLocalizer<SharedResources> Localizer
+@inject NotificationService notificationService
+@inject DialogService dialogService
+
+<RadzenTemplateForm TItem="GeneralDetailSubdivision" Data="@DetailData" Submit="@OnClickAccept" @ref="DetailForm">
+	<RadzenStack>
+		@*NAME*@
+		<RadzenStack Gap="0">
+			<RadzenFormField Text=@($"{Localizer["Subdivisions.Text.Name"]} *") Style="width: 100%;">
+				<RadzenTextBox @bind-Value="@DetailData.Name"
+							   Name="NameField"
+							   Style="width: 100%" />
+			</RadzenFormField>
+			<RadzenRequiredValidator Component="NameField"
+									 Text=@($"*{Localizer["Subdivisions.Text.Required"]}")
+									 Style="color: red">
+			</RadzenRequiredValidator>
+		</RadzenStack>
+		@*DESCRIPTION*@
+		<RadzenFormField Text="@Localizer["Shared.Textos.Description"]" Visible="@ShowDescription" Style="width: 100%;">
+			<RadzenTextBox @bind-Value="@DetailData.Description"
+						   Style="width: 100%" />
+		</RadzenFormField>
+		@*BUTTONS*@
+		<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+			<RadzenButton Click=OnClickAccept
+						  Text="@Localizer["Shared.Botones.Aceptar"]" />
+			<RadzenButton Click=OnClickCancel
+						  Text="@Localizer["Shared.Botones.Cancelar"]"
+						  ButtonStyle="ButtonStyle.Base" />
+		</RadzenStack>
+	</RadzenStack>
+</RadzenTemplateForm>

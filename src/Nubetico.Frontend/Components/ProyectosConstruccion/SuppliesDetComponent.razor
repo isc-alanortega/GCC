@@ -1,0 +1,62 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared;
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Supplies
+@inherits NbBaseComponent
+
+<RadzenStack>
+    <RadzenPanel AllowCollapse="false">
+        <HeaderTemplate>
+		    <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+			    <RadzenIcon Icon=@(!string.IsNullOrEmpty(IconoBase) ? char.ConvertFromUtf32(Convert.ToInt32(IconoBase, 16)) : "") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+			    <b>@Localizer!["Lots.Text.General"]</b>
+		    </RadzenText>
+	    </HeaderTemplate>
+	    <ChildContent>
+		    <RadzenCard class="rz-mt-4">
+                <RadzenTemplateForm @ref="@SupplyForm" TItem="SuppliesDto" Data="@SupplyData">
+                    <RadzenRow>
+                        <RadzenColumn SizeMd="4" SizeSM="6" SizeXS="12">
+                            <RadzenFormField Text="@Localizer!["Shared.Textos.Tipo"]" Style="width: 100%;">
+                                <RadzenDropDown Style="width: 100%;"
+                                                @bind-Value="@SupplyData.TypeId"
+                                                Data="@TypesSupplies"
+                                                ValueProperty="Value"
+                                                TextProperty="Description"
+                                                Disabled="@IsDisabledForm()"
+                                                Name="TypeSupplyId" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="TypeSupplyId" Text="@Localizer!["Supply.Text.TypeRequired"]" Style="color: red" />
+                        </RadzenColumn>
+
+                        <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                            <RadzenFormField Text="@Localizer!["Supplies.Text.Code"]" Style="width: 100%;">
+                                <RadzenTextBox Style="width: 100%"
+                                               @bind-Value="@SupplyData!.Code"
+                                               Change="@((value) => SupplyData!.Code = value?.Trim().ToUpper())"
+                                               aria-label="@Localizer!["Supplies.Text.Code"]"
+                                               Disabled="@IsDisabledForm()"
+                                               Name="Code"
+                                               Trim="true"
+                                               MaxLength="10" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="Code" Text="@Localizer!["Supply.Text.CodeRequired"]" Style="color: red" />
+                        </RadzenColumn>
+
+                        <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                            <RadzenFormField Text="@Localizer!["Shared.Textos.Description"]" Style="width: 100%;">
+                                <RadzenTextBox Style="width: 100%"
+                                               @bind-Value="@SupplyData!.Description"
+                                               Change="@((value) => SupplyData!.Description = value?.Trim().ToUpper())"
+                                               aria-label="@Localizer!["Shared.Textos.Description"]"
+                                               Disabled="@IsDisabledForm()"
+                                               Name="Description"
+                                               Trim="true"
+                                               MaxLength="50" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="Description" Text="@Localizer!["Supply.Text.DescriptionRequired"]" Style="color: red" />
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenTemplateForm>
+            </RadzenCard>
+        </ChildContent>
+    </RadzenPanel>
+</RadzenStack>

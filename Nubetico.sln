@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nubetico.Frontend", "src\Nubetico.Frontend\Nubetico.Frontend.csproj", "{9D8CD0D1-E267-4107-9DE5-0CC1D7F96119}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nubetico.Shared", "src\Nubetico.Shared\Nubetico.Shared.csproj", "{1CA6B067-0F49-48E4-AA42-5EEE2F38ABF6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nubetico.WebAPI", "src\Nubetico.WebAPI\Nubetico.WebAPI.csproj", "{FFF4F8BB-B7B8-4AF8-BACB-648CA8FA3EBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nubetico.DAL", "src\Nubetico.DAL\Nubetico.DAL.csproj", "{904A8537-B4BD-46B3-9388-161B37D78F3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8981F984-F3A6-41C3-B6F0-9762588486C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D8CD0D1-E267-4107-9DE5-0CC1D7F96119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D8CD0D1-E267-4107-9DE5-0CC1D7F96119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D8CD0D1-E267-4107-9DE5-0CC1D7F96119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D8CD0D1-E267-4107-9DE5-0CC1D7F96119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CA6B067-0F49-48E4-AA42-5EEE2F38ABF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA6B067-0F49-48E4-AA42-5EEE2F38ABF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA6B067-0F49-48E4-AA42-5EEE2F38ABF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA6B067-0F49-48E4-AA42-5EEE2F38ABF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFF4F8BB-B7B8-4AF8-BACB-648CA8FA3EBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFF4F8BB-B7B8-4AF8-BACB-648CA8FA3EBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFF4F8BB-B7B8-4AF8-BACB-648CA8FA3EBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFF4F8BB-B7B8-4AF8-BACB-648CA8FA3EBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{904A8537-B4BD-46B3-9388-161B37D78F3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{904A8537-B4BD-46B3-9388-161B37D78F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{904A8537-B4BD-46B3-9388-161B37D78F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{904A8537-B4BD-46B3-9388-161B37D78F3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9D8CD0D1-E267-4107-9DE5-0CC1D7F96119} = {8981F984-F3A6-41C3-B6F0-9762588486C8}
+		{1CA6B067-0F49-48E4-AA42-5EEE2F38ABF6} = {8981F984-F3A6-41C3-B6F0-9762588486C8}
+		{FFF4F8BB-B7B8-4AF8-BACB-648CA8FA3EBF} = {8981F984-F3A6-41C3-B6F0-9762588486C8}
+		{904A8537-B4BD-46B3-9388-161B37D78F3E} = {8981F984-F3A6-41C3-B6F0-9762588486C8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {176BE9AD-468A-4CD0-A928-865D9F2FD7FB}
+	EndGlobalSection
+EndGlobal

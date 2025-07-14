@@ -1,0 +1,19 @@
+﻿<RadzenAccordion class="rz-border-base-700 mb-5">
+    <Items>
+        <RadzenAccordionItem Text="Filtro" Icon="filter_alt" CollapseTitle="Ocultar filtro"
+                             ExpandTitle="Mostrar filtro" CollapseAriaLabel="Ocultar filtro."
+                             ExpandAriaLabel="Mostrar filtro.">
+            <RadzenButton Text="Reset" Click="@Reset" Style="margin-bottom: 20px;" />
+        </RadzenAccordionItem>
+    </Items>
+</RadzenAccordion>
+
+<RadzenDataGrid @ref="grid" IsLoading=@IsLoading Count="@Count" Data="@ListObraDto" LoadData="@LoadData" AllowSorting="true" AllowFiltering="false" AllowPaging="true" PageSize="20" PagerHorizontalAlign="HorizontalAlign.Center" ColumnWidth="200px">
+    <Columns>
+        <RadzenDataGridColumn Property="IdObra" Title="ID" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Nombre" Title="Nombre" />
+        <RadzenDataGridColumn Property="TipoObra" Title="Tipo" />
+        <RadzenDataGridColumn Property="Residente" Title="Residente" />
+        <RadzenDataGridColumn Property="EstadoObra" Title="Estado de Obra" />
+    </Columns>
+</RadzenDataGrid>

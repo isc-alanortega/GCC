@@ -1,0 +1,312 @@
+﻿@page "/forms/{Id}"
+@layout EmptyLayout
+
+@inject DialogService DialogService
+@inject FormsService formsService;
+@inject IStringLocalizer<SharedResources> Localizer
+@using Newtonsoft.Json
+@using Nubetico.Frontend.Components.Shared
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+
+<div class="rz-p-12">
+    @if (Form != null)
+    {
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenRow>
+                <RadzenColumn Size="3">
+                    <img src="@Form.ImageUrl" alt="Imagen" style="height: 140px;" />
+                </RadzenColumn>
+                <RadzenColumn Size="12">
+                    <RadzenText TextStyle="TextStyle.H4">@Form.Title</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H5">@Form.WelcomeMessage</RadzenText>
+                </RadzenColumn>
+            </RadzenRow>
+
+            <RadzenText TextAlign="TextAlign.End" TextStyle="TextStyle.Body1">
+                <b>Campos obligatorios</b>
+                <span style="color: red;">*</span>
+            </RadzenText>
+            @foreach (var question in Form.Questions)
+            {
+                <RadzenCard Variant="Variant.Filled" class="rz-my-2 rz-mx-auto"
+                            Style="max-width: 100%; width: 420px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                    <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Start" Gap="1rem">
+                        <RadzenText TextStyle="TextStyle.Body1">
+                            <b>@question.Text</b>
+                            @if (question.Required)
+                            {
+                                <span style="color: red;">*</span>
+                            }
+                        </RadzenText>
+
+                        @if (question.Type == "text")
+                        {
+                            <RadzenTextBox @bind-Value="question.Answer"
+                                           MaxLength="@(question.MaxLength ?? int.MaxValue)"
+                                           Style="width: 100%" />
+                            @if (question.Required)
+                            {
+                                <RadzenRequiredValidator Component="question.Answer" Text="Este campo es obligatorio." />
+                            }
+                        }
+                        else if (question.Type == "text-area")
+                        {
+                            <RadzenTextArea @bind-Value="question.Answer"
+                                            MaxLength="@(question.MaxLength ?? int.MaxValue)"
+                                            Style="width: 100%" />
+
+                            <span style="font-style: italic;">
+                                @(question.Answer?.Length ?? 0)/@(question.MaxLength?.ToString() ?? "∞")
+                            </span>
+
+                            @if (question.Required)
+                            {
+                                <RadzenRequiredValidator Component="question.Answer" Text="Este campo es obligatorio." />
+                            }
+
+                        }
+                        else if (question.Type == "select")
+                        {
+                            <RadzenDropDown @bind-Value=@question.Answer Data=@question.Options Style="width: 100%;" />
+                            @if (question.Required)
+                            {
+                                <RadzenRequiredValidator Component="question.Answer" Text="Este campo es obligatorio." />
+                            }
+                        }
+                        else if (question.Type == "radio")
+                        {
+                            <RadzenRadioButtonList @bind-Value=@question.Answer Data="question.Options" Orientation="Orientation.Vertical" />
+                            @if (question.Required)
+                            {
+                                <RadzenRequiredValidator Component="question.Answer" Text="Este campo es obligatorio." />
+                            }
+                        }
+                        else if (question.Type == "money")
+                        {
+                            <RadzenNumeric @bind-Value="@question.Answer" Format="#,##0.00" />
+                            @if (question.Required)
+                            {
+                                <RadzenRequiredValidator Component="question.Answer" Text="Este campo es obligatorio." />
+                            }
+                        }
+                        else if (question.Type == "date")
+                        {
+                            <RadzenDatePicker TValue="DateTime"
+                                              Value="@(DateTime.TryParse(question.Answer, out var dateValue) ? dateValue : DateTime.Now)"
+                                              DateFormat="dd/MM/yyyy"
+                                              Change="@(e => question.Answer = ((DateTime)e.Value).ToString("yyyy-MM-dd"))"
+                                              Placeholder="Selecciona una fecha" />
+
+                            @if (question.Required)
+                            {
+                                <RadzenRequiredValidator Component="question.Answer" Text="Debe seleccionar una fecha." />
+                            }
+                        }
+                        else if (question.Type == "file")
+                        {
+
+                            @* <InputFile OnChange="@(e => OnFileChange(e, question))"
+                                       AdditionalAttributes="@(new Dictionary<string, object> { { "accept", question.MimeType } })" /> *@
+                            <InputFile OnChange="@(e => OnFileChange(e, question))" />
+                        }
+                    </RadzenStack>
+                </RadzenCard>
+            }
+
+            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="width: 100%; margin-top: 1rem;">
+                <TurnstileCaptcha SiteKey="0x4AAAAAAA-8Bs_IinlEPqw5" OnSuccess="HandleTurnstileSuccess" />
+                <RadzenButton Click="@(() => PostFormAsync())"
+                              Text="Enviar"
+                              Icon="send" ButtonStyle="ButtonStyle.Primary"
+                              IsBusy=@isBusy BusyText="Enviando"
+                              Style="width: 200px;">
+                </RadzenButton>
+            </RadzenStack>
+
+        </RadzenStack>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private bool isBusy = false;
+
+    public FormRequestDto? Form { get; set; }
+
+    private string TurnstileToken { get; set; } = string.Empty;
+    private void HandleTurnstileSuccess(string token)
+    {
+        TurnstileToken = token;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var formResponse = await formsService.GetFormByAliasAsync(Id);
+
+            if (!formResponse.Success)
+            {
+                await DialogService.Alert("Formulario no encontrado.", "Error");
+                return;
+            }
+
+            Form = JsonConvert.DeserializeObject<FormRequestDto>(formResponse.Data.ToString())
+                   ?? throw new Exception("Error al deserializar el formulario.");
+
+            InitializeDefaultValues();
+        }
+        catch (Exception ex)
+        {
+            await DialogService.Alert($"Ocurrió un error: {ex.Message}", "Error");
+        }
+    }
+
+    private void InitializeDefaultValues()
+    {
+        if (Form?.Questions == null)
+        {
+            return;
+        }
+
+        foreach (var question in Form.Questions.Where(q => q.Type == "select" && q.Options?.Count == 1))
+        {
+            question.Answer = question.Options.First();
+        }
+
+        foreach (var question in Form.Questions.Where(q => q.Type == "date" && q.Required && string.IsNullOrEmpty(q.Answer)))
+        {
+            question.Answer = DateTime.Now.ToString("yyyy-MM-dd");
+        }
+    }
+
+    private async Task OnFileChange(InputFileChangeEventArgs e, FormRequestQuestionDto question)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            using var memoryStream = new MemoryStream();
+            await file.OpenReadStream().CopyToAsync(memoryStream);
+            byte[] fileBytes = memoryStream.ToArray();
+            question.Answer = JsonConvert.SerializeObject(new FileInput64Dto { Content = Convert.ToBase64String(fileBytes), FileName = file.Name, MimeType = question.MimeType });
+        }
+    }
+
+    public async Task PostFormAsync()
+    {
+        try
+        {
+            if (isBusy) return;
+            isBusy = true;
+
+            if (string.IsNullOrEmpty(TurnstileToken))
+            {
+                await DialogService.Alert("No se ha completado la verificación de que usted no sea un bot, completela antes de continuar.", "Error");
+                return;
+            }
+
+            List<FormRequestQuestionDto> nullAnswers = Form.Questions
+                .Where(q => q.Required && string.IsNullOrEmpty(q.Answer))
+                .ToList() ?? new List<FormRequestQuestionDto>();
+
+            if (nullAnswers.Count > 0)
+            {
+                List<string> campos = nullAnswers.Select(m => $"• {m.Text}").ToList();
+                string mensajeCampos = string.Join("<br>", campos);
+
+                await DialogService.Alert(
+                    $"Por favor, complete los siguientes campos obligatorios para continuar:<br>{mensajeCampos}",
+                    "Advertencia"
+                );
+                return;
+            }
+
+            bool? dialogResult = await DialogService.Confirm(
+                "¿Desea guardar el formulario?",
+                "Atención",
+                new ConfirmOptions
+                    {
+                        OkButtonText = Localizer["Shared.Botones.Aceptar"],
+                        CancelButtonText = Localizer["Shared.Botones.Cancelar"]
+                    }
+            );
+
+            if (dialogResult != true) return;
+
+            FormPostDto formPostDto = new FormPostDto
+                {
+                    Id = Form.Id,
+                    Answers = Form.Questions.Select(m => new FormPostAnswerDto
+                    {
+                        Id = m.Id,
+                        Type = m.Type,
+                        Text = m.Answer,
+                        MimeType = m.Type == "file" ? m.MimeType : null
+                    }).ToList()
+                };
+
+            var response = await formsService.PostFormAsync(formPostDto, TurnstileToken);
+
+            if (!response.Success)
+            {
+                // 404: Formulario no encontrado
+                if (response.StatusCode == 404)
+                {
+                    await DialogService.Alert("Formulario no registrado.", "Error");
+                    return;
+                }
+
+                // 500: Error en servidor
+                if (response.StatusCode == 500)
+                {
+                    await DialogService.Alert(response.Message, "Error");
+                    return;
+                }
+
+                return;
+            }
+
+            await DialogService.Alert(response.Message, "Éxito");
+            await LoadFormAsync();
+        }
+        catch (Exception ex)
+        {
+            await DialogService.Alert($"Ocurrió un error inesperado: {ex.Message}", "Error");
+        }
+        finally
+        {
+            isBusy = false;
+        }
+    }
+
+    // Recargar form
+    private async Task LoadFormAsync()
+    {
+        var formResponse = await formsService.GetFormByAliasAsync(Id);
+
+        if (!formResponse.Success)
+        {
+            await DialogService.Alert("Formulario no encontrado.", "Error");
+            return;
+        }
+
+        Form = JsonConvert.DeserializeObject<FormRequestDto>(formResponse.Data.ToString())
+               ?? throw new Exception("Error al deserializar formulario");
+
+        foreach (var question in Form.Questions.Where(q => q.Type == "select" && q.Options?.Count == 1))
+        {
+            question.Answer = question.Options.First();
+        }
+
+        foreach (var question in Form.Questions.Where(q => q.Type == "date" && q.Required && string.IsNullOrEmpty(q.Answer)))
+        {
+            question.Answer = DateTime.Now.ToString("yyyy-MM-dd");
+        }
+
+        StateHasChanged();
+    }
+}

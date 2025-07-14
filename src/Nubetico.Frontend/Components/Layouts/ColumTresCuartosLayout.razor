@@ -1,0 +1,15 @@
+﻿<RadzenRow AlignItems="@AlignItemsLayout" JustifyContent="@JustifyContentLayout" Style="@StyleLayout">
+    <RadzenColumn SizeLG="10" SizeMD="12" SizeXS="12">
+        <RadzenCard Variant="Variant.Text">
+            <RadzenStack Gap="1rem" ChildContent="ChildContent" />
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+    // Este es el parámetro que permitirá pasar contenido al componente
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public AlignItems AlignItemsLayout { get; set; }
+    [Parameter] public JustifyContent JustifyContentLayout { get; set; }
+    [Parameter] public string StyleLayout { get; set; }
+}

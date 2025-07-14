@@ -1,0 +1,73 @@
+﻿@using Nubetico.Frontend.Components.Core.Dialogs
+@using Nubetico.Frontend.Components.Core.Shared;
+@using Nubetico.Frontend.Components.Shared
+@using Nubetico.Shared.Dto.ProyectosConstruccion;
+@using Nubetico.Frontend.Services.Core;
+@using Nubetico.Frontend.Models.Enums.Core;
+@using Microsoft.AspNetCore.Http;
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Models
+@inherits NbBaseComponent
+@inject DocumentsService documentsService
+@inject NotificationService notificationService
+@inject GlobalBreakpointService BreakpointService
+@inject IStringLocalizer<SharedResources> Localizer
+
+<RadzenStack>
+    <RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">@Localizer!["Subdivisions.Text.Model"]</RadzenText>
+    <LoadingDialogComponent @ref="_loadingDialog" />
+    @*FILTERS*@
+    <PanelFiltrosNubeticoComponent>
+        <RadzenRow AlignItems="AlignItems.Normal" JustifyContent="@GetJustifyContentRow()">
+            <RadzenRow>
+                <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                    <RadzenFormField Text="@Localizer!["Shared.Textos.Name"]" Style="width: 100%;">
+                        <RadzenTextBox Placeholder="@Localizer["Shared.Textos.Name"]"
+                                       Style="width: 100%;"
+                                       @bind-Value="@RequestGrid.Name"
+                                       type="search" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn SizeXS="12" SizeSM="2">
+                    <RadzenButton Icon="search"
+                                  Text="@Localizer!["Shared.Textos.Buscar"]"
+                                  Style="margin-top: 11px;"
+                                  Click="OnClickSearch" />
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenRow>
+    </PanelFiltrosNubeticoComponent>
+
+    @*GRID PROJECT*@
+    <RadzenDataGrid @ref="Grid"
+                    IsLoading="@IsLoading"
+                    Count="@Count"
+                    Data="@ModelsGrid"
+                    LoadData="@LoadData"
+                    AllowSorting="true"
+                    AllowFiltering="false"
+                    AllowPaging="true"
+                    PageSize="20"
+                    PagerHorizontalAlign="HorizontalAlign.Center"
+                    ShowPagingSummary="true"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    EmptyText="@Localizer!["Subdivisions.Text.EmptyGrid"]"
+                    Style="height: fit-content; max-height: calc(100vh - 455px); min-height: 300px; overflow: auto"
+                    RowDoubleClick="@((DataGridRowMouseEventArgs<ModelGridDto> args) => OnDataGridRowDoubleClick(args))"
+                    @bind-Value="@ModelSelected">
+
+        <Columns>
+            <RadzenDataGridColumn Property="ProyectGuid" Title="UUID" TextAlign="TextAlign.Center" Visible="false" />
+            <RadzenDataGridColumn Property="Folio" Title="ID" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn Property="Name" Title="@Localizer!["Shared.Textos.Name"]" TextAlign="TextAlign.Center" />
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    private JustifyContent GetJustifyContentRow() => BreakpointService.GetCurrentBreakpoint() switch
+    {
+        Breakpoint.Xs => JustifyContent.Center,
+        _ => JustifyContent.Normal
+    };
+}

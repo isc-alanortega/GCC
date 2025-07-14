@@ -1,0 +1,61 @@
+﻿@using Nubetico.Frontend.Components.Core
+@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Helpers
+@using Nubetico.Frontend.Models.Enums.Core
+@using Nubetico.Frontend.Services.Core
+
+@page "/login"
+@layout EmptyLayout
+
+<div style=" display: flex; justify-content: center; align-items: center; height: 100vh; ">
+    <RadzenRow Gap="0" class="rz-my-12 rz-mx-auto rz-border-radius-6 rz-shadow-10" Style="width: 100%; max-width: 800px; overflow: hidden;">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenCard class="nb-login-color-primary rz-shadow-0 rz-border-radius-0 rz-text-align-center rz-p-12" Style="height: 100%;">
+                <div class="responsive-logo rz-mb-5"></div>
+                <RadzenText TextStyle="TextStyle.H6" class="rz-color-white">@Localizer["Core.Login.WelcomeMessage"]</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body2" class="rz-color-white">@Localizer["Core.Login.Instructions"]</RadzenText>
+            </RadzenCard>
+            <RadzenStack class="rz-ml-5" Orientation="Orientation.Horizontal"
+                         JustifyContent="JustifyContent.Start"
+                         Gap="0"
+                         Style="position: sticky; bottom: 0;">
+                <RadzenText TextStyle="TextStyle.Body2" class="rz-color-white">@NubeticoAssemblyProperties.GetBuildDate().Trim()</RadzenText>
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+
+            <RadzenCard class="rz-shadow-0 rz-border-radius-0 rz-p-12 ">
+                <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" class="rz-mb-6">@Localizer["Core.Login.IniciarSesion"]</RadzenText>
+                @if (PasoActual.Equals(PasosAutenticacion.Credenciales))
+                {
+                    <RadzenStack class="rz-mb-6">
+                        <RadzenText TagName="TagName.H2" class="rz-mb-1">@Localizer["Core.Login.Usuario"]</RadzenText>
+                        <RadzenTextBox class="rz-mb-3" @bind-Value="@model.Username"></RadzenTextBox>
+                        <RadzenText TagName="TagName.H2" class="rz-mb-1">@Localizer["Core.Login.Password"]</RadzenText>
+                        <RadzenPassword @bind-Value=@model.Password aria-label="@Localizer["Core.Login.Password"]" />
+                    </RadzenStack>
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="0">
+                        <RadzenButton class="trz-mb-6" Text="@Localizer["Core.Login.IniciarSesion"]" ButtonType="ButtonType.Button" Click="ExecuteAsync" />
+                    </RadzenStack>
+                }
+                else
+                {
+                    <RadzenStack class="rz-mb-6">
+                        <RadzenText TagName="TagName.H2" class="rz-mb-1">@Localizer["Core.Login.Token"]</RadzenText>
+                        <RadzenSecurityCode @bind-Value=@model.Token Type="SecurityCodeType.Numeric" Count="6" Gap="0.5rem" />
+                    </RadzenStack>
+                    <RadzenStack class="rz-mb-6" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="2">
+                        <RadzenButton class="trz-mb-6" Text="@Localizer["Shared.Botones.Volver"]" ButtonType="ButtonType.Button" Click="ResetForm" />
+                        <RadzenButton class="trz-mb-6" Text="@Localizer["Shared.Botones.Continuar"]" ButtonType="ButtonType.Button" Click="ExecuteAsync" />
+                    </RadzenStack>
+                }
+                <RadzenRow class="rz-mb-6">
+                    <RadzenLabel class="rz-color-danger" Text="@Message" />
+                </RadzenRow>
+                <RadzenStack class="rz-mb-6" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                    <CultureProvider></CultureProvider>
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
+</div>

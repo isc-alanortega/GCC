@@ -1,0 +1,130 @@
+﻿@using Nubetico.Frontend.Helpers
+@using Nubetico.Frontend.Models.Class.Core
+@using Nubetico.Frontend.Models.Static.Core
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+@inject IJSRuntime JsRuntime
+@inject NavigationManager navigationManager
+@inherits NbBaseComponent
+
+@* @if (!MenuDto.New && !MenuDto.Updated)
+{
+    <RadzenPanelMenuItem Click="OnClick"
+                         Text="@MenuDto.Name" Path=""
+                         Icon="@(!string.IsNullOrEmpty(MenuDto.IconGlyph) ? char.ConvertFromUtf32(Convert.ToInt32(MenuDto.IconGlyph, 16)) : "")"
+                         @bind-Expanded=@Expanded
+                         aria-label="@MenuDto.Name" >
+        @ChildContent
+    </RadzenPanelMenuItem>
+}
+else
+{
+    <RadzenPanelMenuItem @bind-Expanded=@Expanded Text="@MenuDto.Name" Path="" Icon="@MenuDto.Icon" aria-label="@MenuDto.Name" Click="OnClick">
+        <Template>
+            @MenuDto.Name
+            <RadzenBadge Text="Updated" Visible=@MenuDto.Updated BadgeStyle="BadgeStyle.Info" />
+            <RadzenBadge Text="New" Visible=@MenuDto.New BadgeStyle="BadgeStyle.Success" />
+        </Template>
+        <ChildContent>@ChildContent</ChildContent>
+    </RadzenPanelMenuItem>
+} *@
+
+<RadzenPanelMenuItem @bind-Expanded=@Expanded Text="@MenuDto.Name" Path="" aria-label="@MenuDto.Name" Click="OnClick">
+    <Template>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start">
+            @if (!string.IsNullOrEmpty(MenuDto.UnicodeIcon))
+            {
+                <RadzenIcon Icon="@(!string.IsNullOrEmpty(MenuDto.UnicodeIcon) ? char.ConvertFromUtf32(Convert.ToInt32(MenuDto.UnicodeIcon, 16)) : "")"
+                            class="@(MenuDto.IconClass)">
+                </RadzenIcon>
+            }
+            @MenuDto.Name
+        </RadzenStack>
+        <RadzenBadge Text="Updated" Visible=@MenuDto.Updated BadgeStyle="BadgeStyle.Info" />
+        <RadzenBadge Text="New" Visible=@MenuDto.New BadgeStyle="BadgeStyle.Success" />
+    </Template>
+    <ChildContent>
+        @ChildContent
+    </ChildContent>
+</RadzenPanelMenuItem>
+
+@code {
+    [Parameter]
+    public MenuUsuarioDto MenuDto { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool Expanded
+    {
+        get
+        {
+            return MenuDto.Expanded;
+        }
+        set
+        {
+            MenuDto.Expanded = value;
+        }
+    }
+
+    [Parameter]
+    public EventCallback<bool> ExpandedChanged { get; set; }
+
+    public async Task OnClick(MouseEventArgs args)
+    {
+        var abrirEnTab = await JsRuntime.InvokeAsync<string>("localStorage.getItem", LocalStorageKeys.WorkWithTabs);
+
+        if (abrirEnTab == "true")
+        {
+            if (!string.IsNullOrEmpty(MenuDto.ComponentNamespace) && !string.IsNullOrEmpty(MenuDto.ComponentTypeName))
+            {
+                var type = Type.GetType($"{MenuDto.ComponentNamespace}.{MenuDto.ComponentTypeName}");
+                if (type != null)
+                {
+                    // Crear instancia TabNubetico
+                    TabNubetico tabNubetico = new TabNubetico
+                        {
+                            Icono = MenuDto.UnicodeIcon,
+                            Text = MenuDto.Name,
+                            TipoControl = type,
+                            Repetir = MenuDto.CanRepeatTab
+                        };
+                    
+                    // Instanciar componente contenido en TabNubetico
+                    tabNubetico.Componente = builder =>
+                    {
+                        builder.OpenComponent(0, type);
+                        builder.AddComponentReferenceCapture(1, instance =>
+                        {
+                            // Asegurarnos que el componente interno instanciado hereda el componente base
+                            if (instance is NbBaseComponent nbComponent)
+                            {
+                                tabNubetico.InstanciaComponente = nbComponent;
+                                nbComponent.IconoBase = tabNubetico.Icono ?? "";
+
+                                // Establecer el menú inicial para el componente
+                                nbComponent.TriggerMenuUpdate();
+                            }
+                        });
+                        builder.CloseComponent();
+                    };
+
+                    this.AgregarTabNubetico(tabNubetico);
+                }
+            }
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(MenuDto.Path))
+            {
+                navigationManager.NavigateTo(MenuDto.Path);
+            }
+        }
+    }
+
+    string GetUrl()
+    {
+        return MenuDto.Path == null ? MenuDto.Path : $"{MenuDto.Path}{new Uri(navigationManager.Uri).Query}";
+    }
+}

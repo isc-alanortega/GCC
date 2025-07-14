@@ -1,0 +1,30 @@
+﻿@inject IJSRuntime JSRuntime;
+
+<div id="turnstile-widget" class="mb-3" data-theme="light"></div>
+
+@code {
+    [Parameter]
+    public string SiteKey { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnSuccess { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitializeTurnstileAsync();
+        }
+    }
+
+    private async Task InitializeTurnstileAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("initializeTurnstile", SiteKey, DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public async Task OnTurnstileSuccess(string token)
+    {
+        await OnSuccess.InvokeAsync(token);
+    }
+}

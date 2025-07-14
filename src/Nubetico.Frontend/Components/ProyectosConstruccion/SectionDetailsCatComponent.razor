@@ -1,0 +1,82 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Shared.Dto.ProyectosConstruccion.ProjectSectionDetails
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto
+@using Nubetico.Frontend.Models.Enums.Core
+@using Nubetico.Frontend.Components.Shared
+@inherits NbBaseComponent
+
+@*HEADER*@
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">Secciones</RadzenText>
+
+@*FILTERS*@
+<PanelFiltrosNubeticoComponent>
+    <RadzenRow AlignItems="AlignItems.Normal" JustifyContent="@GetJustifyContentRow()">
+        <RadzenColumn SizeMD="10" SizeXS="12">
+            <RadzenRow>
+                <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                    <RadzenFormField Text="@Localizer!["Shared.Textos.Project"]" Style="width: 100%;" class="radzen-form-field-required">
+                        <RadzenTextBox Placeholder="@Localizer!["Shared.Textos.Project"]"
+                                       @bind-Value="@Request.Project"
+                                       Style="width: 100%;"
+                                       type="search" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                    <RadzenFormField Text="Sección" Style="width: 100%;">
+                        <RadzenTextBox Placeholder="@Localizer!["Shared.Textos.Project"]"
+                                       @bind-Value="@Request.Section"
+                                       Style="width: 100%;"
+                                       type="search" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenColumn>
+        <RadzenColumn SizeMD="2" SizeXS="2">
+            <RadzenButton Icon="search"
+                          Text="@Localizer!["Shared.Textos.Buscar"]"
+                          Style="margin-top: 11px;"
+                          Click="OnClickFilterSectionsAsync" />
+        </RadzenColumn>
+    </RadzenRow>
+</PanelFiltrosNubeticoComponent>
+
+@*GRID PROJECT*@
+<RadzenDataGrid @ref="SectionGrid"
+                @bind-Value="@SectionSelected"
+                IsLoading="@IsLoading"
+                Count="@CountGrid"
+                Data="@SectionData"
+                LoadData="LoadData"
+                RowDoubleClick="@((DataGridRowMouseEventArgs<SectionDetailsDto> args) => DataGridRowDoubleClick(args))"
+                AllowSorting="true"
+                AllowFiltering="false"
+                AllowPaging="true"
+                PageSize="20"
+                PagerHorizontalAlign="HorizontalAlign.Center"
+                ShowPagingSummary="true"
+                ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single"
+                EmptyText="@Localizer!["Subdivisions.Text.EmptyGrid"]"
+                Style="height: fit-content; max-height: calc(100vh - 455px); min-height: 300px; overflow: auto">
+    <Columns>
+        <RadzenDataGridColumn Property="Project" Title="@Localizer!["Shared.Textos.Project"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Section" Title="Sección" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="StartDate" Title="Inicio" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="EndDate" Title="Fin" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Complete" Title="Terminado" TextAlign="TextAlign.Center" >
+            <Template Context="data">
+                <RadzenCheckBox TriState="false" Value="@data.Complete" TValue="bool?" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+
+@code {
+    private JustifyContent GetJustifyContentRow() => BreakpointService!.GetCurrentBreakpoint() switch
+    {
+        Breakpoint.Xs => JustifyContent.Center,
+        _ => JustifyContent.Normal
+    };
+}

@@ -1,0 +1,37 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.Layouts
+@using Nubetico.Frontend.Models.Enums.Core
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto
+
+<RadzenRow>
+    <RadzenColumn>
+        <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap">
+            <RadzenDataGrid @ref="LotsGrid"
+                            @bind-Value="@LotSelected"
+                            Data="@LotsData"
+                            IsLoading="false"
+                            AllowSorting="false"
+                            AllowFiltering="false"
+                            AllowPaging="true"
+                            ShowPagingSummary="true"
+                            PagerHorizontalAlign="HorizontalAlign.Left"
+                            SelectionMode="DataGridSelectionMode.Single"
+                            PageSize="20"
+                            ColumnWidth="200px"
+                            Style="min-width: 200px"
+                            EmptyText="Sin regristros">
+                <Columns>
+                    <RadzenDataGridColumn Property="Subdivision" Title="Fraccinamiento" />
+                    <RadzenDataGridColumn Property="SubdivisionStep" Title="Etapa" />
+                    <RadzenDataGridColumn Property="Stage" Title="Manzana" />
+                    <RadzenDataGridColumn Property="Lots" Title="Lote" />
+                    <RadzenDataGridColumn Property="Acciones" Title="Acciones" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenStack Gap="0.5rem">
+        <RadzenButton Icon="add" Style="margin-right: 10px;" Disabled="@GetIsReadOnly()" />
+    </RadzenStack>
+</RadzenRow>
+

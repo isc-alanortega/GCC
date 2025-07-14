@@ -1,0 +1,37 @@
+﻿@using Nubetico.Frontend.Components.Core.Dialogs
+@using Nubetico.Frontend.Services.Core
+
+@inject AuthStateProvider AuthStateProvider
+@inject DialogService DialogService
+@inject HttpClient HttpClient
+@inject IJSRuntime JsRuntime
+@inject IStringLocalizer<SharedResources> Localizer
+@inject NavigationManager NavigationManager
+
+@if (Perfil != null)
+{
+    <RadzenStack class="rz-mb-6" Orientation="Orientation.Vertical" AlignItems="Radzen.AlignItems.Center" Gap="4px">
+        <RadzenIcon Icon="@("\uf007")" class="rz-mt-4 fa-light" style="font-size: 64px" />
+        <RadzenText TagName="TagName.H2" class="rz-mb-4 rz-mt-4">@($"{Perfil.Nombre} {Perfil.PrimerApellido} {Perfil.SegundoApellido ?? ""}".Trim())</RadzenText>
+    </RadzenStack>
+    <RadzenStack class="rz-mb-6" Orientation="Orientation.Horizontal" JustifyContent="Radzen.JustifyContent.Center" Gap="4px">
+        <RadzenButton class="trz-mb-6" Text="@Localizer["Core.ChangePassword"]" ButtonType="ButtonType.Button" Click="ShowChangePasswordDialog" />
+        <RadzenButton class="trz-mb-6" Text="@Localizer["Core.CloseSession"]" ButtonType="ButtonType.Button" Click="SignOutAsync" />
+    </RadzenStack>
+    <RadzenStack class="rz-mb-6" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="4px">
+        <CultureProvider></CultureProvider>
+    </RadzenStack>
+}
+else
+{
+    <p>profile not found</p>
+}
+
+@code{
+    async Task ShowChangePasswordDialog()
+    {
+        var result = await DialogService.OpenAsync("Cambiar contraseña", ds =>
+            @<ChangePasswordDialog></ChangePasswordDialog>
+        );
+    }
+}

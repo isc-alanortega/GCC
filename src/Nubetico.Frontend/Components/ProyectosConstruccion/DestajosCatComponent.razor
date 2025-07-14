@@ -1,0 +1,58 @@
+﻿@using Newtonsoft.Json
+@using Nubetico.Frontend.Components.Core.Dialogs
+@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+@using Nubetico.Shared.Static.Core
+
+@using Nubetico.Shared.Dto.ProyectosConstruccion;
+
+@inherits NbBaseComponent
+
+@inject GlobalBreakpointService breakpointService
+@inject IStringLocalizer<SharedResources> Localizer
+
+<RadzenPanel>
+    <HeaderTemplate>
+        <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+            <RadzenIcon Icon=@("\uf6e3") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+            <b>Destajos</b>
+        </RadzenText>
+    </HeaderTemplate>
+    <ChildContent>
+        <RadzenCard class="rz-mt-4">
+            <RadzenDataGrid @ref="GridDestajos"
+                            IsLoading=@IsLoading
+                            Culture="@System.Globalization.CultureInfo.CurrentCulture"
+                            Count="@Count"
+                            Data="@ListaDestajos"
+                            LoadData="@LoadDataAsync"
+                            AllowSorting="true"
+                            AllowFiltering="false"
+                            AllowPaging="true"
+                            PageSize="@this.RowsPerPage"
+                            PagerHorizontalAlign="HorizontalAlign.Center"
+                            ShowPagingSummary="true"
+                            ColumnWidth="200px"
+                            SelectionMode="DataGridSelectionMode.Single"
+                            TItem="DesatjosDto"
+                            RowDoubleClick="DataGridRowDoubleClick"
+                            @bind-Value=@DestajosSeleccionados>
+                <Columns>
+                    <RadzenDataGridColumn Property="Proyecto" Title="Proyecto" TextAlign="TextAlign.Center"/>
+                    <RadzenDataGridColumn Property="Seccion" Title="Seccion" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="Contratista" Title="Contratista" TextAlign="TextAlign.Left" />
+                    <RadzenDataGridColumn Property="FechaReporte" Title="Fecha Reporte" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="NotasReporte" Title="Notas Reporte" TextAlign="TextAlign.Left" />
+                    <RadzenDataGridColumn Property="Supervisor" Title="Supervisor" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="FechaSupervision" Title="Fecha Supervision" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="Modelo" Title="Modelo" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="PorcentajeReportado" Title="Porcentaje Reportado" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="PorcentajeAprobado" Title="Porcentaje Aprobado" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn Property="NotasContratista" Title="Notas Contratista" TextAlign="TextAlign.Left" />
+                    <RadzenDataGridColumn Property="NotasSupervisor" Title="Notas Supervisor" TextAlign="TextAlign.Left" />
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+    </ChildContent>
+</RadzenPanel>

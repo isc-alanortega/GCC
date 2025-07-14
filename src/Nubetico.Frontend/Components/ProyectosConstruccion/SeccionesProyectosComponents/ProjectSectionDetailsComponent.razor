@@ -1,0 +1,79 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.Layouts
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto
+@using Nubetico.Frontend.Models.Enums.Core
+@implements IDisposable
+@inherits NbBaseComponent
+<div>
+    <ColumTresCuartosLayout>
+        <RadzenRow>
+            <RadzenColumn Size="12">
+                <RadzenFormField Text="Proyecto" Style="width: 100%;">
+                    <RadzenTextBox Value="@Section.Project" Trim="true" ReadOnly="true" />
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn SizeSM="6" SizeXS="12">
+                <RadzenFormField Text="Nombre Etapa" Style="width: 100%;">
+                    <RadzenTextBox Value="@Section.Section" Trim="true" ReadOnly="true" />
+
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn SizeSM="6" SizeXS="12">
+                <RadzenFormField Text="Descripción" Style="width: 100%;">
+                    <RadzenTextBox Value="@Section.Description"/>
+
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn SizeSM="6" SizeXS="12">
+                <RadzenFormField Text="Inicio Estimado" Style="width: 100%;">
+                    <RadzenTextBox Value="@Section.ProjectedStartDate" Trim="true" ReadOnly="true" />
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn SizeSM="6" SizeXS="12">
+                <RadzenFormField Text="Fin Estimado" Style="width: 100%;">
+                    <RadzenTextBox Value="@Section.ProjectedEndDate" Trim="true" ReadOnly="true" />
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn SizeSM="6" SizeXS="12">
+                <RadzenFormField Text="Inicio Real" Style="width: 100%;">
+                    <RadzenTextBox Value="@Section.StartDate" Trim="true" ReadOnly="true" />
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn SizeSM="6" SizeXS="12">
+                <RadzenFormField Text="Fin Real" Style="width: 100%;">
+                    <RadzenTextBox Value="@Section.ProjectedEndDate" Trim="true" ReadOnly="true" />
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn SizeSM="6" SizeXS="12">
+                <RadzenFormField Text="Contratista" Style="width: 100%;">
+                    <RadzenTextBox Value="@Section.GeneralConractor" Trim="true" ReadOnly="true" />
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn Size="3" Style="@GetStylesColumnCheckBox()">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenCheckBox Value="Section.Complete" ReadOnly="true" />
+                    <RadzenLabel Text="Teminado" Component="chkPostalCode" class="rz-ms-2" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </ColumTresCuartosLayout>
+</div>
+
+@code {
+
+    private string GetStylesColumnCheckBox() => BreakpointService!.GetCurrentBreakpoint() == Breakpoint.Xs ? "padding-left: 5px;" : "padding-top: 10px;";
+    
+    private void Get()
+    {
+        if (Section.Section == null) return;
+        Section.Section = "holi";
+    }
+}

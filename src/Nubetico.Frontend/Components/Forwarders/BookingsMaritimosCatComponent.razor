@@ -1,0 +1,24 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.Shared
+@inject IStringLocalizer<SharedResources> localizer
+@inherits NbBaseComponent
+
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">@localizer["Forwarders.MaritimeBookings"]</RadzenText>
+<PanelFiltrosNubeticoComponent>
+    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" RowGap="0">
+
+    </RadzenRow>
+</PanelFiltrosNubeticoComponent>
+
+<RadzenDataGrid @ref="grid" IsLoading=@IsLoading Count="@Count" Data="@ListObraDto" LoadData="@LoadData" AllowSorting="true" AllowFiltering="false" AllowPaging="true" PageSize="20" PagerHorizontalAlign="HorizontalAlign.Center" ColumnWidth="200px">
+    <Columns>
+        @* <RadzenDataGridColumn Property="ID" Title="ID" TextAlign="TextAlign.Center" /> *@
+        <RadzenDataGridColumn Property="NoOrder" Title="@localizer["Forwarders.OrderId"]" />
+        <RadzenDataGridColumn Property="Origen" Title="@localizer["Forwarders.Origin"]" />
+        <RadzenDataGridColumn Property="Destino" Title="@localizer["Forwarders.Destination"]" />
+        <RadzenDataGridColumn Property="Modalidad" Title="@localizer["Forwarders.Mode"]" />
+        <RadzenDataGridColumn Property="Cliente" Title="@localizer["Forwarders.Client"]" />
+        <RadzenDataGridColumn Property="Precio" Title="@localizer["Forwarders.Price"]" />
+        <RadzenDataGridColumn Property="Credito" Title="@localizer["Forwarders.Credit"]" />
+    </Columns>
+</RadzenDataGrid>

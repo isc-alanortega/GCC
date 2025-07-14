@@ -1,0 +1,133 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.Layouts
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto
+@inherits NbBaseComponent
+<div>
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenStack Orientation="Orientation.Horizontal" Wrap="@GetFlexWrap()">
+                <RadzenDataGrid @ref="SectionsGrid"
+                                IsLoading="@IsLoadData"
+                                Count="@SectionsCount"
+                                Data="@(GetSectionList().Where(section => section.Sequence != 0 && section.Active == true).ToList().OrderBy(section => section.Sequence))"
+                                @bind-Value="@SectionsSelected"
+                                AllowSorting="false"
+                                AllowFiltering="false"
+                                AllowPaging="true"
+                                PageSize="20"
+                                PagerHorizontalAlign="HorizontalAlign.Center"
+                                ShowPagingSummary="true"
+                                ColumnWidth="200px"
+                                SelectionMode="DataGridSelectionMode.Single"
+                                Style="min-width: 200px"
+                                RowDoubleClick="@((DataGridRowMouseEventArgs<ProjectSectionDataDto> args) => OnDataGridRowDoubleClickSection(args))"
+                                EmptyText="@LocalizerServices!["Subdivisions.Text.EmptyGrid"]">
+                    <Columns>
+                        <RadzenDataGridColumn Property="SectionGuid" Title="UUID" Visible="false" />
+                        <RadzenDataGridColumn Property="Name" Title="@LocalizerServices!["Shared.Textos.Sections"]" />
+                        @if (!IsDisabledForm())
+                        {
+                            <RadzenDataGridColumn Title="@LocalizerServices!["Subdivisions.Text.Options"]" MinWidth="@($"{GetWithOfColumOptions()}px")">
+                                <Template>
+                                    <RadzenStack Orientation="Orientation.Horizontal"
+                                                 Wrap="FlexWrap.Wrap"
+                                                 JustifyContent="JustifyContent.SpaceBetween"
+                                                 Gap="0"
+                                                 Style="display: flex; flex-wrap: wrap; max-width:150px; min-width: 75px; align-items: center">
+                                        <RadzenButton Variant="Variant.Text"
+                                                      Icon="edit_square"
+                                                      ButtonStyle="ButtonStyle.Warning"
+                                                      Click="(args) => OnClickEditSection(context)" />
+                                        <RadzenButton Variant="Variant.Text"
+                                                      Icon="remove"
+                                                      ButtonStyle="ButtonStyle.Danger"
+                                                      Click="(args) => OnClickDeleteSection(context)" />
+                                        <RadzenButton Variant="Variant.Text"
+                                                      Icon="keyboard_arrow_up"
+                                                      ButtonStyle="ButtonStyle.Dark"
+                                                      Click="(args) => OnClickMoveUpSections(context)" />
+                                        <RadzenButton Variant="Variant.Text"
+                                                      Icon="keyboard_arrow_down"
+                                                      ButtonStyle="ButtonStyle.Dark"
+                                                      Click="(args) => OnClickMoveDownSections(context)" />
+                                    </RadzenStack>
+                                </Template>
+                            </RadzenDataGridColumn>
+                        }
+                    </Columns>
+                </RadzenDataGrid>
+                <RadzenStack Gap="0.5rem">
+                    <RadzenButton Icon="add"
+                                  Style="margin-right: 10px;"
+                                  Click="OnClickAddSectionsAsync" Visible="@(!IsDisabledForm())" Disabled="IsDisabledForm()" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+
+        <RadzenColumn>
+            <RadzenStack Orientation="Orientation.Horizontal" Wrap="@GetFlexWrap()">
+                <RadzenDataGrid @ref="PhasesGrid"
+                                IsLoading="@IsLoadData"
+                                Count="@PhasesCount"
+                                Data="@GetActualSectionPhasesList().Where(phase => phase.Sequence != null && phase.Sequence != 0 && phase.Active == true).ToList().OrderBy(phase => phase.Sequence)"
+                                AllowSorting="true"
+                                AllowFiltering="false"
+                                AllowPaging="true"
+                                PageSize="20"
+                                PagerHorizontalAlign="HorizontalAlign.Center"
+                                ShowPagingSummary="true"
+                                ColumnWidth="200px"
+                                SelectionMode="DataGridSelectionMode.Single"
+                                @bind-Value="@PhasesSelected"
+                                Style="min-width: 200px"
+                                RowDoubleClick="@((DataGridRowMouseEventArgs<ProjectSectionPhaseDto> args) => OnDataGridRowDoubleClickPhase(args))"
+                                EmptyText="@LocalizerServices!["Subdivisions.Text.EmptyGrid"]">
+                    <Columns>
+                        <RadzenDataGridColumn Property="SectionGuid" Title="UUID" Visible="false" />
+                        <RadzenDataGridColumn Property="Name" Title="@LocalizerServices!["Shared.Textos.Phases"]" />
+                        @if (!IsDisabledForm())
+                        {
+                            <RadzenDataGridColumn Title="@LocalizerServices!["Subdivisions.Text.Options"]" Width="@($"{GetWithOfColumOptions()}px")" MinWidth="@($"{GetWithOfColumOptions()}px")">
+                                <Template>
+                                    <RadzenStack Orientation="Orientation.Horizontal"
+                                                 Wrap="FlexWrap.Wrap"
+                                                 JustifyContent="JustifyContent.SpaceBetween"
+                                                 Gap="0"
+                                                 Style="display: flex; flex-wrap: wrap; max-width:150px; min-width: 75px; align-items: center">
+                                        <RadzenButton Variant="Variant.Text"
+                                                      Icon="edit_square"
+                                                      ButtonStyle="ButtonStyle.Warning"
+                                                      Click="(args) => OnClickEditPhase(context)" />
+                                        <RadzenButton Variant="Variant.Text"
+                                                      Icon="remove"
+                                                      ButtonStyle="ButtonStyle.Danger"
+                                                      Click="(args) => OnClickDeletePhase(context)" />
+                                        <RadzenButton Variant="Variant.Text"
+                                                      Icon="keyboard_arrow_up"
+                                                      ButtonStyle="ButtonStyle.Dark"
+                                                      Click="(args) => OnClickMoveUpPhase(context)" />
+                                        <RadzenButton Variant="Variant.Text"
+                                                      Icon="keyboard_arrow_down"
+                                                      ButtonStyle="ButtonStyle.Dark"
+                                                      Click="(args) => OnClickMoveDonwPhase(context)" />
+                                    </RadzenStack>
+                                </Template>
+                            </RadzenDataGridColumn>
+                        }
+                    </Columns>
+                </RadzenDataGrid>
+                <RadzenStack Gap="0.5rem">
+                    <RadzenButton Icon="add"
+                                  Style="margin-right: 10px;"
+                                  Click="OnClickAddPhaseAsync" Visible="@(IsSectionSelected() && !IsDisabledForm())" Disabled="IsDisabledForm()" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+
+
+    @if(ProjectData!.ProjectId == 11 && GetSectionList().Where(item => item.SectionId == 20).ToList().Any())
+    {
+        <RadzenButton Text="Abrir detalle" Click="OpenTab"></RadzenButton>
+    }
+</div>

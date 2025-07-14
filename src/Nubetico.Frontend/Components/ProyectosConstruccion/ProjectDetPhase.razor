@@ -1,0 +1,63 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@inherits NbBaseComponent
+
+<div>
+    <RadzenCard>
+        @* <RadzenRow>
+        <RadzenColumn Size="6">
+        <RadzenFormField Text="@LocalizerServices!["Shared.Textos.Folio"]" Style="width: 100%;">
+        <RadzenTextBox Trim="true"
+        Value="@(PhaseData!.Folio)"
+        Style="width: 100%"
+        aria-label="@LocalizerServices!["Shared.Textos.Folio"]"
+        Disabled="true" />
+        </RadzenFormField>
+        </RadzenColumn>
+        </RadzenRow> *@
+
+        <RadzenRow>
+            <RadzenColumn Size="6">
+                <RadzenFormField Text="@LocalizerServices!["Shared.Textos.Name"]" Style="width: 100%;">
+                    <RadzenTextBox Value="@PhaseData!.Name?.ToUpper()"
+                                   ValueChanged="@((value) => PhaseData.Name = value?.Trim().ToUpper())"
+                                   Trim="true"
+                                   Style="width: 100%"
+                                   aria-label="@LocalizerServices!["Shared.Textos.Name"]"
+                                   Disabled="@GetIsDisabled()" />
+                </RadzenFormField>
+            </RadzenColumn>
+
+            <RadzenColumn Size="3">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenCheckBox @bind-Value="@PhaseData!.Complete" Disabled="@GetIsDisabled()" />
+                    <RadzenLabel Text="Teminado" Component="chkPostalCode" class="rz-ms-2" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12">
+                <RadzenFormField Text="@LocalizerServices!["Shared.Textos.Description"]" Style="width: 100%;">
+                    <RadzenTextArea Value="@PhaseData!.Description?.ToUpper()"
+                                    ValueChanged="@((value) => PhaseData!.Description = value?.Trim().ToUpper())"
+                                    Style="width: 100%; height: 6.5em; resize: none;"
+                                    aria-label="@LocalizerServices!["Shared.Textos.Description"]"
+                                    Disabled="@GetIsDisabled()" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenCard>
+
+    @if (IsDialogOrigen == true && ActionForm != TipoEstadoControl.Lectura)
+    {
+        <br />
+        <RadzenStack class="rz-w-100" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Wrap="FlexWrap.Wrap">
+            <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                <RadzenButton Click=@(async () => await FactoryTypeSaveWithDialogAsync()) Text="Guardar" Icon="Save" ButtonStyle="ButtonStyle.Primary" Disabled="@GetIsDisabled()" />
+            </RadzenStack>
+            <RadzenStack Style="width: 20%" Orientation="Orientation.Vertical" Gap="4px">
+                <RadzenButton Click=@(() => DialogService?.Close()) Text="Cancelar" Icon="dangerous" ButtonStyle="ButtonStyle.Danger" />
+            </RadzenStack>
+        </RadzenStack>
+    }
+</div>

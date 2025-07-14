@@ -1,0 +1,18 @@
+﻿@inject IStringLocalizer<SharedResources> Localizer
+
+<RadzenCard class="rz-mb-5 rz-p-2 rz-border">
+    <RadzenPanel AllowCollapse="true">
+        <HeaderTemplate>
+            <RadzenText class="rz-display-flex rz-align-items-center rz-m-0">
+                <RadzenIcon Icon="@("\uf1de")" IconColor="@Colors.Primary" class="rz-me-1 fa-light" /><b>@Localizer["Shared.Textos.Filtros"]</b>
+            </RadzenText>
+        </HeaderTemplate>
+        <ChildContent>
+            @ChildContent
+        </ChildContent>
+    </RadzenPanel>
+</RadzenCard>
+
+@code{
+    [Parameter] public RenderFragment ChildContent { get; set; } = default!;
+}

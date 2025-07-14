@@ -1,0 +1,150 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Services.Core
+@inherits NbBaseComponent
+@inject AddressesService addressesService
+@inject NotificationService notificationService
+@inject GlobalBreakpointService breakpointService
+@inject IStringLocalizer<SharedResources> Localizer
+
+<RadzenPanel>
+	@*TITLE*@
+	<HeaderTemplate>
+		<RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+			<RadzenIcon Icon="location_on" IconColor="@Colors.Primary" class="rz-me-2" />
+			<b>@Localizer["Address.Text.Title"]</b>
+		</RadzenText>
+	</HeaderTemplate>
+	<ChildContent>
+		@*CONTENT*@
+		<RadzenCard class="rz-mt-4">
+			<RadzenStack>
+				 <RadzenRow Wrap="FlexWrap.Wrap">
+					<RadzenColumn SizeSM="6" SizeXS="12" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Address.Text.Street"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@AddressData.Street" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn SizeSM="6" SizeXS="12" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Shared.Textos.Description"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@AddressData.Description" />
+						</RadzenFormField>
+					</RadzenColumn>
+
+					<RadzenColumn Size="@GetColumnsSize()" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Address.Text.StreetNumber"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@AddressData.StreetNumber" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn Size="@GetColumnsSize()" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Address.Text.UnitNumber"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@AddressData.UnitNumber" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn Size="@GetColumnsSize()" Style="width: 100%; min-width: 200px">
+						<RadzenStack Gap="0">
+							<RadzenFormField Text="@Localizer["Subdivisions.Text.Zipcode"]" Style="width: 100%">
+								<RadzenMask Mask="*****"
+											CharacterPattern="[0-9]"
+											Name="ZipCodeField"
+											Change="@(args => OnValueChange(args, "ZIPCODE"))"
+											Disabled="@GetDisabled()"
+											@bind-Value="AddressData.ZipCode" />
+							</RadzenFormField>
+							<RadzenRegexValidator Component="ZipCodeField"
+												  Text="@Localizer["Address.Error.LengthZipcode"]"
+												  Pattern="\d{5}" />
+						</RadzenStack>
+					</RadzenColumn>
+					
+					<RadzenColumn Size="@GetColumnsSize()" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Address.Text.State"]" Style="width: 100%">
+							<RadzenDropDown TValue="string"
+											Name="StateField"
+											@ref="StateDropDown"
+											@bind-SearchText="stateSearchText"
+											FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+											FilterOperator="StringFilterOperator.Contains"
+											AllowFiltering="true"
+											Data="@StatesList"
+											TextProperty="Value"
+											ValueProperty="Key"
+											AllowClear="true"
+											Change="@(args => OnValueChange((string?)args, "STATE"))"
+											Disabled="@GetDisabled()"
+											@bind-Value="@AddressData.c_State" />
+						</RadzenFormField>
+						<RadzenCustomValidator Component="StateField"
+											   Validator="@(() => CustomValidate("STATE"))"
+											   Text="@($"*{Localizer["Subdivisions.Text.Required"]}")" />
+					</RadzenColumn>
+					<RadzenColumn Size="@GetColumnsSize()" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Address.Text.City"]" Style="width: 100%">
+							<RadzenDropDown TValue="string"
+											Name="CityField"
+											@ref="CityDropDown"
+											@bind-SearchText="citySearchText"
+											FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+											FilterOperator="StringFilterOperator.Contains"
+											AllowFiltering="true"
+											Data="@CitiesList"
+											TextProperty="Descripcion"
+											ValueProperty="ID"
+											AllowClear="true"
+											Disabled="@GetDisabled()"
+											@bind-Value="@AddressData.c_City" />
+						</RadzenFormField>
+						<RadzenCustomValidator Component="CityField"
+											   Validator="@(() => CustomValidate("CITY"))"
+											   Text="@($"*{Localizer["Subdivisions.Text.Required"]}")" />
+					</RadzenColumn>
+					<RadzenColumn Size="@GetColumnsSize()" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Address.Text.Neighborhood"]" Style="width: 100%">
+							<RadzenDropDown TValue="string"
+											Name="NeighborhoodField"
+											@ref="NeighborhoodDropDown"
+											SearchTextChanged="@(args => OnValueChange(args, "NEIGHBORHOODSEARCH"))"
+											FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+											FilterOperator="StringFilterOperator.Contains"
+											AllowFiltering="true"
+											Data="@NeighborhoodsList"
+											TextProperty="Descripcion"
+											ValueProperty="ID"
+											AllowClear="true"
+											Disabled="@GetDisabled()"
+											@bind-Value="@AddressData.c_Neighborhood" />
+						</RadzenFormField>
+						<RadzenCustomValidator Component="NeighborhoodField"
+											   Validator="@(() => CustomValidate("NEIGHBORHOOD"))"
+											   Text="@($"*{Localizer["Subdivisions.Text.Required"]}")" />
+					</RadzenColumn>
+
+					<RadzenColumn Size="@GetColumnsSize("BETWEENSTREET")" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Address.Text.BetweenStreet"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@AddressData.BetweenStreet1" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn Size="@GetColumnsSize("BETWEENSTREET")" Style="width: 100%; min-width: 200px">
+						<RadzenFormField Text="@Localizer["Address.Text.AndStreet"]" Style="width: 100%">
+							<RadzenTextBox Disabled="@GetDisabled()"
+										   @bind-Value="@AddressData.BetweenStreet2" />
+						</RadzenFormField>
+					</RadzenColumn>
+					<RadzenColumn Style="width: 100%; min-width: 130px">
+						<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Style="height: 100%">
+							<RadzenCheckBox Name="IsInvoicingField"
+											Disabled="@GetDisabled()"
+											@bind-Value="@AddressData.IsInvoincing" />
+							<RadzenLabel Text="@Localizer["Address.Text.IsInvoicing"]"
+										 Component="IsInvoicingField" class="rz-ms-2" />
+						</RadzenStack>
+					</RadzenColumn>
+				</RadzenRow> 
+			</RadzenStack>
+		</RadzenCard>
+	</ChildContent>
+</RadzenPanel>
