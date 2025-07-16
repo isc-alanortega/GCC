@@ -1,0 +1,22 @@
+{
+  "name": "Palmaterra Constructora",
+  "short_name": "Palmaterra Constructora",
+  "id": "./../../",
+  "start_url": "./../../",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0490E3",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/assets/palmaterra/img/favicon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/assets/palmaterra/img/favicon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}

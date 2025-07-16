@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Nubetico.DAL.Models.Core;
 using Nubetico.Shared.Dto.Common;
 using Nubetico.Shared.Dto.Core;
+using Nubetico.Shared.Enums.Core;
 using Nubetico.WebAPI.Application.External.CIEmail;
 using Nubetico.WebAPI.Application.External.Directory;
 using Nubetico.WebAPI.Application.External.Directory.Dto;
@@ -114,6 +115,34 @@ namespace Nubetico.WebAPI.Application.Modules.Core.Services
                 }
             }
 
+            var userJwtRequestModel = new UserJwtRequestModel
+            {
+                Id = usuarioDirectoryResponse.Data.UUID.ToString()
+                    ?? throw new Exception("UserID not valid"),
+                Username = usuarioDirectoryResponse.Data.Username,
+                Email = usuarioDirectoryResponse.Data.Email,
+                TenantGuid = this.GetTenant().TenantGuid.ToString()
+            };
+
+            var vContactoEntidad = await coreDbContext.vUsuariosContactos
+                .FirstOrDefaultAsync(v => v.IdUsuario == vUsuario.IdUsuario);
+
+            if(vContactoEntidad != null)
+            {
+                var tipo = Enum.IsDefined(typeof(TypeContactUserEnum), vContactoEntidad.IdTipoEntidad)
+                    ? (TypeContactUserEnum)vContactoEntidad.IdTipoEntidad
+                    : TypeContactUserEnum.None;
+
+                EntidadContactoUsuarioDto entidadContacto = new EntidadContactoUsuarioDto
+                {
+                    Id = vContactoEntidad.UUID_Entidad,
+                    Rfc = vContactoEntidad.RfcEntidad,
+                    Tipo = tipo
+                };
+
+                userJwtRequestModel.EntidadContacto = entidadContacto;
+            }
+
             AuthResponseDto authResponseDto = new AuthResponseDto
             {
                 PerfilUsuario = new PerfilUsuarioDto
@@ -124,7 +153,7 @@ namespace Nubetico.WebAPI.Application.Modules.Core.Services
                     Nombre = usuarioDirectoryResponse.Data.Nombres,
                     NavegaTabs = vUsuario.NavegarTabsActivo
                 },
-                JwtData = _jwtHandlerService.JwtUserSigner(usuarioDirectoryResponse.Data, this.GetTenant()),
+                JwtData = _jwtHandlerService.UserJwtSigner(userJwtRequestModel),
                 TwoFactorRequired = false,
                 Roles = await coreDbContext.vUsuariosPermisos
                     .Where(m => m.IsRole && m.IdUsuario == vUsuario.IdUsuario)
@@ -164,7 +193,16 @@ namespace Nubetico.WebAPI.Application.Modules.Core.Services
             if (vUsuario.UsuarioPuedeAutenticar == false)
                 throw new Exception((_localizer["Core.Users.CannotLogin"]).ToString().Replace("__STATUS__", currentCulture == "en-US" ? vUsuario.UsuarioEstadoEN : vUsuario.UsuarioEstado));
 
-            return _jwtHandlerService.JwtUserSigner(usuarioDirectoryResponse.Data, this.GetTenant());
+            var userJwtRequestModel = new UserJwtRequestModel
+            {
+                Id = vUsuario.GuidUsuarioDirectory.ToString()
+                    ?? throw new Exception("UserID not valid"),
+                Username = vUsuario.Username,
+                Email = vUsuario.Email,
+                TenantGuid = this.GetTenant().TenantGuid.ToString()
+            };
+
+            return _jwtHandlerService.UserJwtSigner(userJwtRequestModel);
         }
 
         public async Task<PaginatedListDto<UsuarioNubeticoGridDto>?> GetUsuariosPaginadoAsync(int limit, int offset, string? orderBy, string? username, string? nombreCompleto, int? idEstadoUsuario)

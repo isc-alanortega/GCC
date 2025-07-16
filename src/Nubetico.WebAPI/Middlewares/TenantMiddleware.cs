@@ -36,7 +36,14 @@ namespace Nubetico.WebAPI.Middlewares
                 return;
             }
 
-            if (!context.Request.Headers.TryGetValue("X-SITE", out var tenantUrl))
+            // Header para identificar el tenant
+#if (DEBUG)
+            string hostHeader = "Host";
+#else
+            string hostHeader = "X-SITE";
+#endif
+
+            if (!context.Request.Headers.TryGetValue(hostHeader, out var tenantUrl))
             {
                 await _next(context);
                 return;

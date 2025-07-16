@@ -1,0 +1,621 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "PalmaTerraDbContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Palmaterra.DAL",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[db_owner].[Proveedores_sucursales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Almacenes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Almacenes\/Existencias]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Almacenes\/Movimientos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Almacenes\/Movimientos\/Partidas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Almacenes\/TiposMovimientos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Categoria_Obra]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Destajos_Cuenta]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Destajos_Relacion_Gastos_Trabajos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Destajos_Tipos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Destajos_Tipos_Gastos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Destajos_Tipos_Trabajo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Destajos_Trabajos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Estatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Facturacion_Productos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Facturas_AutorizaMotivos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Facturas_Subcategorias]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Leyenda_Obras_Cerradas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Reembolsos_Conceptos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Reembolsos_Tipo_Documento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Reembolsos_Tipo_Pago]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Segmentos_Contables]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Tipo_Factura]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Tipo_Obras]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Tipos_Segmentos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_Tipos_Servicios_Obras_Terminadas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_UnidadMedida]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_UnidadPresentacion]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cat_UnidadPresentacion_Arbol]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Ciudades]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ComentariosPortalProveedores]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CorreoAres]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Destajos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Destajos\/Archivos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Destajos\/Solicitudes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Detalles_Segmentos_Contables_Ciudades]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Detalles_Segmentos_Contables_Estados]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Empleados]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Empleados_Destajos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Empleados\/DobleRol]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Empleados\/Obras]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Equipo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Estados]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ListadoMantenimiento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Maquinaria]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Maquinaria\/Combustible]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Maquinaria\/Mantenimiento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Maquinaria\/MantoPreventivo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Maquinaria\/Odometros]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Maquinaria\/Personal]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Maquinaria\/Trabajo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Obras]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrdenCompra]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrdenCompraDetalle]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Parametros]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Permisos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Plazas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Productos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Productos_Existencias]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Proveedores]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Proveedores_facturas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Proveedores_facturas_notascredito]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Proveedores_facturas_precompra_detalle]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Reembolsos\/Archivos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Reembolsos\/Solicitudes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Rel_Destajos_TiposTrabajo_CategoriaObra]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Rel_gastos_generales_trabajo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Rol_Empleados_Destajos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sucursales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sucursales\/Almacenes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sucursales\/Usuarios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tablas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tablas\/Descripciones]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Usuarios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Usuarios\/Permisos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Vehiculos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ET]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[M_Combustible]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[M_Ingresos]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[M_Mantenimiento]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[M_Personal]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[ProvFac]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[vCorreo_Res]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[vDestajosRelVistaeExcelGastos]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[vDestajosRelVistaeExcelResidentes]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[vDestajosRelVistaeExcelSupervision]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[vDestajosRelVistaExcelGastos]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[vDestajosSolicitudes]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[vSaldoComprasFacturas]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[dbo].[sp_auto_select_datos_obra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_cat_facturas_compras]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_cat_segmentos_contables_generales]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_create_vehiculo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajo_archivo_guardar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajo_encabezado_add]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajo_get_nombrearchivo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajo_guardar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajo_pagar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajo_revisar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajo_solicitud_add]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajos_get_data_by_filter]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_destajos_get_destajos_gastos]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_factura_precompra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_cat_destajos_tipos]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_cat_orden_compra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_cat_vehiculos]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_catalogo_orden_compra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_datos_orden_compra_detalle]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_datos_orden_compra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_destajo_tipo_trabajo_gastos_generales]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_detalle_prov_factura]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_empleados_destajos]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_equipo_menor]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_facturas_pendientes_pago]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_obra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_obras_destajo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_rel_destajos_tipos_gastos]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_rel_destajos_tipostrabajo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_rel_gasto_trabajo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_reporte_obras]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_reporte_orden_compra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_reporte_pdf_paths_facturas_proveedores]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_rol_empleado_destajo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_segmento_contable_ciudad_estado]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_solicitud_destajo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_get_vehiculo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_orden_compra_detalle]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_orden_compra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_pagos]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_presentaciones]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_productos_detalle]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_productos]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_reembolso_archivo_guardar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_reembolso_archivoxml_guardar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_reembolso_get_nombrearchivo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_reembolso_guardar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_reembolso_pagar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_reembolso_revisar]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_reporte_imprimir_orden_compra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_reporte_programacion]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_segmento_contable_add]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_set_delete_destajo]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_set_orden_compra]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_update_vehiculo]",
+         "ObjectType": 1
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}

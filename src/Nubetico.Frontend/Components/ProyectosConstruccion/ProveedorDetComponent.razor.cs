@@ -17,19 +17,34 @@ using Microsoft.Extensions.Localization;
 
 using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto;
 using Nubetico.Shared.Enums.Core;
-
+using Nubetico.Shared.Dto.Common;
+using Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores;
+using Microsoft.AspNetCore.Components.Web;
+using System.Reflection.Metadata.Ecma335;
 namespace Nubetico.Frontend.Components.ProyectosConstruccion
 {
-    public partial class ProveedorDetComponent
+    public partial class ProveedorDetComponent : NbBaseComponent
     {
-        [Parameter]
+		#region Parametros
+		[Parameter]
         public string? GuidProveedor { get; set; }
+        [Inject]
+        protected DialogService DialogService { get; set; }
+        [Inject]
+        protected MenuService MenuService { get; set; }
         [Parameter]
-        public ProveedoresDto? ProveedorData { get; set; } // = new ProveedoresDto();
-        public TipoEstadoControl EstadoControl { get; set; }
+        public ProveedorGetDto ProveedorData { get; set; } // = new ProveedoresDto();
+        [Inject] private ProveedorServices proveedorService { get; set; }
 
-		//[Inject] private GlobalBreakpointService? BreakpointService { get; set; }
-		//[Inject] private IStringLocalizer<SharedResources> Localizer { get; set; }
+        #endregion
+        #region Propiedades
+        private ProveedoresDto? ProveedorDto { get; set; } = new ProveedoresDto();
+        private bool IsSaving { get; set; } = false;
+		private LotsDetail LotData { get; set; } = new LotsDetail();
+        private DomicilioComponent AddressComponent { get; set; }
+        //private DomicilioComponent AddressComponent = new DomicilioComponent();
+		private IDictionary<string, string> IconTabs { get; set; } = new Dictionary<string, string>();
+		#endregion
 
 		// ***************************************************************************************************
 		// Solo para insumos
@@ -41,31 +56,75 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
 		[Inject] SuppliesService SuppliesDA { get; set; }
 		private SuppliesPaginatedRequestDto RequestForm { get; set; } = new();
 
-		// ***************************************************************************************************
+        // ***************************************************************************************************
 
-		public bool tieneCredito = true;
 
-        private LotsDetail LotData { get; set; } = new LotsDetail();
-        private DomicilioComponent AddressComponent { get; set; }
-        //private DomicilioComponent AddressComponent = new DomicilioComponent() { }
-        private IDictionary<string, string> IconTabs { get; set; } = new Dictionary<string, string>();
 
-  //      protected override void OnInitialized()
-  //      {
-  //          breakpointService!.OnChange += StateHasChanged;
-  //          base.OnInitialized();
+        protected override void OnInitialized()
+        {
+            breakpointService!.OnChange += StateHasChanged;
+            base.OnInitialized();
 
-		//	TriggerMenuUpdate();
-		//}
+            TriggerMenuUpdate();
 
-  //      protected override async Task OnInitializedAsync()
-  //      {
-  //          //await LoadMenusPermisosAsync();
+        }
 
-  //          //await base.OnInitializedAsync();
+        protected override async Task OnInitializedAsync()
+        {
 
-		//	TriggerMenuUpdate();
-		//}
+            try
+            {
+                // Si no viene el ProveedorData, inicializa vacío
+                ProveedorData ??= new ProveedorGetDto();
+
+                // Establece el nombre del tab dinámico
+                SetNombreTabNubetico($"{Localizer!["Core.ProyectosConstruccion.Proveedor"]}");
+
+                // Configura el menú superior
+                //this.TriggerMenuUpdate();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en ProveedorDetComponent.OnInitializedAsync: {ex.Message}");
+            }
+            //await LoadMenusPermisosAsync();
+
+            //await base.OnInitializedAsync();
+
+
+        }
+        private void OnClickAdd()
+        {
+            var proveedor = new ProveedoresDto();
+
+            var tab = new TabNubetico
+            {
+                EstadoControl = TipoEstadoControl.Alta,
+                Icono = "fa-solid fa-user-plus",
+                Text = "Agregar Proveedor",
+                TipoControl = typeof(ProveedorDetComponent),
+                Repetir = true
+            };
+
+            tab.Componente = builder =>
+            {
+                builder.OpenComponent(0, tab.TipoControl);
+                builder.AddAttribute(1, "ProveedorData", proveedor);
+                builder.AddComponentReferenceCapture(2, instance =>
+                {
+                    if (instance is NbBaseComponent nbComponent)
+                    {
+                        tab.InstanciaComponente = nbComponent;
+                        nbComponent.IconoBase = "fa-solid fa-user-plus";
+                        nbComponent.EstadoControl = TipoEstadoControl.Alta;
+                        nbComponent.TriggerMenuUpdate();
+                    }
+                });
+                builder.CloseComponent();
+            };
+
+            this.AgregarTabNubetico(tab);
+        }
 
         //private async Task LoadMenusPermisosAsync()
         //{
@@ -86,18 +145,18 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
         //    }
         //}
 
-        //public void Dispose()
-        //{
-        //    breakpointService!.OnChange -= StateHasChanged;
-        //}
-
-
-
-        private bool GetDisabled(string? field_name = null)
+        public void Dispose()
         {
-            //return EstadoControl == TipoEstadoControl.Lectura;
-            return false;
+            breakpointService!.OnChange -= StateHasChanged;
         }
+
+
+
+        //private bool GetDisabled(string? field_name = null)
+        //{
+        //    //return EstadoControl == TipoEstadoControl.Lectura;
+        //    return false;
+        //}
 
         //public int GetColumnsSize(string? field_name = null)
         //{
@@ -162,25 +221,25 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
                 {
                     menu.Click = onClick;
                     menusMostrar.Add(menu);
+                    StateHasChanged();
                 }
             }
 
-            switch (this.EstadoControl)
+            if (this.EstadoControl == TipoEstadoControl.Alta)
             {
-                case TipoEstadoControl.Alta:
-                    AgregarMenuSiExiste(BaseMenuCommands.SAVE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickSave));
-                    AgregarMenuSiExiste(BaseMenuCommands.CLOSE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickClose));
-                    break;
-                case TipoEstadoControl.Edicion:
-                    AgregarMenuSiExiste(BaseMenuCommands.SAVE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickSave));
-                    AgregarMenuSiExiste(BaseMenuCommands.CANCEL, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickCancel));
-                    AgregarMenuSiExiste(BaseMenuCommands.CLOSE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickClose));
-                    break;
-                default:
-                    AgregarMenuSiExiste(BaseMenuCommands.EDIT, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickEdit));
-                    AgregarMenuSiExiste(BaseMenuCommands.CLOSE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickClose));
-                    break;
-
+                AgregarMenuSiExiste(BaseMenuCommands.SAVE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickSave));
+                AgregarMenuSiExiste(BaseMenuCommands.CLOSE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickClose));
+            }
+            else if (this.EstadoControl == TipoEstadoControl.Edicion)
+            {
+                AgregarMenuSiExiste(BaseMenuCommands.SAVE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickSave));
+                AgregarMenuSiExiste(BaseMenuCommands.CANCEL, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickCancel));
+                AgregarMenuSiExiste(BaseMenuCommands.CLOSE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickClose));
+            }
+            else if (this.EstadoControl == TipoEstadoControl.Lectura)
+            {
+                AgregarMenuSiExiste(BaseMenuCommands.EDIT, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickEdit));
+                AgregarMenuSiExiste(BaseMenuCommands.CLOSE, EventCallback.Factory.Create<MenuItemEventArgs>(this, OnClickClose));
             }
 
             return menusMostrar;
@@ -190,23 +249,91 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
         {
             //if (!IsValidForm() || IsSaving) return;
 
-            //IsSaving = true;
+            // IsSaving = true;
+            bool? dialogResult = await DialogService.Confirm(
+                 Localizer["Shared.Dialog.SaveChanges"],
+                 Localizer["Shared.Dialog.Atencion"],
+                 new ConfirmOptions
+                 {
+                     OkButtonText = Localizer["Shared.Botones.Aceptar"],
+                     CancelButtonText = Localizer["Shared.Botones.Cancelar"]
+                 }
+             );
+            if (dialogResult != true) return;
 
-            //await HandleSaveAsync();
+            if(this.EstadoControl == TipoEstadoControl.Alta)
+            {
+                // Mapear ProveedorGetDto a ProveedorRequestDto
+                var proveedorRequest = new ProveedorSaveDto
+                {
+                    UUID = Guid.NewGuid(),
+                    //Aunque el usuario mande algo en ProveedorData... El sp se encarga de foliar
+                    Folio = ProveedorData?.Folio ?? string.Empty,
+                    Rfc = ProveedorData?.Rfc ?? string.Empty,
+                    RazonSocial = ProveedorData?.RazonSocial ?? string.Empty,
+                    NombreComercial = ProveedorData?.NombreComercial ?? string.Empty,
+                    Email = ProveedorData?.Email ?? string.Empty,
+                    Web = ProveedorData?.Web ?? string.Empty,
+                    Credito = ProveedorData?.Credito ?? false,
+                    LimiteCreditoMXN = ProveedorData?.LimiteCreditoMXN ?? 0,
+                    LimiteCreditoUSD = ProveedorData?.LimiteCreditoUSD ?? 0,
+                    DiasCredito = ProveedorData?.DiasCredito ?? 0,
+                    DiasGracia = ProveedorData?.DiasGracia ?? 0,
+                    CuentaContable = ProveedorData?.CuentaContable ?? string.Empty,
+                    IdFormaPago = ProveedorData?.IdFormaPago ?? 0,
+                    IdEstadoProveedor = ProveedorData?.IdEstadoProveedor ?? 0,
+                    IdRegimenFiscal = ProveedorData?.IdRegimenFiscal ?? 0,
+                    FechaAlta = ProveedorData?.FechaAlta ?? DateTime.Now,
+                    // Nuevos campos de EntidadComponent
+                    IdTipoInsumo = ProveedorData?.IdTipoInsumo ?? 0, 
+                    IdTipoRegimenFiscal = ProveedorData?.IdTipoRegimenFiscal ?? 0,
+                    IdTipoMetodoPago = ProveedorData?.IdTipoMetodoPago ?? 0,
+                    IdUsoCFDI = ProveedorData?.IdUsoCFDI ?? 0
+                };
+                var response = await proveedorService.PostSaveProveedor(proveedorRequest);
+                if (!response.Success)
+                {
+                    // 400: Validación del Proveedor
+                    if (response.StatusCode == 400)
+                    {
+                        var errores = JsonConvert.DeserializeObject<List<ValidationFailureDto>>(response.Data.ToString());
+                        if (errores != null)
+                            ReadFormValidationErrors(errores);
+
+                        return;
+                    }
+
+                    // 500: Error en servidor
+                    if (response.StatusCode == 500)
+                    {
+                        ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = response.Message, Duration = 10000 });
+                        return;
+                    }
+
+                    return;
+                }
+                this.GuidProveedor = response.Data.UUID.ToString();
+                this.EstadoControl = TipoEstadoControl.Lectura;
+                this.SetNombreTabNubetico($"{Localizer["Core.ProyectosConstruccion.Proveedor"]} [{response.Data.NombreComercial}]");
+                this.TriggerMenuUpdate();
+
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = Localizer["Shared.Textos.Exito"], Detail = Localizer["Shared.Textos.RegistroGuardado"], Duration = 10000 });
+            }
+            
 
             ////SuppliesDA.NotifyStateChanged();
             //StateHasChanged();
-            //IsSaving = false;
+            IsSaving = false;
         }
 
-        private void OnClickEdit()
+        private void OnClickEdit(MouseEventArgs args)
         {
-            //if (this.EstadoControl == TipoEstadoControl.Edicion) return;
-
-            //UpdateTab(state: TipoEstadoControl.Edicion);
+            this.EstadoControl = TipoEstadoControl.Edicion;
+            this.SetNombreTabNubetico($"Proveedor [{this.ProveedorData?.NombreComercial}]");
+            this.TriggerMenuUpdate();
         }
 
-        private async void OnClickCancel()
+        private async void OnClickCancel(MouseEventArgs args)
         {
             //UpdateTab(state: TipoEstadoControl.Lectura);
 
@@ -221,19 +348,81 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
         private void UpdateTab(TipoEstadoControl state)
         {
             this.EstadoControl = state;
-            SetNombreTabNubetico($"{Localizer!["Core.ProyectosConstruccion.Proveedor"]} [{ProveedorData.Nombre}]");
+            SetNombreTabNubetico($"{Localizer!["Core.ProyectosConstruccion.Proveedor"]} [{ProveedorData.NombreComercial}]");
             this.TriggerMenuUpdate();
             StateHasChanged();
         }
 
-        private void OnClickClose() => this.CerrarTabNubetico();
+        private void OnClickClose(MouseEventArgs args)
+        {
+            this.CerrarTabNubetico();
+        }  
 
+		#region Funciones
+		//private async Task<bool> HandleSaveAsync()
+		//{
+		//	var result = await (this.EstadoControl switch
+		//	{
+		//		TipoEstadoControl.Alta => proveedorService.PostSaveProveedor(ProveedorData),
+		//		//TipoEstadoControl.Edicion => SuppliesDA.PatchEditSupplyAsync(supply: ProveedorData!),
+		//		_ => Task.FromResult<BaseResponseDto<ProveedoresDto?>>(null)
+		//	});
 
-		// ***********************************************************************************************
-		// Solo para insumos
-		// ***********************************************************************************************
+		//	if (result.StatusCode > 300)
+		//	{
+		//		var message = result.StatusCode > 400 ? Localizer!["Shared.Text.UnknowError"] : result.Message;
+  //              ShowErrorNotification(Localizer!["Shared.Text.ProblemOcurred"], message);
 
-		public async Task LoadData(LoadDataArgs args)
+  //              //NotifyAcces(Localizer!["Shared.Text.ProblemOcurred"], message, NotificationSeverity.Error);
+  //              return false;
+		//	}
+  //          ShowInfoNotification(Localizer!["Shared.Text.SaveSucces"]);
+
+  //          //NotifyAcces(string.Empty, Localizer!["Shared.Text.SaveSucces"], NotificationSeverity.Success);
+
+  //          UpdateTab(state: TipoEstadoControl.Lectura);
+  //          return true;
+		//}
+        /// <summary>
+        /// Itera de forma recursiva los nodos del menu y devuelve aquellos que la propiedad Check = true o que la totalidad de los nodos tengan chek = true si seleccionable = false
+        /// </summary>
+        /// <param name="menus"></param>
+        /// <returns></returns>
+        public IEnumerable<MenuDto> RecursiveMenuDtoFilter(IEnumerable<MenuDto> menus)
+        {
+            return menus
+                .Where(menu =>
+                    (menu.Check && menu.Seleccionable)
+                    || (!menu.Seleccionable && GetMenuDtoChildrenIsCheck(menu))
+                )
+                .Concat(
+                    menus
+                    .Where(menu => menu.Children != null && menu.Children.Any())
+                    .SelectMany(menu => RecursiveMenuDtoFilter(menu.Children))
+                );
+        }
+
+        /// <summary>
+        /// Valida si todos los nodos hijos de MenuDto tienen propiedad Check = true
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <returns></returns>
+        private bool GetMenuDtoChildrenIsCheck(MenuDto menu)
+        {
+            if (menu.Children == null || !menu.Children.Any())
+                return false;
+
+            return menu.Children.All(child =>
+                (child.Check || !child.Seleccionable && GetMenuDtoChildrenIsCheck(child))
+            );
+        }
+        #endregion
+
+        // ***********************************************************************************************
+        // Solo para insumos
+        // ***********************************************************************************************
+
+        public async Task LoadData(LoadDataArgs args)
 		{
 			if (IsLoading) return;
 
@@ -279,7 +468,24 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
 			_ => BadgeStyle.Base,
 		};
 
-		// ***********************************************************************************************
+        private void ShowInfoNotification(string message) => Notify(Localizer["Subdivisions.Notify.Info"], Localizer[message], NotificationSeverity.Info);
 
-	}
+        private void ShowErrorNotification(string message, string? additionalMessage = null)
+        {
+            string detail = string.IsNullOrEmpty(additionalMessage)
+                    ? Localizer[message]
+                    : string.Concat($"{Localizer[message]}\n", $"{Localizer["Excel.Text.Row"]} {additionalMessage}.");
+
+            Notify("Error", detail, NotificationSeverity.Error);
+        }
+        private void Notify(string summary, string? detail, NotificationSeverity severity) => notificationService.Notify(new()
+        {
+            Severity = severity,
+            Summary = summary,
+            Detail = detail,
+            Duration = 6500,
+        });
+        // ***********************************************************************************************
+
+    }
 }

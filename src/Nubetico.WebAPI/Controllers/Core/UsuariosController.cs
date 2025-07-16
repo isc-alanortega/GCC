@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -91,7 +92,7 @@ namespace Nubetico.WebAPI.Controllers.Core
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(BaseResponseDto<UsuarioNubeticoDto>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BaseResponseDto<>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BaseResponseDto<List<ValidationFailure>>))]
         //[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDto<>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDto<>))]
         public async Task<IActionResult> PostUsuario(
@@ -120,7 +121,7 @@ namespace Nubetico.WebAPI.Controllers.Core
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDto<UsuarioNubeticoDto>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BaseResponseDto<>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BaseResponseDto<List<ValidationFailure>>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseResponseDto<>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDto<>))]
         public async Task<IActionResult> PutUsuario(

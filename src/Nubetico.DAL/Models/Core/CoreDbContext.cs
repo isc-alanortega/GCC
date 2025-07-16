@@ -17,6 +17,12 @@ public partial class CoreDbContext : DbContext
 
     public virtual DbSet<Archivos_Tipos> Archivos_Tipos { get; set; }
 
+    public virtual DbSet<Catalogos> Catalogos { get; set; }
+
+    public virtual DbSet<CatalogosSAT> CatalogosSAT { get; set; }
+
+    public virtual DbSet<Contactos_Funciones> Contactos_Funciones { get; set; }
+
     public virtual DbSet<Domicilios> Domicilios { get; set; }
 
     public virtual DbSet<Domicilios_CP> Domicilios_CP { get; set; }
@@ -28,6 +34,12 @@ public partial class CoreDbContext : DbContext
     public virtual DbSet<Domicilios_Municipios> Domicilios_Municipios { get; set; }
 
     public virtual DbSet<Entidades> Entidades { get; set; }
+
+    public virtual DbSet<Entidades_Contactos> Entidades_Contactos { get; set; }
+
+    public virtual DbSet<Entidades_Contactos_Funciones> Entidades_Contactos_Funciones { get; set; }
+
+    public virtual DbSet<Entidades_Tipos> Entidades_Tipos { get; set; }
 
     public virtual DbSet<Forms> Forms { get; set; }
 
@@ -49,6 +61,8 @@ public partial class CoreDbContext : DbContext
 
     public virtual DbSet<Personas> Personas { get; set; }
 
+    public virtual DbSet<Proveedores> Proveedores { get; set; }
+
     public virtual DbSet<Sucursales> Sucursales { get; set; }
 
     public virtual DbSet<Usuarios> Usuarios { get; set; }
@@ -63,7 +77,13 @@ public partial class CoreDbContext : DbContext
 
     public virtual DbSet<Usuarios_Tokens> Usuarios_Tokens { get; set; }
 
+    public virtual DbSet<vEntidades> vEntidades { get; set; }
+
     public virtual DbSet<vMenusFormularios> vMenusFormularios { get; set; }
+
+    public virtual DbSet<vProveedores> vProveedores { get; set; }
+
+    public virtual DbSet<vUsuariosContactos> vUsuariosContactos { get; set; }
 
     public virtual DbSet<vUsuariosPermisos> vUsuariosPermisos { get; set; }
 
@@ -108,6 +128,48 @@ public partial class CoreDbContext : DbContext
             entity.Property(e => e.MimeType)
                 .IsRequired()
                 .HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<Catalogos>(entity =>
+        {
+            entity.HasKey(e => e.Id_Catalogo).HasName("PK_Catalogos_1");
+
+            entity.ToTable("Catalogos", "Core");
+
+            entity.Property(e => e.Descripcion)
+                .IsRequired()
+                .HasMaxLength(250);
+            entity.Property(e => e.Valor).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<CatalogosSAT>(entity =>
+        {
+            entity.HasKey(e => new { e.Catalogo, e.Indice });
+
+            entity.ToTable("CatalogosSAT", "Core");
+
+            entity.Property(e => e.Catalogo).HasMaxLength(100);
+            entity.Property(e => e.Clave).HasMaxLength(20);
+            entity.Property(e => e.Descripcion).HasMaxLength(200);
+            entity.Property(e => e.IdCatalogoSAT).ValueGeneratedOnAdd();
+            entity.Property(e => e.SubCatalogo).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Contactos_Funciones>(entity =>
+        {
+            entity.HasKey(e => e.IdContactoFuncion).HasName("PK_Contactos_Funciones_IdContactoFuncion");
+
+            entity.ToTable("Contactos_Funciones", "Core");
+
+            entity.Property(e => e.AliasFuncion)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.FechaAlta).HasColumnType("datetime");
+            entity.Property(e => e.FechaElimina).HasColumnType("datetime");
+            entity.Property(e => e.FechaModifica).HasColumnType("datetime");
+            entity.Property(e => e.Funcion)
+                .IsRequired()
+                .HasMaxLength(50);
         });
 
         modelBuilder.Entity<Domicilios>(entity =>
@@ -248,6 +310,58 @@ public partial class CoreDbContext : DbContext
             entity.Property(e => e.SaldoUSD).HasColumnType("money");
             entity.Property(e => e.UUID_Entidad).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Web).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<Entidades_Contactos>(entity =>
+        {
+            entity.HasKey(e => e.IdEntidadContacto).HasName("PK_Entidades_Contactos_IdEntidadContacto");
+
+            entity.ToTable("Entidades_Contactos", "Core");
+
+            entity.HasIndex(e => new { e.IdEntidad, e.IdUsuario }, "UQ_Entidades_Contactos_IdEntidad_IdUsuario").IsUnique();
+
+            entity.Property(e => e.Puesto)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("");
+
+            entity.HasOne(d => d.IdEntidadNavigation).WithMany(p => p.Entidades_Contactos)
+                .HasForeignKey(d => d.IdEntidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Entidades_IdEntidad");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Entidades_Contactos)
+                .HasForeignKey(d => d.IdUsuario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Entidades_IdUsuario");
+        });
+
+        modelBuilder.Entity<Entidades_Contactos_Funciones>(entity =>
+        {
+            entity.HasKey(e => e.IdEntidadContactoFuncion).HasName("PK_Entidades_Contactos_Funciones_IdEntidadContactoFuncion");
+
+            entity.ToTable("Entidades_Contactos_Funciones", "Core");
+
+            entity.HasOne(d => d.IdContactoFuncionNavigation).WithMany(p => p.Entidades_Contactos_Funciones)
+                .HasForeignKey(d => d.IdContactoFuncion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Contactos_Funciones_IdContactoFuncion");
+
+            entity.HasOne(d => d.IdEntidadContactoNavigation).WithMany(p => p.Entidades_Contactos_Funciones)
+                .HasForeignKey(d => d.IdEntidadContacto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Entidades_Contactos_IdEntidadContacto");
+        });
+
+        modelBuilder.Entity<Entidades_Tipos>(entity =>
+        {
+            entity.HasKey(e => e.Id_Entidad_Tipo);
+
+            entity.ToTable("Entidades_Tipos", "Core");
+
+            entity.Property(e => e.Entidad_Tipo)
+                .IsRequired()
+                .HasMaxLength(50);
         });
 
         modelBuilder.Entity<Forms>(entity =>
@@ -432,6 +546,39 @@ public partial class CoreDbContext : DbContext
             entity.Property(e => e.Telefono).HasMaxLength(50);
         });
 
+        modelBuilder.Entity<Proveedores>(entity =>
+        {
+            entity.HasKey(e => e.IdProveedor);
+
+            entity.ToTable("Proveedores", "Core");
+
+            entity.Property(e => e.Correo)
+                .IsRequired()
+                .HasMaxLength(250)
+                .HasDefaultValue("");
+            entity.Property(e => e.CreditoDolares).HasColumnType("money");
+            entity.Property(e => e.CreditoPesos).HasColumnType("money");
+            entity.Property(e => e.CuentaContable)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("")
+                .IsFixedLength();
+            entity.Property(e => e.Folio)
+                .IsRequired()
+                .HasMaxLength(10)
+                .HasDefaultValue("");
+            entity.Property(e => e.IdEstadoProveedor).HasDefaultValue(-1);
+            entity.Property(e => e.IdFormaPago).HasDefaultValue(-1);
+            entity.Property(e => e.IdRegimenFiscal).HasDefaultValue(-1);
+            entity.Property(e => e.SaldoDolares).HasColumnType("money");
+            entity.Property(e => e.SaldoPesos).HasColumnType("money");
+            entity.Property(e => e.UUID).HasDefaultValueSql("(newsequentialid())");
+            entity.Property(e => e.Web)
+                .IsRequired()
+                .HasMaxLength(250)
+                .HasDefaultValue("");
+        });
+
         modelBuilder.Entity<Sucursales>(entity =>
         {
             entity.HasKey(e => e.IdSucursal).HasName("PK_Sucursales_IdSucursal");
@@ -557,6 +704,23 @@ public partial class CoreDbContext : DbContext
                 .HasConstraintName("FK_Usuarios_Tokens_IdUsuario");
         });
 
+        modelBuilder.Entity<vEntidades>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vEntidades", "Core");
+
+            entity.Property(e => e.Entidad_Tipo).HasMaxLength(50);
+            entity.Property(e => e.FechaAlta).HasColumnType("datetime");
+            entity.Property(e => e.FechaElimina).HasColumnType("datetime");
+            entity.Property(e => e.FechaModifica).HasColumnType("datetime");
+            entity.Property(e => e.NombreComercial).HasMaxLength(500);
+            entity.Property(e => e.RazonSocial).HasMaxLength(500);
+            entity.Property(e => e.Rfc)
+                .IsRequired()
+                .HasMaxLength(13);
+        });
+
         modelBuilder.Entity<vMenusFormularios>(entity =>
         {
             entity
@@ -579,6 +743,90 @@ public partial class CoreDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(200);
             entity.Property(e => e.RutaPagina).HasMaxLength(200);
+        });
+
+        modelBuilder.Entity<vProveedores>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vProveedores", "Core");
+
+            entity.Property(e => e.Correo)
+                .IsRequired()
+                .HasMaxLength(250);
+            entity.Property(e => e.CreditoDolares).HasColumnType("money");
+            entity.Property(e => e.CreditoPesos).HasColumnType("money");
+            entity.Property(e => e.CuentaContable)
+                .IsRequired()
+                .HasMaxLength(50)
+                .IsFixedLength();
+            entity.Property(e => e.Entidad_Tipo)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.FechaAlta).HasColumnType("datetime");
+            entity.Property(e => e.FechaElimina).HasColumnType("datetime");
+            entity.Property(e => e.FechaModifica).HasColumnType("datetime");
+            entity.Property(e => e.Folio)
+                .IsRequired()
+                .HasMaxLength(10);
+            entity.Property(e => e.NombreComercial).HasMaxLength(500);
+            entity.Property(e => e.RazonSocial).HasMaxLength(500);
+            entity.Property(e => e.Rfc)
+                .IsRequired()
+                .HasMaxLength(13);
+            entity.Property(e => e.SaldoDolares).HasColumnType("money");
+            entity.Property(e => e.SaldoPesos).HasColumnType("money");
+            entity.Property(e => e.Web)
+                .IsRequired()
+                .HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<vUsuariosContactos>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vUsuariosContactos", "Core");
+
+            entity.Property(e => e.CURP).HasMaxLength(18);
+            entity.Property(e => e.Celular).HasMaxLength(50);
+            entity.Property(e => e.CuentaContable).HasMaxLength(20);
+            entity.Property(e => e.DefaultCulture).HasMaxLength(20);
+            entity.Property(e => e.DefaultTimeZone).HasMaxLength(50);
+            entity.Property(e => e.Email).HasMaxLength(250);
+            entity.Property(e => e.EmailEntidad).HasMaxLength(250);
+            entity.Property(e => e.Entidad_Tipo)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.FechaAlta).HasColumnType("datetime");
+            entity.Property(e => e.Folio).HasMaxLength(20);
+            entity.Property(e => e.Genero).HasMaxLength(1);
+            entity.Property(e => e.HeartBeat).HasColumnType("datetime");
+            entity.Property(e => e.LimiteCreditoMXN).HasColumnType("money");
+            entity.Property(e => e.LimiteCreditoUSD).HasColumnType("money");
+            entity.Property(e => e.NombreComercial).HasMaxLength(500);
+            entity.Property(e => e.NombreCompleto).HasMaxLength(302);
+            entity.Property(e => e.Nombres).HasMaxLength(100);
+            entity.Property(e => e.PrimerApellido).HasMaxLength(100);
+            entity.Property(e => e.RFC).HasMaxLength(13);
+            entity.Property(e => e.RazonSocial).HasMaxLength(500);
+            entity.Property(e => e.RfcEntidad)
+                .IsRequired()
+                .HasMaxLength(13);
+            entity.Property(e => e.SaldoMXN).HasColumnType("money");
+            entity.Property(e => e.SaldoUSD).HasColumnType("money");
+            entity.Property(e => e.SegundoApellido).HasMaxLength(100);
+            entity.Property(e => e.Telefono).HasMaxLength(50);
+            entity.Property(e => e.TwoFactorKey).HasMaxLength(32);
+            entity.Property(e => e.Username)
+                .IsRequired()
+                .HasMaxLength(256);
+            entity.Property(e => e.UsuarioEstado)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.UsuarioEstadoEN)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.Web).HasMaxLength(250);
         });
 
         modelBuilder.Entity<vUsuariosPermisos>(entity =>

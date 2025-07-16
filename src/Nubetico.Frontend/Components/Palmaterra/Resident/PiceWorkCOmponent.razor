@@ -1,0 +1,41 @@
+﻿@* <RadzenCard Style="margin:20px;">
+    <RadzenHeading Size="H4">Piecework Report</RadzenHeading>
+
+    <div class="row">
+        <div class="col-md-3">
+            <RadzenDropDown @bind-Value="selectedStatus" Data="@statusList" Placeholder="Select Status" />
+        </div>
+        <div class="col-md-3">
+            <RadzenTextBox @bind-Value="projectSearch" Placeholder="Search project, folio or task" Style="width:100%" />
+        </div>
+        <div class="col-md-3">
+            <RadzenCheckBox @bind-Value="filterDates" TValue="bool" />
+            <label class="ml-2">Filter by dates</label>
+        </div>
+    </div>
+
+    @if (filterDates)
+    {
+        <div class="row mt-2">
+            <div class="col-md-3">
+                <RadzenDatePicker @bind-Value="dateFrom" Placeholder="From" />
+            </div>
+            <div class="col-md-3">
+                <RadzenDatePicker @bind-Value="dateTo" Placeholder="To" />
+            </div>
+        </div>
+    }
+
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <RadzenButton Text="Search" Icon="search" Click="@Search" Style="background-color: purple; color: white;" />
+        </div>
+        <div class="col-md-3">
+            <RadzenButton Text="Download" Icon="download" Click="@Download" Style="background-color: green; color: white;" />
+        </div>
+        <div class="col-md-3">
+            <RadzenButton Text="Add" Icon="add_circle" Click="@(() => showModal = true)" Style="background-color: #00BCD4; color: white;" />
+        </div>
+    </div>
+</RadzenCard>
+ *@

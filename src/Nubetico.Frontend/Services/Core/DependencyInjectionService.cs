@@ -17,6 +17,8 @@ namespace Nubetico.Frontend.Services.Core
             services.AddScoped<MenuService>();
             services.AddScoped<SucursalesService>();
             services.AddScoped<UsuariosService>();
+            services.AddScoped<EntidadesService>();
+            services.AddScoped<FoliadorService>();
 
             return services;
         }

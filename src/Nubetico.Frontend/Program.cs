@@ -6,6 +6,7 @@ using Nubetico.Frontend.Components.Shared;
 using Nubetico.Frontend.Helpers;
 using Nubetico.Frontend.Services.Core;
 using Nubetico.Frontend.Services.Core.XmlServices;
+using Nubetico.Frontend.Services.PortalClientes;
 using Nubetico.Frontend.Services.PortalProveedores;
 using Nubetico.Frontend.Services.ProveedoresFacturas;
 using Nubetico.Frontend.Services.ProyectosConstruccion;
@@ -46,6 +47,7 @@ namespace Nubetico.Frontend
             builder.Services.AddRadzenComponents();
 
             builder.Services.AddCoreServices();
+            builder.Services.AddPortalClientesServices();
             builder.Services.AddPortalProveedoresServices();
             builder.Services.AddProveedoresFacturasServices();
             builder.Services.AddProyectosConstruccionServices();

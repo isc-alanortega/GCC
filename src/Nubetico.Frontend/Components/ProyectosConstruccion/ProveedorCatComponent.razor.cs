@@ -4,8 +4,11 @@ using Microsoft.Extensions.Localization;
 using Nubetico.Frontend.Components.Core.Shared;
 using Nubetico.Frontend.Models.Class.Core;
 using Nubetico.Frontend.Models.Static.Core;
+using Nubetico.Frontend.Services.ProyectosConstruccion;
 using Nubetico.Shared.Dto.Common;
 using Nubetico.Shared.Dto.ProyectosConstruccion;
+using Nubetico.Shared.Dto.ProyectosConstruccion.Models;
+using Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores;
 using Radzen;
 using Radzen.Blazor;
 
@@ -15,91 +18,43 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
     {
         [Inject]
         protected IStringLocalizer<SharedResources> Localizer { get; set; }
-        private RadzenDataGrid<ProveedoresDto>? GridProveedores { get; set; }
+        private RadzenDataGrid<ProveedorGridResultSet>? GridProveedores { get; set; }
         private List<ProveedoresDto>? ListaProveedores { get; set; }
         private int Count { get; set; }
         private bool IsLoading { get; set; } = false;
         private int RowsPerPage { get; set; } = 10;
-		//public IList<ProveedoresDto> ProveedoresSeleccionados { get; set; } = new List<ProveedoresDto>();
-		public IList<ProveedoresDto> ProveedoresSeleccionados { get; set; } = [];
-		//private IList<InsumosDto> SelectedSupply { get; set; } = [];
-		private FiltroProveedoresNubeticoGridDto Filtro { get; set; } = new FiltroProveedoresNubeticoGridDto();
+        //public IList<ProveedoresDto> ProveedoresSeleccionados { get; set; } = new List<ProveedoresDto>();
+        public IList<ProveedorGridResultSet> ProveedoresSeleccionados { get; set; } = [];
+        //private IList<InsumosDto> SelectedSupply { get; set; } = [];
+        private FiltroProveedoresNubeticoGridDto Filtro { get; set; } = new FiltroProveedoresNubeticoGridDto();
         private List<BasicItemSelectDto> SelectEstadosProveedor = new List<BasicItemSelectDto>();
+
+        private List<ProveedorGridResultSet> proveedores = new();
+
+        [Inject] public ProveedorServices ProveedoresService { get; set; }
         //public bool busy { get; set; } = false;
 
 
-        ProveedoresDto p1 = new ProveedoresDto()
-        {
-            Folio = "PRV01",
-            EstadoProveedor = "Activo",
-            IdEstadoProveedor = 1,
-            Nombre = "FERRETERIA LUGO",
-            RFC = "FER010101001",
-            UUID = Guid.NewGuid(),
-            CreditoPesos = "50,000",
-            CreditoDolares = "2,500",
-            RegimenFiscal = "PERSONA MORAL",
-            TieneCredito = true,
-            DiasCredito = "30",
-            DiasGracia = "5",
-            SaldoPesos ="15,000",
-            SaldoDolares = "750",
-            Web = "www.ferretarialugo.com.mx",
-            Correo = "contacto@ferretarialugo.com.mx",
-            CuentaContable = "0101010101010101",
-            FormaPago = "TRANSFERENCIA"
-        };
-
-        ProveedoresDto p2 = new ProveedoresDto()
-        {
-            Folio = "PRV02",
-            EstadoProveedor = "Activo",
-            IdEstadoProveedor = 1,
-            Nombre = "FERREPACIFICO",
-            RFC = "FER020202002",
-            UUID = Guid.NewGuid(),
-            CreditoPesos = "75,000",
-            CreditoDolares = "3,500",
-            RegimenFiscal = "PERSONA MORAL",
-            TieneCredito = true,
-            DiasCredito = "30",
-            DiasGracia = "5",
-            SaldoPesos = "18,000",
-            SaldoDolares = "900",
-            Web = "www.ferrepacifico.com",
-            Correo = "info@ferretarialugo.com",
-            CuentaContable = "0202020202020202",
-            FormaPago = "TRANSFERENCIA"
-        };
-
-        ProveedoresDto p3 = new ProveedoresDto()
-        {
-            Folio = "PRV03",
-            EstadoProveedor = "Activo",
-            IdEstadoProveedor = 1,
-            Nombre = "FERRETERIA EL CAMINANTE",
-            RFC = "FER030303003",
-            UUID = Guid.NewGuid(),
-            CreditoPesos = "20,000",
-            CreditoDolares = "1,000",
-            RegimenFiscal = "PERSONA MORAL",
-            TieneCredito = true,
-            DiasCredito = "15",
-            DiasGracia = "5",
-            SaldoPesos = "10,000",
-            SaldoDolares = "500",
-            Web = "www.ferretariaelcaminante.com.mx",
-            Correo = "contacto@ferretarialugo.com.mx",
-            CuentaContable = "0303030303030303",
-            FormaPago = "CONTADO"
-        };
 
         protected override async Task OnInitializedAsync()
         {
             TriggerMenuUpdate();
-            
-            ListaProveedores = new List<ProveedoresDto> { p1, p2, p3 };
 
+            //ListaProveedores = new List<ProveedoresDto> { p1, p2, p3 };
+            await LoadProveedores();
+
+
+        }
+        private async Task LoadProveedores()
+        {
+            try
+            {
+                proveedores = await ProveedoresService.GetAllProveedoresAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al cargar proveedores: {ex.Message}");
+            }
         }
 
         protected override List<RadzenMenuItem> GetMenuItems()
@@ -169,6 +124,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
             };
 
             this.AgregarTabNubetico(tabNubetico);
+            StateHasChanged();
         }
 
         private void OnAbrirClick(MouseEventArgs args)
@@ -207,10 +163,21 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
 
         #region funciones
 
-        private void AbrirDetalleProveedor(ProveedoresDto proveedorSeleccionado, TipoEstadoControl estadoControl)
+        private async Task AbrirDetalleProveedor(ProveedorGridResultSet proveedorSeleccionado, TipoEstadoControl estadoControl)
         {
             string? guidUsuario = proveedorSeleccionado.UUID.ToString();
+            if (proveedorSeleccionado == null)
+            {
+                Console.WriteLine("No se seleccionó ningún proveedor.");
+                return;
+            }
 
+            var result = await ProveedoresService.GetProveedorByIdAsync(proveedorSeleccionado.IdProveedor);
+            if (result == null)
+            {
+                Console.WriteLine("No se pudo obtener los detalles del proveedor.");
+                return;
+            }
             // Crear instancia TabNubetico
             TabNubetico tabNubetico = new TabNubetico
             {
@@ -219,7 +186,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
                             ? $"{MenuItemsFactory.MenuIconDictionary["editar"]}"
                             : this.IconoBase,
 
-                Text = $"{Localizer["Core.ProyectosConstruccion.Proveedor"]} [{proveedorSeleccionado.Nombre}]",
+                Text = $"{Localizer["Core.ProyectosConstruccion.Proveedor"]} [{proveedorSeleccionado.NombreComercial}]",
                 TipoControl = typeof(ProveedorDetComponent),
                 Repetir = true
             };
@@ -229,7 +196,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
             {
                 builder.OpenComponent(0, tabNubetico.TipoControl);
                 builder.AddAttribute(1, "GuidProveedor", guidUsuario);
-                builder.AddAttribute(2, "ProveedorData", proveedorSeleccionado);
+                builder.AddAttribute(2, "ProveedorData", result);
                 builder.AddComponentReferenceCapture(1, instance =>
                 {
                     // Asegurarnos que el componente interno instanciado hereda el componente base
@@ -251,7 +218,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
             this.AgregarTabNubetico(tabNubetico);
         }
 
-        private async Task DataGridRowDoubleClick(DataGridRowMouseEventArgs<ProveedoresDto> args)
+        private async Task DataGridRowDoubleClick(DataGridRowMouseEventArgs<ProveedorGridResultSet> args)
         {
             if (args.Data != null)
                 AbrirDetalleProveedor(args.Data, TipoEstadoControl.Lectura);
@@ -287,6 +254,44 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
 
             IsLoading = false;
         }
+        public void OpenTab(TipoEstadoControl action, string name, ProveedoresDto data)
+        {
+            var tabNubetico = new TabNubetico
+            {
+                EstadoControl = action,
+                Icono = GetIconByControlState(action),
+                Text = name,
+                TipoControl = typeof(ProveedorDetComponent),
+                Repetir = true
+            };
+
+            tabNubetico.Componente = builder =>
+            {
+                builder.OpenComponent(0, tabNubetico.TipoControl);
+                builder.AddAttribute(1, "ProveedorData", data);
+                builder.AddComponentReferenceCapture(1, instance =>
+                {
+                    if (instance is NbBaseComponent nbComponent)
+                    {
+                        tabNubetico.InstanciaComponente = nbComponent;
+                        nbComponent.IconoBase = GetIconByControlState(action);
+                        nbComponent.EstadoControl = action;
+                        nbComponent.TriggerMenuUpdate();
+                    }
+                });
+                builder.CloseComponent();
+            };
+
+            this.AgregarTabNubetico(tabNubetico);
+        }
+        private static string GetIconByControlState(TipoEstadoControl typeState) => typeState switch
+        {
+            TipoEstadoControl.Edicion => $"{MenuItemsFactory.MenuIconDictionary["editar"]}",
+            TipoEstadoControl.Alta => $"{MenuItemsFactory.MenuIconDictionary["agregar"]}",
+            _ => "f015" // fa-house
+        };
+
+
 
         #endregion
 

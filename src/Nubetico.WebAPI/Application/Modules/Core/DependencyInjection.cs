@@ -19,6 +19,7 @@ namespace Nubetico.WebAPI.Application.Modules.Core
             services.AddTransient<SucursalesService>();
             services.AddTransient<TenantsService>();
             services.AddTransient<UsuariosService>();
+            services.AddTransient<EntidadesService>();
 
             // Validators
             services.AddScoped<IValidator<AuthRequestDto>, AuthDtoValidator>();

@@ -1,7 +1,7 @@
 ﻿@using Nubetico.Shared.Dto.ProyectosConstruccion;
 @using Nubetico.Frontend.Components.Core.Shared;
 @using Nubetico.Frontend.Components.Shared
-
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores
 @using Nubetico.Frontend.Services.Core
 @using Nubetico.Shared.Dto.Core
 
@@ -30,7 +30,7 @@
                 IsLoading=@IsLoading
                 Culture="@System.Globalization.CultureInfo.CurrentCulture"
                 Count="@Count"
-                Data="@ListaProveedores"
+                Data="@proveedores"
                 LoadData="@LoadDataAsync"
                 AllowSorting="true"
                 AllowFiltering="false"
@@ -40,19 +40,14 @@
                 ShowPagingSummary="true"
                 ColumnWidth="200px"
                 SelectionMode="DataGridSelectionMode.Single"
-                TItem="ProveedoresDto"
-                RowDoubleClick="DataGridRowDoubleClick"
+                TItem="ProveedorGridResultSet"
                 @bind-Value=@ProveedoresSeleccionados>
     <Columns>
         <RadzenDataGridColumn Property="UUID" Title="ID" TextAlign="TextAlign.Center" Visible="false" />
         <RadzenDataGridColumn Property="Folio" Title="@Localizer["Shared.Textos.Folio"]" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="Nombre" Title="@Localizer["Core.Users.FullName"]" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="RFC" Title="@Localizer["Core.ProyectosConstruccion.RFC"]" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="EstadoProveedor" Title="@Localizer["Shared.Textos.Estado"]" TextAlign="TextAlign.Center" Width="100px">
-            <Template Context="data">
-                <RadzenBadge BadgeStyle="@(data.IdEstadoProveedor == 1 ? BadgeStyle.Success : data.IdEstadoProveedor == 0 ? BadgeStyle.Danger : BadgeStyle.Warning)" Text="@(data.EstadoProveedor)" Style="text-transform: none;" />
-            </Template>
-        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Property="NombreComercial" Title="@Localizer["Core.Users.FullName"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Rfc" Title="@Localizer["Core.ProyectosConstruccion.RFC"]" TextAlign="TextAlign.Center" />
+
     </Columns>
 </RadzenDataGrid>
 

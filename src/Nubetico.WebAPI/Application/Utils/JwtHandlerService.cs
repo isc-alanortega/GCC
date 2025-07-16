@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Nubetico.Shared.Dto.Core;
-using Nubetico.WebAPI.Application.External.Directory.Dto;
+using Nubetico.Shared.Enums.Core;
 using Nubetico.WebAPI.Application.Modules.Core.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,22 +17,35 @@ namespace Nubetico.WebAPI.Application.Utils
             _config = config;
         }
 
-        public JwtDataDto JwtUserSigner(UsuarioDto usuarioDto, TenantModel currentTenant)
+        public JwtDataDto UserJwtSigner(UserJwtRequestModel userJwtRequestModel)
         {
             int minutesValid = int.TryParse(_config["JwtConfig:MinutesValid"], out var duration) ? duration : 0;
             var tokenHandler = new JwtSecurityTokenHandler();
             string key = _config["JwtConfig:Key"] ?? string.Empty;
             var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier,userJwtRequestModel.Username),
+                new Claim(ClaimTypes.Email,userJwtRequestModel.Email),
+                new Claim("id", userJwtRequestModel.Id),
+                new Claim("tenant-id", userJwtRequestModel.TenantGuid), // Agregar a la firma del Jwt el Guid del tenant
+            };
+
+            if (userJwtRequestModel.EntidadContacto != null)
+            {
+                var tipo = ((int)(userJwtRequestModel.EntidadContacto.Tipo ?? TypeContactUserEnum.None)).ToString();
+                claims.Add(new Claim("type-contact", tipo));
+                claims.Add(new Claim("entity-contact-id", userJwtRequestModel.EntidadContacto.Id.ToString()));
+            }
+            else
+            {
+                claims.Add(new Claim("type-contact", ((int)TypeContactUserEnum.None).ToString()));
+            }
+
             var tokenDescritor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier,usuarioDto.Username),
-                    new Claim(ClaimTypes.Email,usuarioDto.Email),
-                    new Claim("id", usuarioDto.UUID.ToString()),
-                    new Claim("tenant-id", currentTenant.TenantGuid.ToString()), // Agregar a la firma del Jwt el Guid del tenant
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddMinutes(minutesValid),
                 SigningCredentials = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _config["JwtConfig:Issuer"],

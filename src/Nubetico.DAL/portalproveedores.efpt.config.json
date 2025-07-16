@@ -1,0 +1,66 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "PortalProveedoresContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models\\PortalProveedores",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Nubetico.DAL",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[nb_pp].[Obras]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[nb_pp].[vObras]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[nb_pp].[sp_obra_get]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[nb_pp].[sp_obra_post]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[nb_pp].[sp_obra_put]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[nb_pp].[sp_obras_get]",
+         "ObjectType": 1
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

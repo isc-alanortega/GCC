@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nubetico.Shared.Dto.Common;
+using Nubetico.Shared.Dto.Core;
 using Nubetico.Shared.Dto.ProyectosConstruccion;
 using Nubetico.Shared.Dto.ProyectosConstruccion.Supplies;
 using Nubetico.WebAPI.Application.Modules.ProyectosConstruccion.Services;
@@ -111,6 +112,52 @@ namespace Nubetico.WebAPI.Controllers.ProyectosConstruccion
                 return StatusCode(StatusCodes.Status400BadRequest, ResponseService.Response<object>(StatusCodes.Status400BadRequest, message: result?.Message));
 
             return StatusCode(StatusCodes.Status201Created, ResponseService.Response<object>(StatusCodes.Status201Created, data: result.Result));
+        }
+
+        [HttpGet("GetAllTipoInsumo")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDto<List<TablaRelacionDto>>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDto<object>))]
+        public async Task<IActionResult> GetAllTipoInsumo(
+     [FromServices] SuppliesService suppliesService)
+        {
+            try
+            {
+                var result = await suppliesService.GetAllTipoInsumo();
+
+                if (result == null || !result.Any())
+                {
+                    return StatusCode(StatusCodes.Status200OK, ResponseService.Response(StatusCodes.Status200OK, new List<TablaRelacionDto>(), "No hay Tipo de Insumos registrados."));
+                }
+
+                return StatusCode(StatusCodes.Status200OK, ResponseService.Response(StatusCodes.Status200OK, result, "Tipos de Insumos encontrados."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ResponseService.Response<object>(StatusCodes.Status500InternalServerError, null, ex.Message));
+            }
+        }
+        
+        [HttpGet("GetAllInsumos")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponseDto<List<TablaRelacionDto>>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResponseDto<object>))]
+        public async Task<IActionResult> GetAllInsumos(
+     [FromServices] SuppliesService suppliesService)
+        {
+            try
+            {
+                var result = await suppliesService.GetAllInsumos();
+
+                if (result == null || !result.Any())
+                {
+                    return StatusCode(StatusCodes.Status200OK, ResponseService.Response(StatusCodes.Status200OK, new List<TablaRelacionDto>(), "No hay Insumos registrados."));
+                }
+
+                return StatusCode(StatusCodes.Status200OK, ResponseService.Response(StatusCodes.Status200OK, result, "Insumos encontrados."));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ResponseService.Response<object>(StatusCodes.Status500InternalServerError, null, ex.Message));
+            }
         }
     }
 }

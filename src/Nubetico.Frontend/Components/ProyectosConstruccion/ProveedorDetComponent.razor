@@ -11,6 +11,7 @@
 @using Nubetico.Frontend.Components.ProyectosConstruccion
 
 @inherits NbBaseComponent
+@inject NotificationService notificationService
 
 @inject GlobalBreakpointService breakpointService
 @inject IStringLocalizer<SharedResources> Localizer
@@ -23,14 +24,14 @@
 		</RadzenTabsItem>
 
 		@*LOCATION TAB*@
-		<RadzenTabsItem Text="Domicilio" Icon="@GetCustomValue("LOCATIONTAB")" IconColor="red">
+		@* <RadzenTabsItem Text="Domicilio" Icon="@GetCustomValue("LOCATIONTAB")" IconColor="red">
 			<DomicilioComponent @ref="@AddressComponent" Address_ID="1" EstadoControl="@EstadoControl" />
-		</RadzenTabsItem>
+		</RadzenTabsItem> *@
 
 		@*Contactos*@
-		<RadzenTabsItem Text="Contactos">
+		@* <RadzenTabsItem Text="Contactos">
 			<ContactosComponent></ContactosComponent>
-		</RadzenTabsItem>
+		</RadzenTabsItem> *@
 
 		@*Insumos TAB*@
 		<RadzenTabsItem Text="Insumos">

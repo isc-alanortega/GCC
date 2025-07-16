@@ -1,0 +1,90 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared;
+@using Nubetico.Frontend.Services.PortalClientes;
+@using Radzen.Blazor;
+@inherits NbBaseComponent
+@inject ClientInvoicesService invoicesService;
+@inject IStringLocalizer<SharedResources> localizer
+@inject NotificationService NotificationService
+@inject DialogService DialogService
+
+@* ******************************************************************************************************************* *@
+@* Encabezado *@
+@* ******************************************************************************************************************* *@
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">Facturas</RadzenText>
+
+<RadzenCard class="rz-my-6">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            Folio
+            <RadzenTextBox Placeholder="Ingrese Folio"
+                           Change="@(() => OnValueChange())"
+                           @bind-Value="@Filter.Folio"
+                           type="search" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            Fecha Inicial
+            <RadzenDatePicker TValue="DateTime?" ShowTime="false" HourFormat="24" DateFormat="dd/MM/yyyy" Min="DateTime.Today.AddYears(-10)" Max="DateTime.Today.AddDays(7)" Change="@(() => OnValueChange())" Name="RadzenDatePickerChangeEvent" @bind-Value="@Filter.DateFrom" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            Fecha Final
+            <RadzenDatePicker TValue="DateTime?" ShowTime="false" HourFormat="24" DateFormat="dd/MM/yyyy" Min="DateTime.Today.AddYears(-10)" Max="DateTime.Today.AddDays(7)" Change="@(() => OnValueChange())" Name="RadzenDatePickerChangeEvent" @bind-Value="@Filter.DateTo"/>
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            Razón Social
+            <RadzenTextBox Placeholder="Ingrese Razón Social"
+                           Change="@(() => OnValueChange())"
+                           @bind-Value="@Filter.BusinessName"
+                           type="search"/>
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            Estatus
+            <RadzenDropDown Data="@StatusList()" Size="ButtonSize.Small" @bind-Value="@Filter.Status" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+            <div>&nbsp;</div>
+            <RadzenButton Click=@(() => OnValueChange()) Text="Buscar" Icon="search" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard>
+
+@* ******************************************************************************************************************* *@
+@* Grid para el listado de facturas *@
+@* ******************************************************************************************************************* *@
+
+@* LoadData="@LoadData" *@
+<RadzenDataGrid @ref="InvoicesGrid"
+                IsLoading=@IsLoading
+                Count="@Count"
+                Data="@Invoices"
+                LoadData="@LoadData"
+                AllowSorting="true"
+                AllowFiltering="false"
+                AllowPaging="true"
+                PageSize="20"
+                PagerHorizontalAlign="HorizontalAlign.Center"
+                ShowPagingSummary="true"
+                ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single"
+                EmptyText="No se encontraron registros con los filtros seleccionados"
+                @bind-Value=@SelectedInvoices>
+
+    <Columns>
+        <RadzenDataGridColumn Property="Folio" Title="Folio" TextAlign="TextAlign.Center" Width="100px" />
+        <RadzenDataGridColumn Property="InvoiceType" Title="Tipo" TextAlign="TextAlign.Center" Width="80px" />
+        <RadzenDataGridColumn Property="Date" Title="Fecha" TextAlign="TextAlign.Center" Width="120px" FormatString="{0:dd/MM/yyyy}" />
+        <RadzenDataGridColumn Property="BusinessName" Title="Razón Social" TextAlign="TextAlign.Center" Width="150px" />
+        <RadzenDataGridColumn Property="Total" Title="Total" FormatString="{0:C}" TextAlign="TextAlign.Center" Width="100px" />
+        <RadzenDataGridColumn Property="Balance" Title="Saldo" FormatString="{0:C}" TextAlign="TextAlign.Center" Width="100px" />
+        <RadzenDataGridColumn Property="Status" Title="Estatus" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="data">
+                <RadzenBadge BadgeStyle="@(GetBadgeColor(data.Status))" Text="@data.Status" Style="text-transform: none;" />
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Property="" Title="PDF" TextAlign="TextAlign.Center" Width="50px">
+            <Template Context="data">
+                <i class="fas fa-file-pdf"></i>
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+

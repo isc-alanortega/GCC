@@ -66,7 +66,7 @@
         <RadzenDataGridColumn Property="FechaVencimiento" Title="Fecha Vencimiento" TextAlign="TextAlign.Center" Width="140px" FormatString="{0:dd/MM/yyyy}" />
         <RadzenDataGridColumn Property="EstadoLeyenda" Title="Estatus" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="data">
-                <RadzenBadge BadgeStyle="@(GetBadgeColor(@data.EstadoLeyenda))" Text="@data.EstadoLeyenda" Style="text-transform: none;" />
+                @* <RadzenBadge BadgeStyle="@(GetBadgeColor(@data.EstadoLeyenda))" Text="@data.EstadoLeyenda" Style="text-transform: none;" /> *@
             </Template>
         </RadzenDataGridColumn>
         @* <RadzenDataGridColumn Property="" Title="PDF" TextAlign="TextAlign.Center" Width="50px">

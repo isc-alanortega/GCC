@@ -6,7 +6,10 @@ using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.Extensions.Localization;
 using Nubetico.DAL.Models.Core;
 using Nubetico.DAL.Models.ProyectosConstruccion;
+using Nubetico.DAL.Providers.Core;
+using Nubetico.DAL.Providers.ProyectosConstruccion;
 using Nubetico.Shared.Dto.Common;
+using Nubetico.Shared.Dto.Core;
 using Nubetico.Shared.Dto.ProyectosConstruccion;
 using Nubetico.Shared.Dto.ProyectosConstruccion.Supplies;
 using Nubetico.Shared.Enums.ProyectosConstruccion;
@@ -216,5 +219,15 @@ namespace Nubetico.WebAPI.Application.Modules.ProyectosConstruccion.Services
 				return new ResponseDto<object>(success: true, data: null, message: _localizer["Insumo eliminado correctamente"]);
 			}
 		}
+        public async Task<List<TablaRelacionDto>> GetAllTipoInsumo()
+        {
+            var result = await InsumosProvider.GetAllTipoInsumo(_dbContextFactory);
+            return result;
+        }
+        public async Task<List<TablaRelacionDto>> GetAllInsumos()
+        {
+            var result = await InsumosProvider.GetAllInsumos(_dbContextFactory);
+            return result;
+        }
     }
 }

@@ -9,6 +9,12 @@ public partial class Entidades
 {
     public int IdEntidad { get; set; }
 
+    public int? IdExterno { get; set; }
+
+    public Guid UUID_Entidad { get; set; }
+
+    public string Folio { get; set; }
+
     public string Rfc { get; set; }
 
     public string RazonSocial { get; set; }
@@ -22,22 +28,6 @@ public partial class Entidades
     public int IdTipoPersonaSat { get; set; }
 
     public int? IdEntidadPadre { get; set; }
-
-    public int IdUsuarioAlta { get; set; }
-
-    public DateTime FechaAlta { get; set; }
-
-    public int? IdUsuarioModifica { get; set; }
-
-    public DateTime? FechaModifica { get; set; }
-
-    public int? IdUsuarioElimina { get; set; }
-
-    public DateTime? FechaElimina { get; set; }
-
-    public Guid UUID_Entidad { get; set; }
-
-    public string Folio { get; set; }
 
     public string Email { get; set; }
 
@@ -62,4 +52,18 @@ public partial class Entidades
     public int? IdFormaPago { get; set; }
 
     public bool Activo { get; set; }
+
+    public int IdUsuarioAlta { get; set; }
+
+    public DateTime FechaAlta { get; set; }
+
+    public int? IdUsuarioModifica { get; set; }
+
+    public DateTime? FechaModifica { get; set; }
+
+    public int? IdUsuarioElimina { get; set; }
+
+    public DateTime? FechaElimina { get; set; }
+
+    public virtual ICollection<Entidades_Contactos> Entidades_Contactos { get; set; } = new List<Entidades_Contactos>();
 }

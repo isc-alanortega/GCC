@@ -10,9 +10,9 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.16" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.16" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.17" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.17" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
@@ -34,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
+	<ProjectReference Include="..\External\CwEM.DAL\CwEM.DAL.csproj" />
+    <ProjectReference Include="..\External\Palmaterra.DAL\Palmaterra.DAL.csproj" />
     <ProjectReference Include="..\Nubetico.DAL\Nubetico.DAL.csproj" />
     <ProjectReference Include="..\Nubetico.Frontend\Nubetico.Frontend.csproj" />
     <ProjectReference Include="..\Nubetico.Shared\Nubetico.Shared.csproj" />

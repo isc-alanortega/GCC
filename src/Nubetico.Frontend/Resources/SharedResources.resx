@@ -891,4 +891,7 @@
   <data name="Core.Users.Verify" xml:space="preserve">
     <value>Verify</value>
   </data>
+  <data name="Label.Invoices" xml:space="preserve">
+    <value>Invoices</value>
+  </data>
 </root>

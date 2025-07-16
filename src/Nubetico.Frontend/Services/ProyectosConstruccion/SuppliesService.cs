@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nubetico.Shared.Dto.Common;
+using Nubetico.Shared.Dto.Core;
 using Nubetico.Shared.Dto.ProyectosConstruccion;
 using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto;
 using Nubetico.Shared.Dto.ProyectosConstruccion.Supplies;
@@ -72,6 +73,43 @@ namespace Nubetico.Frontend.Services.ProyectosConstruccion
             var dataResult = JsonConvert.DeserializeObject<BaseResponseDto<SuppliesDto?>>(responseContent);
 
             return dataResult;
+        }
+
+        public async Task<List<TablaRelacionDto>> GetAllTipoInsumo()
+        {
+            try
+            {
+                string endpoint = $"{API_URL_BASE}/GetAllTipoInsumo";
+
+                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress!, endpoint));
+                var response = await _httpClient.SendAsync(request);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                var baseResponse = JsonConvert.DeserializeObject<BaseResponseDto<List<TablaRelacionDto>>>(responseContent);
+                return baseResponse?.Data ?? [];
+            }
+            catch (Exception)
+            {
+                return [];
+            }
+        }
+        public async Task<List<TablaRelacionDto>> GetAllInsumos()
+        {
+            try
+            {
+                string endpoint = $"{API_URL_BASE}/GetAllInsumos";
+
+                var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress!, endpoint));
+                var response = await _httpClient.SendAsync(request);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                var baseResponse = JsonConvert.DeserializeObject<BaseResponseDto<List<TablaRelacionDto>>>(responseContent);
+                return baseResponse?.Data ?? [];
+            }
+            catch (Exception)
+            {
+                return [];
+            }
         }
         #endregion
 

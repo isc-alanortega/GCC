@@ -23,6 +23,18 @@
          "ObjectType": 0
       },
       {
+         "Name": "[Core].[Catalogos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[CatalogosSAT]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Contactos_Funciones]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[Core].[Domicilios]",
          "ObjectType": 0
       },
@@ -44,6 +56,18 @@
       },
       {
          "Name": "[Core].[Entidades]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Entidades_Contactos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Entidades_Contactos_Funciones]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Core].[Entidades_Tipos]",
          "ObjectType": 0
       },
       {
@@ -87,6 +111,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[Core].[Proveedores]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[Core].[Sucursales]",
          "ObjectType": 0
       },
@@ -115,7 +143,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "[Core].[vEntidades]",
+         "ObjectType": 3
+      },
+      {
          "Name": "[Core].[vMenusFormularios]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Core].[vProveedores]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[Core].[vUsuariosContactos]",
          "ObjectType": 3
       },
       {
@@ -136,6 +176,7 @@
    "UseAsyncStoredProcedureCalls": true,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
+   "UseDatabaseNamesForRoutines": true,
    "UseDateOnlyTimeOnly": true,
    "UseDbContextSplitting": false,
    "UseDecimalDataAnnotationForSprocResult": true,
@@ -143,6 +184,7 @@
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": false,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
    "UseNoDefaultConstructor": false,
@@ -154,5 +196,6 @@
    "UseSchemaFolders": false,
    "UseSchemaNamespaces": false,
    "UseSpatial": false,
-   "UseT4": false
+   "UseT4": false,
+   "UseT4Split": false
 }

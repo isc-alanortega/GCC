@@ -35,6 +35,8 @@ public partial class Usuarios
 
     public DateTime FechaAlta { get; set; }
 
+    public virtual ICollection<Entidades_Contactos> Entidades_Contactos { get; set; } = new List<Entidades_Contactos>();
+
     public virtual Personas IdPersonaNavigation { get; set; }
 
     public virtual Usuarios_Estados IdUsuarioEstadoNavigation { get; set; }

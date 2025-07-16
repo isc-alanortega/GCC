@@ -26,6 +26,7 @@ namespace Nubetico.WebAPI.Application.Modules.ProyectosConstruccion
             services.AddTransient<ModelsService>();
             services.AddTransient<CatalogsSupplysService>();
             services.AddTransient<ReportesDestajosService>();
+            services.AddTransient<ProveedoresService>();
             #endregion
 
             #region VALIDATORS

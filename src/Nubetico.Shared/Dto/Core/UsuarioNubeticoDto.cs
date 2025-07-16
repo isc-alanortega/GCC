@@ -18,5 +18,6 @@
         public IEnumerable<MenuDto> ListaMenus { get; set; } = Enumerable.Empty<MenuDto>();
         public List<PermisoAsignadoDto> Permisos { get; set; } = new List<PermisoAsignadoDto>();
         public List<SucursalDto> Sucursales { get; set; } = new List<SucursalDto>();
+        public EntidadContactoUsuarioDto? EntidadContacto { get; set; }
     }
 }
