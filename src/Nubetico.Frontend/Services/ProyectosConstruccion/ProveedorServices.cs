@@ -15,7 +15,7 @@ namespace Nubetico.Frontend.Services.ProyectosConstruccion
         private const string API_URL_BASE = "api/v1/proyectosconstruccion/proveedores";
 
         #region POST
-        public async Task<BaseResponseDto<ProveedorSaveDto?>> PostSaveProveedor(ProveedorSaveDto model)
+        public async Task<BaseResponseDto<ProveedorResult>> PostSaveProveedor(ProveedorSaveDto model)
         {
             try
             {
@@ -25,14 +25,49 @@ namespace Nubetico.Frontend.Services.ProyectosConstruccion
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync(endpoint, content);
-                var responseContent = await response.Content.ReadAsStringAsync();
 
-                var dataResult = JsonConvert.DeserializeObject<BaseResponseDto<ProveedorSaveDto?>?>(responseContent);
-                return dataResult!;
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new BaseResponseDto<ProveedorResult>
+                    {
+                        StatusCode = (int)response.StatusCode,
+                        Success = false,
+                        Message = $"Error en la solicitud HTTP: {response.ReasonPhrase}",
+                        ResponseKey = Guid.NewGuid(),
+                        Data = null
+                    };
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var dataResult = JsonConvert.DeserializeObject<BaseResponseDto<ProveedorResult>>(responseContent);
+
+                if (dataResult == null)
+                {
+                    return new BaseResponseDto<ProveedorResult>
+                    {
+                        StatusCode = 500,
+                        Success = false,
+                        Message = "No se pudo deserializar la respuesta.",
+                        ResponseKey = Guid.NewGuid(),
+                        Data = null
+                    };
+                }
+
+                dataResult.StatusCode = (int)response.StatusCode; // Asegurar StatusCode correcto
+                dataResult.ResponseKey = dataResult.ResponseKey;
+
+                return dataResult;
             }
             catch (Exception ex)
             {
-                return GetDefaultErrorParseJson<ProveedorSaveDto?>(ex);
+                return new BaseResponseDto<ProveedorResult>
+                {
+                    StatusCode = 500,
+                    Success = false,
+                    Message = $"Error al crear el proveedor: {ex.Message}",
+                    ResponseKey = Guid.NewGuid(),
+                    Data = null
+                };
             }
         }
         #endregion
@@ -60,7 +95,7 @@ namespace Nubetico.Frontend.Services.ProyectosConstruccion
         {
             try
             {
-                string endpoint = $"{API_URL_BASE}/{idProveedor}"; 
+                string endpoint = $"{API_URL_BASE}/GetProveedorById{idProveedor}"; 
 
                 var request = new HttpRequestMessage(HttpMethod.Get, new Uri(_httpClient.BaseAddress!, endpoint));
                 var response = await _httpClient.SendAsync(request);
@@ -72,6 +107,103 @@ namespace Nubetico.Frontend.Services.ProyectosConstruccion
             catch (Exception)
             {
                 return null; 
+            }
+        }
+
+        public async Task<BaseResponseDto<PaginatedListDto<ProveedorGridResultSet>>> GetProveedoresPaginadoAsync(int limit, int offset, string? orderBy, string? nombre, string? rfc)
+        {
+            try
+            {
+                string endpoint = $"{API_URL_BASE}/GetProveedoresPaginado";
+                var queryParams = new Dictionary<string,
+                    string> {
+                {
+                    "limit",
+                    limit.ToString()
+                },
+                {
+                    "offset",
+                    offset.ToString()
+                }
+            };
+                if (!string.IsNullOrEmpty(nombre)) queryParams.Add("nombre", Uri.EscapeDataString(nombre));
+                if (!string.IsNullOrEmpty(rfc)) queryParams.Add("rfc", Uri.EscapeDataString(rfc));
+                if (!string.IsNullOrEmpty(orderBy)) queryParams.Add("orderBy", Uri.EscapeDataString(orderBy));
+                var queryString = string.Join("&", queryParams.Select(param => $"{param.Key}={param.Value}"));
+                var urlWithParams = $"{endpoint}?{queryString}";
+                var response = await _httpClient.GetAsync(urlWithParams);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var baseResponse = JsonConvert.DeserializeObject<BaseResponseDto<PaginatedListDto<ProveedorGridResultSet>>>(responseContent);
+                return baseResponse ?? new BaseResponseDto<PaginatedListDto<ProveedorGridResultSet>>
+                {
+                    Success = false,
+                    Message = "No se pudo deserializar la respuesta."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDto<PaginatedListDto<ProveedorGridResultSet>>
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+        }
+        #endregion
+        #region PUT
+        public async Task<BaseResponseDto<ProveedorGridResultSet>> PutSaveProveedor(ProveedorSaveDto model)
+        {
+            try
+            {
+                string endpoint = $"{API_URL_BASE}/PutSaveProveedor";
+
+                var json = JsonConvert.SerializeObject(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync(endpoint, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new BaseResponseDto<ProveedorGridResultSet>
+                    {
+                        StatusCode = (int)response.StatusCode,
+                        Success = false,
+                        Message = $"Error en la solicitud HTTP: {response.ReasonPhrase}",
+                        ResponseKey = Guid.NewGuid(),
+                        Data = null
+                    };
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var dataResult = JsonConvert.DeserializeObject<BaseResponseDto<ProveedorGridResultSet>>(responseContent);
+
+                if (dataResult == null)
+                {
+                    return new BaseResponseDto<ProveedorGridResultSet>
+                    {
+                        StatusCode = 500,
+                        Success = false,
+                        Message = "No se pudo deserializar la respuesta.",
+                        ResponseKey = Guid.NewGuid(),
+                        Data = null
+                    };
+                }
+
+                dataResult.StatusCode = (int)response.StatusCode; // Asegurar StatusCode correcto
+                dataResult.ResponseKey = dataResult.ResponseKey;
+
+                return dataResult;
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDto<ProveedorGridResultSet>
+                {
+                    StatusCode = 500,
+                    Success = false,
+                    Message = $"Error al actualizar el proveedor: {ex.Message}, InnerException: {ex.InnerException?.Message}",
+                    ResponseKey = Guid.NewGuid(),
+                    Data = null
+                };
             }
         }
 

@@ -1,4 +1,4 @@
-﻿@using Nubetico.Frontend.Components.Core.Shared;
+﻿@using Nubetico.Frontend.Components.Shared;
 @using Nubetico.Shared.Dto.ProyectosConstruccion.Supplies
 @inherits NbBaseComponent
 
@@ -14,6 +14,20 @@
 		    <RadzenCard class="rz-mt-4">
                 <RadzenTemplateForm @ref="@SupplyForm" TItem="SuppliesDto" Data="@SupplyData">
                     <RadzenRow>
+                        <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
+                            <RadzenFormField Text="@Localizer!["Supplies.Text.Code"]" Style="width: 100%;">
+                                <RadzenTextBox Style="width: 100%"
+                                               @bind-Value="@SupplyData!.Code"
+                                               Change="@((value) => SupplyData!.Code = value?.Trim().ToUpper())"
+                                               aria-label="@Localizer!["Supplies.Text.Code"]"
+                                               Name="Code"
+                                               Trim="true"
+                                               Disabled="true"
+                                               MaxLength="10" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+
+
                         <RadzenColumn SizeMd="4" SizeSM="6" SizeXS="12">
                             <RadzenFormField Text="@Localizer!["Shared.Textos.Tipo"]" Style="width: 100%;">
                                 <RadzenDropDown Style="width: 100%;"
@@ -25,21 +39,24 @@
                                                 Name="TypeSupplyId" />
                             </RadzenFormField>
                             <RadzenRequiredValidator Component="TypeSupplyId" Text="@Localizer!["Supply.Text.TypeRequired"]" Style="color: red" />
+                        </RadzenColumn> 
+                        
+                        
+                        <RadzenColumn SizeMd="4" SizeSM="6" SizeXS="12">
+                            <RadzenFormField Text="@Localizer!["Supplies.Text.Unit"]" Style="width: 100%;">
+                                <RadzenTextBox Style="width: 100%"
+                                               @bind-Value="@SupplyData!.Description"
+                                               Change="@((value) => SupplyData!.Unit = value?.Trim().ToUpper())"
+                                               aria-label="@Localizer!["Supplies.Text.Unit"]"
+                                               Disabled="@IsDisabledForm()"
+                                               Name="Description"
+                                               Trim="true"
+                                               MaxLength="50" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="TypeSupplyId" Text="@Localizer!["Supply.Text.TypeRequired"]" Style="color: red" />
                         </RadzenColumn>
 
-                        <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
-                            <RadzenFormField Text="@Localizer!["Supplies.Text.Code"]" Style="width: 100%;">
-                                <RadzenTextBox Style="width: 100%"
-                                               @bind-Value="@SupplyData!.Code"
-                                               Change="@((value) => SupplyData!.Code = value?.Trim().ToUpper())"
-                                               aria-label="@Localizer!["Supplies.Text.Code"]"
-                                               Disabled="@IsDisabledForm()"
-                                               Name="Code"
-                                               Trim="true"
-                                               MaxLength="10" />
-                            </RadzenFormField>
-                            <RadzenRequiredValidator Component="Code" Text="@Localizer!["Supply.Text.CodeRequired"]" Style="color: red" />
-                        </RadzenColumn>
+
 
                         <RadzenColumn SizeMD="4" SizeSM="6" SizeXS="12">
                             <RadzenFormField Text="@Localizer!["Shared.Textos.Description"]" Style="width: 100%;">

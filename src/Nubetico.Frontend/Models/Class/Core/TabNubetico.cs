@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using Radzen.Blazor;
-using static Nubetico.Frontend.Components.Core.Shared.NbBaseComponent;
+using static Nubetico.Frontend.Components.Shared.NbBaseComponent;
 
 namespace Nubetico.Frontend.Models.Class.Core
 {

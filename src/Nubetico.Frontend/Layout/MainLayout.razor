@@ -92,6 +92,13 @@
     </RadzenSidebar>
     <RadzenFooter Style="padding: 0.5rem">
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" JustifyContent="Radzen.JustifyContent.Start" Wrap="FlexWrap.NoWrap" Gap="0px">
+            @if (!string.IsNullOrEmpty(Empresa))
+            {
+                <RadzenLabel>@Empresa</RadzenLabel>
+                <RadzenIcon Icon="@("\u007c")" class="fa-sharp-light"></RadzenIcon>
+                <RadzenLabel>@NombreUsuario</RadzenLabel>
+                <RadzenIcon Icon="@("\u007c")" class="fa-sharp-light"></RadzenIcon>
+            }
             <RadzenLabel>nubetico @NubeticoAssemblyProperties.GetBuildDate()</RadzenLabel>
             <RadzenIcon Icon="@("\u007c")" class="fa-sharp-light"></RadzenIcon>
             <RadzenLabel>Copyright Ⓒ @DateTime.Now.Year</RadzenLabel>

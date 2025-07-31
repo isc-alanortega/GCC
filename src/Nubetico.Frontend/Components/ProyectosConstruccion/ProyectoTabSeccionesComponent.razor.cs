@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Frontend.Models.Class.Core;
 using Nubetico.Frontend.Models.Enums.Core;
 using Nubetico.Frontend.Pages.ProyectosConstruccion;

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Content Remove="Components\ProyectosConstruccion\InsumosProveedorCatComponent.razor" />
+    <Content Remove="Pages\ProyectosConstruccion\EgresosCatPage.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,10 +48,16 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Components\ProyectosConstruccion\InsumosProveedorCatComponent.razor" />
+    <_ContentIncludedByDefault Remove="Pages\ProyectosConstruccion\EgresosCatPage.razor" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Components\ProyectosConstruccion\InsumosProveedorCatComponent.razor" />
+    <None Include="Pages\ProyectosConstruccion\EgresosCatPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\ProyectosConstruccion\EgresosCatPage.razor" />
   </ItemGroup>
 
 </Project>

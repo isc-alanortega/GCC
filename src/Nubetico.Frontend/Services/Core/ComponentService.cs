@@ -1,6 +1,6 @@
 ﻿using Nubetico.Frontend.Models.Class.Core;
 using Radzen.Blazor;
-using static Nubetico.Frontend.Components.Core.Shared.NbBaseComponent;
+using static Nubetico.Frontend.Components.Shared.NbBaseComponent;
 
 namespace Nubetico.Frontend.Services.Core
 {

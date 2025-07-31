@@ -8,8 +8,10 @@ using Nubetico.DAL.Models.Core;
 using Nubetico.DAL.Models.ProyectosConstruccion;
 using Nubetico.DAL.Providers.Core;
 using Nubetico.DAL.Providers.ProyectosConstruccion;
+using Nubetico.Frontend.Services.Core;
 using Nubetico.Shared.Dto.Common;
 using Nubetico.Shared.Dto.Core;
+using Nubetico.Shared.Dto.Core.Folios;
 using Nubetico.Shared.Dto.ProyectosConstruccion;
 using Nubetico.Shared.Dto.ProyectosConstruccion.Supplies;
 using Nubetico.Shared.Enums.ProyectosConstruccion;
@@ -140,12 +142,28 @@ namespace Nubetico.WebAPI.Application.Modules.ProyectosConstruccion.Services
 		{
 			using(var db = _dbContextFactory.CreateDbContext())
 			{
-				var suppliesDb = _mapper.Map<Insumos>(request);
+                var folioRequest = new FolioRequestDto()
+                {
+                    Alias = "pc.insumos",
+                    IdSucursal = null
+                };
+                var folio = await FoliosProvider.GetFolioAsync(_coreDbContextFactory, folioRequest.Alias, folioRequest.IdSucursal);
+                if (folio == null)
+                {
+                    return new ResponseDto<SuppliesDto>
+                    {
+                        Success = false,
+                        Message = "No se pudo obtener el folio",
+                        Result = null
+                    };
+                }
+                string folioSolicitud = $"{folio.Serie}{folio.Folio.ToString($"D{folio.Digitos}")}";
+                request.Code = folioSolicitud;
+                var suppliesDb = _mapper.Map<Insumos>(request);
 				suppliesDb.Id_Usuario_Alta = await GetIdUserAsync(request.ActionUserGuid!.Value);
 				suppliesDb.Fecha_Alta = DateTime.Now;
 				suppliesDb.Habilitado = true;
-
-				await db.AddAsync(suppliesDb);
+                await db.AddAsync(suppliesDb);
 				await db.SaveChangesAsync();
 
 				return new ResponseDto<SuppliesDto>(success: true, data: request);

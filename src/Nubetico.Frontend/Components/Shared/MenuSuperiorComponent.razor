@@ -1,0 +1,31 @@
+﻿@using Nubetico.Frontend.Services.Core
+@using Radzen
+@implements IDisposable
+@inject ComponentService ComponentService
+
+<RadzenMenu class="rz-mb-5">
+    @foreach (var menuItem in ComponentService.CurrentMenuItems)
+    {
+        <RadzenMenuItem Text="@menuItem.Text" Icon="@menuItem.Icon" Click="@menuItem.Click" />
+    }
+</RadzenMenu>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Suscribirse al evento MenuChanged para actualizar el menú cuando cambie
+        ComponentService.MenuChanged += OnMenuChanged;
+    }
+
+    private void OnMenuChanged()
+    {
+        // Forzar actualización del componente cuando cambie el menú
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        // Cancelar suscripción para evitar fugas de memoria
+        ComponentService.MenuChanged -= OnMenuChanged;
+    }
+}

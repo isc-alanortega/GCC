@@ -1,0 +1,76 @@
+﻿@using Nubetico.Shared.Dto.ProyectosConstruccion;
+@using Nubetico.Frontend.Components.Core.Shared;
+@using Nubetico.Frontend.Components.Shared
+
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+
+@inherits NbBaseComponent
+
+<RadzenText class="rz-mb-5" TextStyle="TextStyle.H5">@Localizer["Core.Egresos"]</RadzenText>
+<PanelFiltrosNubeticoComponent>
+    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" RowGap="0">
+        <RadzenColumn SizeSM="3" SizeXS="12" Style="min-width: 150px; max-width: 405px">
+            <RadzenFormField Text="@Localizer["Shared.Textos.State"]" Style="width: 100%; max-width: 400px">
+                <RadzenTextBox Style="width: 100%" @bind-value=@Filtro.Nombre type="search" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn SizeSM="3" SizeXS="12" Style="min-width: 150px; max-width: 405px">
+            <RadzenFormField Text="@Localizer["Obra / Folio / Trabao"]" Style="width: 100%; max-width: 400px">
+                <RadzenTextBox Style="width: 100%" @bind-value=@Filtro.RFC type="search" />
+            </RadzenFormField>
+        </RadzenColumn>
+        <RadzenColumn SizeSM="3" SizeXS="12">
+            <RadzenButton Click="@(() => RefreshGridAsync("NombreCompleto asc", this.RowsPerPage, 0))" Text=@Localizer["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" IsBusy=@IsLoading BusyText="@Localizer["Shared.Textos.Buscando"]" Style="margin-top: 12px" />
+        </RadzenColumn>
+    </RadzenRow>
+</PanelFiltrosNubeticoComponent>
+
+<RadzenDataGrid @ref="GridEgresos"
+                AllowColumnResize="true"
+                AllowGrouping="true"
+                AllowFiltering="false"
+                AllowPaging="true"
+                AllowSorting="true"
+                Count="@Count"
+                ColumnWidth="200px"
+                Culture="@System.Globalization.CultureInfo.CurrentCulture"
+                Data="@ListaEgresos"
+                FilterMode="FilterMode.Advanced"
+                GroupPanelText="@Localizer["Shared.Textos.Grid.AgruparColumnas"]"
+                GroupRowRender="@OnGroupRowRender"
+                HideGroupedColumn="true"
+                IsLoading=@IsLoading
+                LoadData="@LoadDataAsync"
+                LogicalFilterOperator="LogicalFilterOperator.Or"
+                PagerHorizontalAlign="HorizontalAlign.Center"
+                PageSize="@this.RowsPerPage"
+                RowDoubleClick="DataGridRowDoubleClick"
+                SelectionMode="DataGridSelectionMode.Single"
+                ShowPagingSummary="true"
+                TItem="vEgresos_Partidas_DetallesDto"
+                @bind-Value=@EgresosSeleccionados>
+    <Columns>
+        <RadzenDataGridColumn Property="Id_Egreso_Partida" Title="Id Egreso Partida" TextAlign="TextAlign.Center" Visible="false" Width="150px" />
+        <RadzenDataGridColumn Property="Id_Egreso" Title="Id Egreso" TextAlign="TextAlign.Center" Visible="false" Width="150px" />
+        <RadzenDataGridColumn Property="Id_Obra" Title="Id Obra" TextAlign="TextAlign.Center" Visible="true" Groupable="true" Width="100px" />
+        <RadzenDataGridColumn Property="Folio" Title="@Localizer["Shared.Textos.Folio"]" TextAlign="TextAlign.Center" Width="100px" />
+        <RadzenDataGridColumn Property="Decsripcion" Title="@Localizer["Shared.Textos.Description"]" TextAlign="TextAlign.Left" Width="300px" />
+        <RadzenDataGridColumn Property="Id_Estatus" Title="Id Estatus" TextAlign="TextAlign.Center" Width="100px" />
+        <RadzenDataGridColumn Property="Monto" Title="@Localizer["Shared.Textos.Importe"]" TextAlign="TextAlign.Right" Width="100px" >
+            <Template Context="data">
+                @string.Format(new System.Globalization.CultureInfo("es-MX"), "{0:C}", data.Monto)
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Property="Fecha" Title="@Localizer["Shared.Textos.Fecha"]" TextAlign="TextAlign.Center" Width="200px" />
+        @* <RadzenDataGridColumn Property="EstadoProveedor" Title="@Localizer["Shared.Textos.Estado"]" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="data">
+                <RadzenBadge BadgeStyle="@(data.IdEstadoProveedor == 1 ? BadgeStyle.Success : data.IdEstadoProveedor == 0 ? BadgeStyle.Danger : BadgeStyle.Warning)" Text="@(data.EstadoProveedor)" Style="text-transform: none;" />
+            </Template>
+        </RadzenDataGridColumn> *@
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+
+}

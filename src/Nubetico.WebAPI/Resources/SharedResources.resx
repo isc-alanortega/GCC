@@ -270,4 +270,22 @@
   <data name="Core.Files.Errors.EmptyFile" xml:space="preserve">
     <value>The file is empty</value>
   </data>
+  <data name="Core.ProyectosConstruccion.ProveedoresAgregar" xml:space="preserve">
+    <value>Add Provider</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.RFCRequired" xml:space="preserve">
+    <value>The RFC is mandatory.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.Contratista" xml:space="preserve">
+    <value>Contratista</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.ContratistasAgregar" xml:space="preserve">
+    <value>Add Contractor</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.Required" xml:space="preserve">
+    <value>The Comercial Name is Required</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.Insumos" xml:space="preserve">
+    <value>Supplies</value>
+  </data>
 </root>

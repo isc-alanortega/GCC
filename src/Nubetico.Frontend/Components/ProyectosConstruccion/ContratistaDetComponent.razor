@@ -1,210 +1,80 @@
 ﻿@using Newtonsoft.Json
-@using Nubetico.Frontend.Components.Core.Dialogs
 @using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Components.Shared
 @using Nubetico.Frontend.Services.Core
 @using Nubetico.Shared.Dto.Core
 @using Nubetico.Shared.Static.Core
-
-@using Nubetico.Shared.Dto.ProyectosConstruccion;
-
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Contratistas
+@using Nubetico.Shared.Dto.ProyectosConstruccion
 @inherits NbBaseComponent
-
 @inject GlobalBreakpointService breakpointService
 @inject IStringLocalizer<SharedResources> Localizer
 
-
-
 <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
-	<Tabs>
-		@*GENERAL TAB*@
-		<RadzenTabsItem Text="General" Icon="@GetCustomValue("GENERALTAB")" IconColor="red">
-			<RadzenPanel>
-				<HeaderTemplate>
-					<RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
-						<RadzenIcon Icon=@(!string.IsNullOrEmpty(IconoBase) ? char.ConvertFromUtf32(Convert.ToInt32(IconoBase, 16)) : "") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
-						<b>@Localizer["Lots.Text.General"]</b>
-					</RadzenText>
-				</HeaderTemplate>
-				<ChildContent>
-					<RadzenCard class="rz-mt-4">
-						<RadzenStack>
-							<RadzenRow Wrap="FlexWrap.Wrap">
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="@Localizer["Shared.Textos.Folio"]" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.Folio" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="@Localizer["Core.ProyectosConstruccion.RFC"]" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.RFC" />
-									</RadzenFormField>
-								</RadzenColumn>
+    <Tabs>
+        @*GENERAL TAB*@
+        <RadzenTabsItem Text="General" Icon="@GetCustomValue("GENERALTAB")" IconColor="red">
+            <EntidadContratistaComponent @ref="EntidadContratistaComponent" ContratistaData="@ContratistaData" EstadoControl="@EstadoControl" />
+        </RadzenTabsItem>
 
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="@Localizer["Shared.Textos.Name"]" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.Nombre" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="@Localizer["Shared.Textos.Estado"]" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.EstadoContratista" />
-									</RadzenFormField>
-								</RadzenColumn>
-							</RadzenRow>
+        @*LOCATION TAB*@
+        @* <RadzenTabsItem Text="Domicilio" Icon="@GetCustomValue("LOCATIONTAB")" IconColor="red">
+            <DomicilioComponent @ref="@AddressComponent" Address_ID="1" EstadoControl="@EstadoControl" />
+        </RadzenTabsItem> *@
 
-							<RadzenRow Wrap="FlexWrap.Wrap">
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Crédito en pesos" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.CreditoPesos" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Crédito en dólares" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.CreditoDolares" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="@Localizer["Shared.Textos.RegimenFiscal"]" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.RegimenFiscal" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" Style="height: 100%">
-										<RadzenCheckBox @bind-Value=@tieneCredito Name="TieneCredito" />
-										<RadzenLabel Text="Tiene crédito"
-													 Component="TieneCredito" class="rz-ms-2" />
-									</RadzenStack>
-								</RadzenColumn>
-							</RadzenRow>
+        @*Contactos*@
+        @* <RadzenTabsItem Text="Contactos">
+            <ContactosComponent></ContactosComponent>
+        </RadzenTabsItem> *@
 
-							<RadzenRow Wrap="FlexWrap.Wrap">
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Dias de crédito" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.DiasCredito" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Dias de gracia" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.DiasGracia" />
-									</RadzenFormField>
-								</RadzenColumn>
+        @*Insumos TAB*@
+        <RadzenTabsItem Text="Insumos">
+            <RadzenPanel>
+                <HeaderTemplate>
+                    <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+                        <RadzenIcon Icon=@("\uf4df") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+                        <b>Insumos</b>
+                    </RadzenText>
+                </HeaderTemplate>
+                <ChildContent>
+                    <RadzenCard class="rz-mt-4">
+                        <RadzenDataGrid @ref="GridInsumos"
+                                        IsLoading="@IsLoading"
+                                        Count="@Count"
+                                        Data="@SuppliesList"
+                                        LoadData="@LoadData"
+                                        AllowSorting="true"
+                                        AllowPaging="true"
+                                        PageSize="20"
+                                        ShowPagingSummary="true"
+                                        SelectionMode="DataGridSelectionMode.Single"
+                                        TItem="InsumosDto"
+                                        EmptyText="No hay resultados"
+                                        Style="height: calc(100vh - 424px); overflow: auto;">
+                            <Columns>
+                                <RadzenDataGridColumn Property="ID" Title="ID" Visible="false" TextAlign="TextAlign.Center" />
+                                <RadzenDataGridColumn Property="Code" Title="@Localizer!["Supplies.Text.Code"]" TextAlign="TextAlign.Center" />
+                                <RadzenDataGridColumn Property="Description" Title="@Localizer!["Shared.Textos.Description"]" TextAlign="TextAlign.Left" />
+                                <RadzenDataGridColumn Property="Unit" Title="@Localizer!["Supplies.Text.Unit"]" TextAlign="TextAlign.Center" />
+                                <RadzenDataGridColumn Title="@Localizer!["Shared.Textos.Fecha"]" TextAlign="TextAlign.Center" />
+                                <RadzenDataGridColumn Title="@Localizer!["Shared.Textos.Price"]" TextAlign="TextAlign.Center" />
+                                <RadzenDataGridColumn Property="Type" Title="@Localizer!["Shared.Textos.Tipo"]" MinWidth="150px" TextAlign="TextAlign.Center">
+                                    <Template Context="data">
+                                        <RadzenBadge BadgeStyle="@GetBadgeStyle(data.Id_Type ?? 0)" Text="@data.Type" Style="text-transform: none;" />
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGrid>
+                    </RadzenCard>
+                </ChildContent>
+            </RadzenPanel>
+        </RadzenTabsItem>
 
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Saldo en pesos" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.SaldoPesos" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Saldo en dólares" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.SaldoDolares" />
-									</RadzenFormField>
-								</RadzenColumn>
-							</RadzenRow>
-
-							<RadzenRow Wrap="FlexWrap.Wrap">
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Web" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.Web" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Correo" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.Correo" />
-									</RadzenFormField>
-								</RadzenColumn>
-
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Cuenta contable" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.CuentaContable" />
-									</RadzenFormField>
-								</RadzenColumn>
-								<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
-									<RadzenFormField Text="Forma de pago" Style="width: 100%">
-										<RadzenTextBox Disabled="@GetDisabled()"
-													   @bind-Value="@ContratistaData.FormaPago" />
-									</RadzenFormField>
-								</RadzenColumn>
-							</RadzenRow>
-
-						</RadzenStack>
-					</RadzenCard>
-				</ChildContent>
-			</RadzenPanel>
-		</RadzenTabsItem>
-
-		@*LOCATION TAB*@
-		<RadzenTabsItem Text="Domicilio" Icon="@GetCustomValue("LOCATIONTAB")" IconColor="red">
-			<DomicilioComponent @ref="@AddressComponent" Address_ID="1" EstadoControl="@EstadoControl" />
-		</RadzenTabsItem>
-
-		@*Contactos*@
-		<RadzenTabsItem Text="Contactos">
-			<ContactosComponent></ContactosComponent>
-		</RadzenTabsItem>
-
-		@*Insumos TAB*@
-		<RadzenTabsItem Text="Insumos">
-			<RadzenPanel>
-				<HeaderTemplate>
-					<RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
-						<RadzenIcon Icon=@("\uf4df") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
-						<b>Insumos</b>
-					</RadzenText>
-				</HeaderTemplate>
-				<ChildContent>
-					<RadzenCard class="rz-mt-4">
-						<RadzenDataGrid @ref="GridInsumos"
-										IsLoading="@IsLoading"
-										Count="@Count"
-										Data="@SuppliesList"
-										LoadData="@LoadData"
-										AllowSorting="true"
-										AllowPaging="true"
-										PageSize="20"
-										ShowPagingSummary="true"
-										SelectionMode="DataGridSelectionMode.Single"
-										TItem="InsumosDto"
-										EmptyText="No hay resultados"
-										Style="height: calc(100vh - 424px); overflow: auto;">
-							<Columns>
-								<RadzenDataGridColumn Property="ID" Title="ID" Visible="false" TextAlign="TextAlign.Center" />
-								<RadzenDataGridColumn Property="Code" Title="@Localizer!["Supplies.Text.Code"]" TextAlign="TextAlign.Center" />
-								<RadzenDataGridColumn Property="Description" Title="@Localizer!["Shared.Textos.Description"]" TextAlign="TextAlign.Left" />
-								<RadzenDataGridColumn Property="Unit" Title="@Localizer!["Supplies.Text.Unit"]" TextAlign="TextAlign.Center" />
-								<RadzenDataGridColumn Title="@Localizer!["Shared.Textos.Fecha"]" TextAlign="TextAlign.Center" />
-								<RadzenDataGridColumn Title="@Localizer!["Shared.Textos.Price"]" TextAlign="TextAlign.Center" />
-								<RadzenDataGridColumn Property="Type" Title="@Localizer!["Shared.Textos.Tipo"]" MinWidth="150px" TextAlign="TextAlign.Center">
-									<Template Context="data">
-										<RadzenBadge BadgeStyle="@GetBadgeStyle(data.Id_Type ?? 0)" Text="@data.Type" Style="text-transform: none;" />
-									</Template>
-								</RadzenDataGridColumn>
-							</Columns>
-						</RadzenDataGrid>
-					</RadzenCard>
-				</ChildContent>
-			</RadzenPanel>
-		</RadzenTabsItem>
-
-		@*Destajos*@
-		<RadzenTabsItem Text="Destajos">
-			<RadzenRow>
-				<DestajosCatComponent></DestajosCatComponent>
-			</RadzenRow>
-		</RadzenTabsItem>
-
-	</Tabs>
+        @*Destajos*@
+        <RadzenTabsItem Text="Destajos">
+            <RadzenRow>
+                <DestajosCatComponent></DestajosCatComponent>
+            </RadzenRow>
+        </RadzenTabsItem>
+    </Tabs>
 </RadzenTabs>

@@ -6,6 +6,7 @@ using Nubetico.Frontend.Components.Shared;
 using Nubetico.Frontend.Helpers;
 using Nubetico.Frontend.Services.Core;
 using Nubetico.Frontend.Services.Core.XmlServices;
+using Nubetico.Frontend.Services.Palmaterra;
 using Nubetico.Frontend.Services.PortalClientes;
 using Nubetico.Frontend.Services.PortalProveedores;
 using Nubetico.Frontend.Services.ProveedoresFacturas;
@@ -51,7 +52,8 @@ namespace Nubetico.Frontend
             builder.Services.AddPortalProveedoresServices();
             builder.Services.AddProveedoresFacturasServices();
             builder.Services.AddProyectosConstruccionServices();
-            builder.Services.AddXmlServices();
+			builder.Services.AddPalmaterraServices();
+			builder.Services.AddXmlServices();
 
             builder.Services.AddAuthorizationCore();
             var host = builder.Build();

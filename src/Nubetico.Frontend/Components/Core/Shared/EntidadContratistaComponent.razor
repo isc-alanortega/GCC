@@ -1,0 +1,285 @@
+﻿@using Newtonsoft.Json
+@using Nubetico.Frontend.Components.Shared
+@using Nubetico.Frontend.Services.Core
+@using Nubetico.Shared.Dto.Core
+@using Nubetico.Shared.Static.Core
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Contratistas
+@inherits NbBaseComponent
+@inject IStringLocalizer<SharedResources> Localizer
+
+<RadzenPanel>
+    <HeaderTemplate>
+        <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+            <RadzenIcon Icon=@("\ue283") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+            <b>@Localizer["Lots.Text.General"]</b>
+        </RadzenText>
+    </HeaderTemplate>
+    <ChildContent>
+        <RadzenCard class="rz-mt-4">
+            <RadzenStack>
+                <RadzenRow Wrap="FlexWrap.Wrap">
+                    <RadzenColumn Size="3" SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="@Localizer["Shared.Textos.Folio"]" Style="width: 100%">
+                            <RadzenTextBox Disabled="true" @bind-Value="@ContratistaData.Folio" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px; display: flex; align-items: center;">
+                        <RadzenRadioButtonList TValue="int" @bind-Value="ContratistaData.IdTipoPersonaSat" Name="IdTipoPersonaSat" Disabled="@GetDisabled()">
+                            <Items>
+                                <RadzenRadioButtonListItem Text="Física" Value="1" />
+                                <RadzenRadioButtonListItem Text="Moral" Value="2" />
+                            </Items>
+                        </RadzenRadioButtonList>
+                        <RadzenRequiredValidator Component="IdTipoPersonaSat" Text="@Localizer["Supply.Text.CodeRequired"]" Style="color: red" />
+                        @if (FormValidationErrors.TryGetValue("IdTipoPersonaSat", out var errorMessagesTipoPersona))
+                        {
+                            <RadzenLabel class="rz-color-danger" Text="@errorMessagesTipoPersona[0]" Style="display: block; margin-top: 4px;" />
+                        }
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px; display: flex; align-items: center;">
+                        <RadzenRadioButtonList TValue="int" Disabled="@GetDisabled()">
+                            <Items>
+                                <RadzenRadioButtonListItem Text="Nacional" Value="1" />
+                                <RadzenRadioButtonListItem Text="Extranjero" Value="2" />
+                            </Items>
+                        </RadzenRadioButtonList>
+                    </RadzenColumn>
+                     <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <div class="rz-mt-4 rz-align-items-start">
+                            <RadzenCheckBox Disabled="@GetDisabled()" @bind-Value="@ContratistaData.Habilitado" Name="CheckBoxHabilitado" />
+                            <RadzenLabel Text="Habilitado" Component="CheckBoxHabilitado" class="rz-ms-1" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <RadzenRow Wrap="FlexWrap.Wrap">
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="@Localizer["Core.ProyectosConstruccion.RFC"]" Style="width: 100%">
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@ContratistaData.Rfc" MaxLength="13" Name="RfcField" Style="width: 100%" Disabled="@GetDisabled()" />
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("Rfc", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="RfcField" Text=@($"*{Localizer["Core.ProyectosConstruccion.RFCRequired"]}") Style="color:red" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeSM="4" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Nombre comercial" Style="width: 100%">
+                            <ChildContent>
+                                <RadzenTextBox Disabled="@GetDisabled()" MaxLength="25" Name="NombreComercial" @bind-Value="@ContratistaData.NombreComercial" />
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("NombreComercial", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="NombreComercial" Text=@($"*{Localizer["Core.ProyectosConstruccion.Required"]}") Style="color:red" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeSM="4" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Razon social" Style="width: 100%">
+                            <ChildContent>
+                                <RadzenTextBox Disabled="@GetDisabled()" Name="RazonSocial" @bind-Value="@ContratistaData.RazonSocial" />
+
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("RazonSocial", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="RazonSocial" Text=@($"*{Localizer["Core.ProyectosConstruccion.Required"]}") Style="color:red" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Tipo de régimen fiscal" Style="width: 100%">
+                            <ChildContent>
+                                 <RadzenDropDown @bind-Value="@ContratistaData.IdTipoRegimenFiscal" Name="TipoRegimenFiscal" Data="@LstTipoRegimenesFiscales" TextProperty="Descripcion" ValueProperty="ID" Placeholder="Seleccione tipo de régimen" Style="width: 100%" Disabled="@GetDisabled()" />
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("IdTipoRegimenFiscal", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="TipoRegimenFiscal" Text="*Campo requerido" Style="color:red" />
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <RadzenRow Wrap="FlexWrap.Wrap">
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Régimen fiscal" Style="width: 100%">
+                            <ChildContent>
+                            <RadzenDropDown Disabled="@GetDisabled()" @bind-Value="@ContratistaData.IdRegimenFiscal" Data="@LstRegimenesFiscales" Name="RegimenFiscal" TextProperty="Descripcion" ValueProperty="ID" Style="width: 100%" Placeholder="Seleccione un régimen fiscal" />
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("IdRegimenFiscal", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="RegimenFiscal" Text=@($"*{Localizer["Core.ProyectosConstruccion.Required"]}") Style="color:red" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Método de pago" Style="width: 100%">
+                            <ChildContent>
+                                <RadzenDropDown Disabled="@GetDisabled()" @bind-Value="@ContratistaData.IdTipoMetodoPago" Data="@LstTipoMetodoPago" TextProperty="Descripcion" Name="MetodoPago" ValueProperty="ID" Placeholder="Seleccione método de pago" Style="width: 100%" />
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("IdTipoMetodoPago", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="MetodoPago" Text=@($"*{Localizer["Core.ProyectosConstruccion.Required"]}") Style="color:red" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Uso del CFDI" Style="width: 100%">
+                            <ChildContent>
+                                <RadzenDropDown Disabled="@GetDisabled()" @bind-Value="@ContratistaData.IdUsoCFDI" Data="@LstUsoCFDI" TextProperty="Descripcion" Name="CFDI" ValueProperty="ID" Placeholder="Seleccione uso del CFDI" Style="width: 100%" />
+
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("IdUsoCFDI", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="CFDI" Text=@($"{Localizer["Core.ProyectosConstruccion.Required"]}") Style="color:red" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Cuenta contable" Style="width: 100%">
+                            <RadzenTextBox Disabled="@GetDisabled()" @bind-Value="@ContratistaData.CuentaContable" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Forma de pago" Style="width: 100%">
+                            <ChildContent>
+                                <RadzenDropDown Disabled="@GetDisabled()" @bind-Value="@ContratistaData.IdFormaPago" Data="@LstTipoFormaPago" TextProperty="Descripcion" Name="FormaPago" ValueProperty="ID" Placeholder="Seleccione forma de pago" Style="width: 100%" />
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("IdFormaPago", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="FormaPago" Text=@($"{Localizer["Core.ProyectosConstruccion.Required"]}") Style="color:red" />
+                    </RadzenColumn>
+                </RadzenRow>
+
+                <RadzenRow Wrap="FlexWrap.Wrap">
+                    <RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Web" Style="width: 100%">
+                            <RadzenTextBox Disabled="@GetDisabled()" @bind-Value="@ContratistaData.Web" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Correo" Style="width: 100%">
+                            <ChildContent>
+                                <RadzenTextBox Disabled="@GetDisabled()" Name="Email" @bind-Value="@ContratistaData.Email" />
+
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("Email", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="Email" Text=@($"{Localizer["Core.ProyectosConstruccion.Required"]}") Style="color:red" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Teléfono" Style="width: 100%">
+                            <ChildContent>
+                                <RadzenMask Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="Teléfono" Style="width: 100%;" aria-label="Phone" Disabled="@GetDisabled()" @bind-Value="@ContratistaData.Telefono" />
+
+                            </ChildContent>
+                            <Helper>
+                                @if (FormValidationErrors.TryGetValue("Telefono", out var errorMessages))
+                                {
+                                    <RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+                                }
+                            </Helper>
+                        </RadzenFormField>
+                        <RadzenRequiredValidator Component="Teléfono" Text=@($"{Localizer["Core.ProyectosConstruccion.Required"]}") Style="color:red" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Celular" Style="width: 100%">
+                            <RadzenMask Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="Celular" Style="width: 100%;" aria-label="Phone" Disabled="@GetDisabled()" @bind-Value="@ContratistaData.Celular" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenStack>
+        </RadzenCard>
+    </ChildContent>
+</RadzenPanel>
+
+<RadzenPanel>
+    <HeaderTemplate>
+        <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+            <RadzenIcon IconColor="@Colors.Primary" class="rz-me-2" />
+            <b>Crédito</b>
+        </RadzenText>
+    </HeaderTemplate>
+    <ChildContent>
+        <RadzenCard class="rz-mt-4">
+            <RadzenStack>
+                <RadzenRow Wrap="FlexWrap.Wrap">
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Crédito en pesos" Style="width: 100%">
+                            <RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)" @bind-Value="@ContratistaData.LimiteCreditoMXN" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Crédito en dólares" Style="width: 100%">
+                            <RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)" @bind-Value="@ContratistaData.LimiteCreditoUSD" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Dias crédito" Style="width: 100%">
+                            <RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)" @bind-Value="@ContratistaData.DiasCredito" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Dias gracia" Style="width: 100%">
+                            <RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)" @bind-Value="@ContratistaData.DiasGracia" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Saldo en pesos" Style="width: 100%">
+                            <RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)" @bind-Value="@ContratistaData.SaldoMXN" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Saldo en dólares" Style="width: 100%">
+                            <RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)" @bind-Value="@ContratistaData.SaldoUSD" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow Wrap="FlexWrap.Wrap">
+                    <RadzenColumn Size="4" SizeSM="4" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <RadzenFormField Text="Referencia Bancaria" Style="width: 100%">
+                            <RadzenTextBox Disabled="@(GetDisabled() || !IsCreditEnabled)" @bind-Value="@ContratistaData.ReferenciaBancaria" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="3" SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
+                        <div class="rz-mt-4 rz-align-items-start">
+                            <RadzenCheckBox @bind-Value="@ContratistaData.Credito" Name="TieneCredito" Disabled="@GetDisabled()" />
+                            <RadzenLabel Text="Tiene crédito" Component="TieneCredito" class="rz-ms-2" />
+                        </div>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenStack>
+        </RadzenCard>
+    </ChildContent>
+</RadzenPanel>

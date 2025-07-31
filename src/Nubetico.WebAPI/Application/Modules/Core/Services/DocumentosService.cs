@@ -1,11 +1,20 @@
 ﻿using ClosedXML.Excel;
+using Microsoft.EntityFrameworkCore;
+using Nubetico.DAL.Models.Core;
 using Nubetico.Shared.Dto.ProyectosConstruccion;
 
 namespace Nubetico.WebAPI.Application.Modules.Core.Services
 {
 	public class DocumentosService
 	{
-		public (string? Error, string? Exception, string? Additional_Error_Data, object? Result) ValidateExcel(IFormFile excelFile, string excelType)
+        private readonly IDbContextFactory<CoreDbContext> _coreDbContextFactory;
+
+        public DocumentosService(IDbContextFactory<CoreDbContext> coreDbContextFactory)
+        {
+            _coreDbContextFactory = coreDbContextFactory;
+        }
+
+        public (string? Error, string? Exception, string? Additional_Error_Data, object? Result) ValidateExcel(IFormFile excelFile, string excelType)
 		{
 			if (excelFile == null || excelType.Length == 0)
 							return ("Core.Files.Errors.EmptyFile", null, null, null);
@@ -274,5 +283,29 @@ namespace Nubetico.WebAPI.Application.Modules.Core.Services
 		private string GetCellValue(IXLWorksheet workSheet, int row, int column) => workSheet.Cell(row, column).Value.ToString().ToUpper().Trim();
     
 		private int GetRowIsCleaned(int row, bool isCleanned, int toalCleanedRows) => isCleanned ? row - toalCleanedRows : row;
+
+		public async Task<string?> GetInvoiceUrlBasePath(string serial, int? numericFolio, bool getPDF)
+		{
+			try
+			{
+                using (var context = _coreDbContextFactory.CreateDbContext())
+                {
+					var basePath = await context.Parametros.FirstAsync(parameter => parameter.IdParametro == 13);
+                    if (basePath is null || string.IsNullOrEmpty(basePath.Valor1))
+					{
+                        throw new InvalidOperationException();
+                    }
+
+                    var fileName = $"00001000000516005087_{serial}_{numericFolio}.{(getPDF ? "pdf" : "xml")}";
+                    var completPath = Path.Combine(basePath.Valor1, fileName);
+
+                    return completPath;
+                }
+            }
+            catch (Exception ex)
+			{
+				return null;
+			}
+		}
     }
 }

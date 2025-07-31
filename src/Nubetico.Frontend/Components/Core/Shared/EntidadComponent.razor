@@ -1,4 +1,5 @@
-﻿@inherits NbBaseComponent
+﻿@using Nubetico.Frontend.Components.Shared
+@inherits NbBaseComponent
 
 @inject IStringLocalizer<SharedResources> Localizer
 
@@ -23,42 +24,53 @@
 						<RadzenFormField Text="Tipo" Style="width: 100%">
 							<ChildContent>
 								<RadzenDropDown Disabled="@GetDisabled()"
-												@bind-Value="@ProveedorData.IdTipoInsumo"
+												@bind-Value="@ProveedorData.IdTipoProveedor"
 												Data="@LstTipo"
 												TextProperty="Descripcion"
 												ValueProperty="ID"
 												Placeholder="Seleccione Tipo"
-												Style="width: 100%" />
+												Style="width: 100%"
+												Name="TipoProveedor" />
 							</ChildContent>
 							<Helper>
-								@if (FormValidationErrors.TryGetValue("TipoInsumo", out var errorMessages))
+								@if (FormValidationErrors.TryGetValue("IdTipoProveedor", out var errorMessages))
 								{
 									<RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
 								}
 							</Helper>
 						</RadzenFormField>
+						<RadzenRequiredValidator Component="TipoProveedor" Text="@Localizer!["Supply.Text.CodeRequired"]" Style="color: red" />
 					</RadzenColumn>
 					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px; display: flex; align-items: center;">
-						<RadzenRadioButtonList TValue="int">
+						<RadzenRadioButtonList TValue="int" @bind-Value="ProveedorData.IdTipoPersonaSat"
+											   Name="IdTipoPersonaSAT" Disabled="@GetDisabled()">
 							<Items>
 								<RadzenRadioButtonListItem Text="Física" Value="1" />
 								<RadzenRadioButtonListItem Text="Moral" Value="2" />
 							</Items>
 						</RadzenRadioButtonList>
+						<RadzenRequiredValidator Component="Code" Text="@Localizer!["Supply.Text.CodeRequired"]" Style="color: red" />
+						@if (FormValidationErrors.TryGetValue("IdTipoPersonaSAT", out var errorMessagesTipoPersona))
+						{
+							<RadzenLabel class="rz-color-danger" Text="@errorMessagesTipoPersona[0]" Style="display: block; margin-top: 4px;" />
+						}
 					</RadzenColumn>
 					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px; display: flex; align-items: center;">
-						<RadzenRadioButtonList TValue="int">
+						<RadzenRadioButtonList TValue="int" Disabled="@GetDisabled()">
 							<Items>
 								<RadzenRadioButtonListItem Text="Nacional" Value="1" />
 								<RadzenRadioButtonListItem Text="Extranjero" Value="2" />
 							</Items>
 						</RadzenRadioButtonList>
 					</RadzenColumn>
-					<RadzenColumn Sise="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
+					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<div class="rz-mt-4 rz-align-items-start">
-							<RadzenCheckBox Disabled="@GetDisabled()" @bind-Value="@ProveedorData.IdEstadoProveedor" Name="CheckBoxHabilitado" />
+							<RadzenCheckBox Disabled="@GetDisabled()"
+											@bind-Value="@ProveedorData.Habilitado"
+											Name="CheckBoxHabilitado" />
 							<RadzenLabel Text="Habilitado" Component="CheckBoxHabilitado" class="rz-ms-1" />
 						</div>
+
 					</RadzenColumn>
 				</RadzenRow>
 
@@ -121,7 +133,7 @@
 												Style="width: 100%" />
 							</ChildContent>
 							<Helper>
-								@if (FormValidationErrors.TryGetValue("TipoRégimenFiscal", out var errorMessages))
+								@if (FormValidationErrors.TryGetValue("IdTipoRegimenFiscal", out var errorMessages))
 								{
 									<RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
 								}
@@ -144,7 +156,7 @@
 												Placeholder="Seleccione un régimen fiscal" />
 							</ChildContent>
 							<Helper>
-								@if (FormValidationErrors.TryGetValue("RégimenFiscal", out var errorMessages))
+								@if (FormValidationErrors.TryGetValue("IdRegimenFiscal", out var errorMessages))
 								{
 									<RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
 								}
@@ -163,7 +175,7 @@
 												Style="width: 100%" />
 							</ChildContent>
 							<Helper>
-								@if (FormValidationErrors.TryGetValue("MétododePago", out var errorMessages))
+								@if (FormValidationErrors.TryGetValue("IdTipoMetodoPago", out var errorMessages))
 								{
 									<RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
 								}
@@ -184,7 +196,7 @@
 												Style="width: 100%" />
 							</ChildContent>
 							<Helper>
-								@if (FormValidationErrors.TryGetValue("CFDI", out var errorMessages))
+								@if (FormValidationErrors.TryGetValue("IdUsoCFDI", out var errorMessages))
 								{
 									<RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
 								}
@@ -213,7 +225,7 @@
 												Style="width: 100%" />
 							</ChildContent>
 							<Helper>
-								@if (FormValidationErrors.TryGetValue("FormaDePago", out var errorMessages))
+								@if (FormValidationErrors.TryGetValue("IdFormaPago", out var errorMessages))
 								{
 									<RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
 								}
@@ -234,20 +246,47 @@
 					</RadzenColumn>
 					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Correo" Style="width: 100%">
-							<RadzenTextBox Disabled="@GetDisabled()"
-										   @bind-Value="@ProveedorData.Email" />
+							<ChildContent>
+								<RadzenTextBox Disabled="@GetDisabled()"
+											   @bind-Value="@ProveedorData.Email" />
+							</ChildContent>
+							<Helper>
+								@if (FormValidationErrors.TryGetValue("Email", out var errorMessages))
+								{
+									<RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+								}
+							</Helper>
 						</RadzenFormField>
 					</RadzenColumn>
 					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Teléfono" Style="width: 100%">
-							@* 							<RadzenTextBox Disabled="@GetDisabled()" Value="312585 7419" />
- *@							<RadzenMask Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="Teléfono" Style="width: 100%;" aria-label="Phone" />
+							<ChildContent>
+								<RadzenMask Mask="(***) ***-****" CharacterPattern="[0-9]"
+											Placeholder="(000) 000-0000"
+											Name="Teléfono"
+											Style="width: 100%;"
+											aria-label="Phone"
+											Disabled="@GetDisabled()"
+											@bind-Value="@ProveedorData.Telefono" />
+							</ChildContent>
+							<Helper>
+								@if (FormValidationErrors.TryGetValue("Telefono", out var errorMessages))
+								{
+									<RadzenLabel class="rz-color-danger" Text="@errorMessages[0]" />
+								}
+							</Helper>
 						</RadzenFormField>
 					</RadzenColumn>
 					<RadzenColumn SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Celular" Style="width: 100%">
-							@* 							<RadzenTextBox Disabled="@GetDisabled()" Value="312 123 9876" /> *@
-								<RadzenMask Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="Celular"Style="width: 100%;" aria-label="Phone" />
+							<RadzenMask Mask="(***) ***-****"
+										CharacterPattern="[0-9]"
+										Placeholder="(000) 000-0000"
+										Name="Celular"
+										Style="width: 100%;"
+										aria-label="Phone"
+										Disabled="@GetDisabled()"
+										@bind-Value="@ProveedorData.Celular" />
 						</RadzenFormField>
 					</RadzenColumn>
 
@@ -272,56 +311,56 @@
 				<RadzenRow Wrap="FlexWrap.Wrap">
 					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Crédito en pesos" Style="width: 100%">
-							<RadzenNumeric Disabled="@GetDisabled()"
+							<RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)"
 										   @bind-Value="@ProveedorData.LimiteCreditoMXN" />
 						</RadzenFormField>
 					</RadzenColumn>
 					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Crédito en dólares" Style="width: 100%">
-							<RadzenNumeric Disabled="@GetDisabled()"
+							<RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)"
 										   @bind-Value="@ProveedorData.LimiteCreditoUSD" />
 						</RadzenFormField>
 					</RadzenColumn>
 					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Dias crédito" Style="width: 100%">
-							<RadzenNumeric Disabled="@GetDisabled()"
+							<RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)"
 										   @bind-Value="@ProveedorData.DiasCredito" />
 						</RadzenFormField>
 					</RadzenColumn>
 					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Dias gracia" Style="width: 100%">
-							<RadzenNumeric Disabled="@GetDisabled()"
+							<RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)"
 										   @bind-Value="@ProveedorData.DiasGracia" />
 						</RadzenFormField>
 					</RadzenColumn>
 					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Saldo en pesos" Style="width: 100%">
-							<RadzenNumeric Disabled="@GetDisabled()"
+							<RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)"
 										   @bind-Value="@ProveedorData.SaldoMXN" />
 						</RadzenFormField>
 					</RadzenColumn>
 					<RadzenColumn Size="2" SizeSM="2" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Saldo en dólares" Style="width: 100%">
-							<RadzenNumeric Disabled="@GetDisabled()"
+							<RadzenNumeric Disabled="@(GetDisabled() || !IsCreditEnabled)"
 										   @bind-Value="@ProveedorData.SaldoUSD" />
 						</RadzenFormField>
 					</RadzenColumn>
 				</RadzenRow>
 
-				@* <RadzenRow Wrap="FlexWrap.Wrap">
+				<RadzenRow Wrap="FlexWrap.Wrap">
 					<RadzenColumn Size="4" SizeSM="4" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<RadzenFormField Text="Referencia Bancaria" Style="width: 100%">
-							<RadzenTextBox Disabled="@GetDisabled()" Value=" "/>
+							<RadzenTextBox Disabled="@(GetDisabled() || !IsCreditEnabled)" Value=" " />
 						</RadzenFormField>
 					</RadzenColumn>
 					<RadzenColumn Size="3" SizeSM="3" SizeXS="6" Style="width: 100%; min-width: 50px">
 						<div class="rz-mt-4 rz-align-items-start">
-							<RadzenCheckBox @bind-Value=@ProveedorData.TieneCredito Name="TieneCredito" />
+							<RadzenCheckBox @bind-Value=@ProveedorData.Credito Name="TieneCredito" Disabled="@GetDisabled()" />
 							<RadzenLabel Text="Tiene crédito"
 										 Component="TieneCredito" class="rz-ms-2" />
 						</div>
 					</RadzenColumn>
-				</RadzenRow> *@
+				</RadzenRow>
 
 			</RadzenStack>
 		</RadzenCard>

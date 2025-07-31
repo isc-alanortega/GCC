@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Shared.Enums.Core;
 using Radzen;
 using Microsoft.Extensions.Localization;

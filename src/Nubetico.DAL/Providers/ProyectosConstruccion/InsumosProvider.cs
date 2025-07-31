@@ -28,7 +28,7 @@ namespace Nubetico.DAL.Providers.ProyectosConstruccion
             using var coreDbContext = await dbContextFactory.CreateDbContextAsync();
 
             var result = await coreDbContext.Database
-                .SqlQueryRaw<TablaRelacionDto>("SELECT ID, Valor, Descripcion FROM Core.vTipo")
+                .SqlQueryRaw<TablaRelacionDto>("SELECT ID, Valor, Descripcion FROM Core.vTipoProveedor")
                 .ToListAsync();
 
             return result;

@@ -8,7 +8,7 @@ using Nubetico.Frontend.Services.ProyectosConstruccion;
 using Nubetico.Shared.Dto.Common;
 using Nubetico.Frontend.Models.Class.Core;
 using Nubetico.Frontend.Pages.ProyectosConstruccion;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using System.Reflection.Metadata.Ecma335;
 using System.Net.NetworkInformation;
 using DocumentFormat.OpenXml.EMMA;

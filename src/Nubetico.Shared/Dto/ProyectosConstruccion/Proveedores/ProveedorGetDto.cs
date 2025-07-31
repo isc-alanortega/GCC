@@ -13,17 +13,15 @@ namespace Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores
         public int IdEntidad { get; set; }
         public Guid UUID { get; set; }
         public string Folio { get; set; } = string.Empty;
-        [Required]
         public string Rfc { get; set; } = string.Empty;
-        [Required]
         public string RazonSocial { get; set; } = string.Empty;
-        [Required]
         public string NombreComercial { get; set; } = string.Empty;
-        [Required]
+        public int IdTipoPersonaSat { get; set; }
         public string Email { get; set; } = string.Empty;
-        [Required]
         public string Web { get; set; } = string.Empty;
         public bool Credito { get; set; }
+        public string Telefono { get; set; }
+        public string Celular { get; set; }
         public decimal LimiteCreditoMXN { get; set; }
         public decimal LimiteCreditoUSD { get; set; }
         public int DiasCredito { get; set; }
@@ -31,17 +29,13 @@ namespace Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores
         public decimal SaldoMXN { get; set; }
         public decimal SaldoUSD { get; set; }
         public string CuentaContable { get; set; } = string.Empty;
-        [Required]
         public int? IdFormaPago { get; set; }
-        [Required]
         public int? IdTipoMetodoPago{ get; set; }
-        [Required]
-        public int? IdEstadoProveedor { get; set; }
-        public int? IdRegimenFiscal { get; set; }
-        public int? IdTipoRegimenFiscal { get; set; }
         public int? IdUsoCFDI { get; set; }
-        public int? IdTipoInsumo { get; set; }
-        public bool TieneCredito { get; set; }
+        public int? IdTipoRegimenFiscal { get; set; }
+        public int? IdTipoProveedor { get; set; }
+        public bool Habilitado { get; set; }
+        public int? IdRegimenFiscal { get; set; }
         public DateTime FechaAlta { get; set; }
     }
 }

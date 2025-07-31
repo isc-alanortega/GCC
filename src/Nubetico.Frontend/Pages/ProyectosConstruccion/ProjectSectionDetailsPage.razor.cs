@@ -6,7 +6,7 @@ using Radzen.Blazor;
 using Radzen;
 using Microsoft.Extensions.Localization;
 using Nubetico.Frontend.Services.ProyectosConstruccion;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Shared.Dto.ProyectosConstruccion.ProjectSectionDetails;
 
 namespace Nubetico.Frontend.Pages.ProyectosConstruccion

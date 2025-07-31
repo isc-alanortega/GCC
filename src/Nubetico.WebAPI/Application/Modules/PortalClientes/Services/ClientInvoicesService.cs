@@ -38,11 +38,17 @@ namespace Nubetico.WebAPI.Application.Modules.PortalClientes.Services
             var query = from ventas in cwEMDbContext.AD_Ventas
                                 join entidades in cwEMDbContext.AD_Entidades
                                 on ventas.IDCliente equals entidades.IDEntidad
-                                where ventas.IDCliente == ExternalClientID && (entidades == null || entidades.TipoEntidad == 1)
+                                where ventas.IDCliente == 8 && (entidades == null || entidades.TipoEntidad == 1)
                                 select new ExternalClientInvoices
                                 {
+                                    Serial = ventas.SerieFE,
+                                    Numeric_Folio = ventas.FolioFE,
                                     Folio = ventas.SerieFE + ventas.FolioFE,
-                                    InvoiceType = ventas.Tipo,
+                                    InvoiceType = ventas.Tipo == "F"
+                                        ? "FACTURA"
+                                        : ventas.Tipo == "P"
+                                            ? "PAGO"
+                                            : "NOTA DE CRÉDITO",
                                     Date = ventas.Fecha,
                                     BusinessName = entidades.RazonSocial,
                                     Total = ventas.Total,
@@ -59,8 +65,8 @@ namespace Nubetico.WebAPI.Application.Modules.PortalClientes.Services
                 if (!string.IsNullOrEmpty(filter.Folio))
                     query = query.Where(i => i.Folio.Contains(filter.Folio));
 
-                if (!string.IsNullOrEmpty(filter.BusinessName))
-                    query = query.Where(i => i.BusinessName.Contains(filter.BusinessName));
+                if (!string.IsNullOrEmpty(filter.Type) && filter.Type != "TODAS")
+                    query = query.Where(i => i.InvoiceType.Contains(filter.Type));
 
                 if (!string.IsNullOrEmpty(filter.Status) && filter.Status != "TODAS")
                     query = query.Where(i => i.Status == filter.Status);

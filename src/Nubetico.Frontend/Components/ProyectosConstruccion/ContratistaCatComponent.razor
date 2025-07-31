@@ -2,6 +2,7 @@
 @using Nubetico.Frontend.Components.Shared
 @using Nubetico.Frontend.Services.Core
 @using Nubetico.Shared.Dto.Core
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Contratistas
 
 @using Nubetico.Shared.Dto.ProyectosConstruccion;
 
@@ -21,7 +22,7 @@
             </RadzenFormField>
         </RadzenColumn>
         <RadzenColumn SizeSM="3" SizeXS="12">
-            <RadzenButton Click="@(() => RefreshGridAsync("NombreCompleto asc", this.RowsPerPage, 0))" Text=@Localizer["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" IsBusy=@IsLoading BusyText="@Localizer["Shared.Textos.Buscando"]" Style="margin-top: 12px" />
+            <RadzenButton Click="@(() => RefreshGridAsync("NombreComercial ASC", this.RowsPerPage, 0))" Text=@Localizer["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" IsBusy=@IsLoading BusyText="@Localizer["Shared.Textos.Buscando"]" Style="margin-top: 12px" />
         </RadzenColumn>
     </RadzenRow>
 </PanelFiltrosNubeticoComponent>
@@ -30,28 +31,27 @@
                 IsLoading=@IsLoading
                 Culture="@System.Globalization.CultureInfo.CurrentCulture"
                 Count="@Count"
-                Data="@ListaContratistas"
+                Data="@ListContratistas"
                 LoadData="@LoadDataAsync"
                 AllowSorting="true"
                 AllowFiltering="false"
                 AllowPaging="true"
-                PageSize="@this.RowsPerPage"
+                PageSize="@RowsPerPage"
                 PagerHorizontalAlign="HorizontalAlign.Center"
                 ShowPagingSummary="true"
                 ColumnWidth="200px"
-                SelectionMode="DataGridSelectionMode.Single"
-                TItem="ContratistasDto"
                 RowDoubleClick="DataGridRowDoubleClick"
+                SelectionMode="DataGridSelectionMode.Single"
+                TItem="ContratistaGridResultSet"
                 @bind-Value=@ContratistasSeleccionados>
     <Columns>
         <RadzenDataGridColumn Property="UUID" Title="ID" TextAlign="TextAlign.Center" Visible="false" />
         <RadzenDataGridColumn Property="Folio" Title="@Localizer["Shared.Textos.Folio"]" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="Nombre" Title="@Localizer["Core.Users.FullName"]" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="RFC" Title="@Localizer["Core.ProyectosConstruccion.RFC"]" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="EstadoContratista" Title="@Localizer["Shared.Textos.Estado"]" TextAlign="TextAlign.Center" Width="100px">
-            <Template Context="data">
-                <RadzenBadge BadgeStyle="@(data.IdEstadoContratista == 1 ? BadgeStyle.Success : data.IdEstadoContratista == 0 ? BadgeStyle.Danger : BadgeStyle.Warning)" Text="@(data.EstadoContratista)" Style="text-transform: none;" />
-            </Template>
+        <RadzenDataGridColumn Property="NombreComercial" Title="@Localizer["Core.Users.FullName"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Rfc" Title="@Localizer["Core.ProyectosConstruccion.RFC"]" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="Habilitado" Title="@Localizer["Shared.Textos.Estado"]" TextAlign="TextAlign.Center" Width="100px">
+
         </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
+ 

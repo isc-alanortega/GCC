@@ -1,0 +1,28 @@
+﻿@using Nubetico.Frontend.Components.Core.Shared
+@using Nubetico.Frontend.Services.ProyectosConstruccion
+@using Nubetico.Shared.Dto.ProyectosConstruccion
+@using Nubetico.Frontend.Services.Core;
+@using Nubetico.Frontend.Components.Shared
+@inherits NbBaseComponent
+@inject SubdivisionsService subdivisionService
+@inject IStringLocalizer<SharedResources> Localizer
+@inject NotificationService notificationService
+@inject DialogService dialogService
+@inject DocumentsService documentsService
+
+<div style="height: 550px; display: flex; flex-direction: column;">
+    <RadzenText class="rz-mb-2" TextStyle="TextStyle.H6" TextAlign="TextAlign.Center">
+        @Invoice.InvoiceType @Invoice.Folio
+    </RadzenText>
+
+    @if (!string.IsNullOrEmpty(InvoiceUrl))
+    {
+        <iframe src="@InvoiceUrl" style="width: 100%; height: 100%; border: none"></iframe>
+    }
+    else
+    {
+        <RadzenText class="rz-mb-5" TextStyle="TextStyle.Body1">
+            No fue posible mostrar el PDF
+        </RadzenText>
+    }
+</div>

@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8981F984-F3A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palmaterra.DAL", "src\External\Palmaterra.DAL\Palmaterra.DAL.csproj", "{57A76F83-EBA5-4F61-8CBF-6B3231C4892F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palmaterra.DAL", "src\External\Palmaterra.DAL\Palmaterra.DAL.csproj", "{57A76F83-EBA5-4F61-8CBF-6B3231C4892F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CwEM.DAL", "src\External\CwEM.DAL\CwEM.DAL.csproj", "{F8C90EE9-1B75-4DA0-A402-27631CBB1F72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CwEM.DAL", "src\External\CwEM.DAL\CwEM.DAL.csproj", "{F8C90EE9-1B75-4DA0-A402-27631CBB1F72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

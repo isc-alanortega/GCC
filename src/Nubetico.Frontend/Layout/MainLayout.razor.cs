@@ -19,10 +19,13 @@ namespace Nubetico.Frontend.Layout
         private HubConnection? hubConnection;
         private bool IsRendered { get; set; } = false;
         private bool LeftSidebarExpanded { get; set; } = true;
-        private bool RightSidebarExpanded { get; set; } = false;
+
         private List<MenuUsuarioDto>? opcionesMenu = new List<MenuUsuarioDto>();
         private List<MenuUsuarioDto>? opcionesMenuBack = new List<MenuUsuarioDto>();
         public bool isAuthenticated { get; set; }
+
+        public string NombreUsuario { get; set; } = string.Empty;
+        public string? Empresa { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -38,6 +41,14 @@ namespace Nubetico.Frontend.Layout
             if (!(user.Identity?.IsAuthenticated ?? false))
             {
                 return;
+            }
+
+            NombreUsuario = user.FindFirst("name")?.Value ?? string.Empty;
+
+            var userType = user.FindFirst("type-contact")?.Value;
+            if((userType ?? "0") != "0")
+            {
+                Empresa = user.FindFirst("entity-contact-name")?.Value;
             }
 
             var result = await MenuService.GetUserMenusAsync();

@@ -12,6 +12,8 @@
 			services.AddScoped<SuppliesService>();
 			services.AddScoped<ModelService>();
 			services.AddScoped<ProveedorServices>();
+			services.AddScoped<EgresosService>();
+			services.AddScoped<ContratistaService>();
 
             return services;
 		}

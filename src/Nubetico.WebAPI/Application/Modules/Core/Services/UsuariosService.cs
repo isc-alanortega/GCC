@@ -120,6 +120,7 @@ namespace Nubetico.WebAPI.Application.Modules.Core.Services
                 Id = usuarioDirectoryResponse.Data.UUID.ToString()
                     ?? throw new Exception("UserID not valid"),
                 Username = usuarioDirectoryResponse.Data.Username,
+                Nombre = $"{usuarioDirectoryResponse.Data.Nombres} {usuarioDirectoryResponse.Data.PrimerApellido} {usuarioDirectoryResponse.Data.SegundoApellido}".Trim(),
                 Email = usuarioDirectoryResponse.Data.Email,
                 TenantGuid = this.GetTenant().TenantGuid.ToString()
             };
@@ -137,7 +138,8 @@ namespace Nubetico.WebAPI.Application.Modules.Core.Services
                 {
                     Id = vContactoEntidad.UUID_Entidad,
                     Rfc = vContactoEntidad.RfcEntidad,
-                    Tipo = tipo
+                    Tipo = tipo,
+                    Nombre = vContactoEntidad.NombreComercial
                 };
 
                 userJwtRequestModel.EntidadContacto = entidadContacto;

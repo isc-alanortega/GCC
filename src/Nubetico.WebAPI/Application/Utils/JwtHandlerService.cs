@@ -26,8 +26,9 @@ namespace Nubetico.WebAPI.Application.Utils
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier,userJwtRequestModel.Username),
-                new Claim(ClaimTypes.Email,userJwtRequestModel.Email),
+                new Claim(ClaimTypes.NameIdentifier, userJwtRequestModel.Username),
+                new Claim(ClaimTypes.Email, userJwtRequestModel.Email),
+                new Claim("name", userJwtRequestModel.Nombre),
                 new Claim("id", userJwtRequestModel.Id),
                 new Claim("tenant-id", userJwtRequestModel.TenantGuid), // Agregar a la firma del Jwt el Guid del tenant
             };
@@ -37,6 +38,7 @@ namespace Nubetico.WebAPI.Application.Utils
                 var tipo = ((int)(userJwtRequestModel.EntidadContacto.Tipo ?? TypeContactUserEnum.None)).ToString();
                 claims.Add(new Claim("type-contact", tipo));
                 claims.Add(new Claim("entity-contact-id", userJwtRequestModel.EntidadContacto.Id.ToString()));
+                claims.Add(new Claim("entity-contact-name", userJwtRequestModel.EntidadContacto.Nombre));
             }
             else
             {

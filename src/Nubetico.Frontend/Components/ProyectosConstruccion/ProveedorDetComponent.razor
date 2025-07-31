@@ -20,7 +20,7 @@
 	<Tabs>
 		@*ENTIDAD TAB*@
 		<RadzenTabsItem Text="General" Icon="@GetCustomValue("GENERALTAB")" IconColor="red">
-			<EntidadComponent ProveedorData="@ProveedorData" />
+			<EntidadComponent @ref="EntidadComponent" ProveedorData="@ProveedorData" EstadoControl="@EstadoControl" />
 		</RadzenTabsItem>
 
 		@*LOCATION TAB*@

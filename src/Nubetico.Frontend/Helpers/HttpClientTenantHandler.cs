@@ -19,6 +19,7 @@ namespace Nubetico.Frontend.Helpers
             // Aqui se puede intercambiar la url en el header para probar diferentes diseños
             //request.Headers.Add("X-SITE", "localhost:5241");
             //request.Headers.Add("X-SITE", "gcc.dev.nubetico.com");
+            //request.Headers.Add("X-SITE", "pt-destajos.nubetico.com");
 
             request.Headers.Add("X-SITE", hostActual);
 

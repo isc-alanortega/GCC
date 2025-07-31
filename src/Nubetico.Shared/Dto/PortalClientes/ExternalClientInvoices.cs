@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace Nubetico.Shared.Dto.PortalClientes
+﻿namespace Nubetico.Shared.Dto.PortalClientes
 {
     public class ExternalClientInvoices
     {
+        // <summary>
+        /// Invoice serial
+        /// </summary>
+        public string Serial { get; set; }
+        // <summary>
+        /// Invoice numeric folio
+        /// </summary>
+        public int? Numeric_Folio { get; set; }
         // <summary>
         /// Invoice folio with serial and folio
         /// </summary>

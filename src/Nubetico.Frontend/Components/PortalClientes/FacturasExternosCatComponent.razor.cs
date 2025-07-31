@@ -1,7 +1,9 @@
 ﻿using Radzen;
 using Radzen.Blazor;
-using Nubetico.Frontend.Components.Dialogs;
 using Nubetico.Shared.Dto.PortalClientes;
+using Nubetico.Frontend.Components.Dialogs.PortalClientes;
+using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components;
 
 namespace Nubetico.Frontend.Components.PortalClientes
 {
@@ -12,7 +14,9 @@ namespace Nubetico.Frontend.Components.PortalClientes
         private List<ExternalClientInvoices>? Invoices { get; set; }
         private int Count { get; set; }
         private bool IsLoading { get; set; } = false;
-        public IList<ExternalClientInvoices> SelectedInvoices { get; set; } = new List<ExternalClientInvoices>();
+        private IList<ExternalClientInvoices> SelectedInvoices { get; set; } = new List<ExternalClientInvoices>();
+        private decimal TotalSum;
+        private decimal BalanceSum;
 
         #region Funciones
         protected override async Task OnInitializedAsync()
@@ -21,6 +25,7 @@ namespace Nubetico.Frontend.Components.PortalClientes
             {
                 DateFrom = DateTime.Today.AddDays(-7),
                 DateTo = DateTime.Today.AddDays(7),
+                Type = "TODAS",
                 Status = "TODAS"
             };
 
@@ -42,6 +47,8 @@ namespace Nubetico.Frontend.Components.PortalClientes
                 {
                     Invoices = result.Data!.Data;
                     Count = result.Data!.RecordsTotal;
+                    TotalSum = Invoices.Sum(invoice => invoice.Total);
+                    BalanceSum = Invoices.Sum(invoice => invoice.Balance ?? 0);
                 }
             }
             catch (Exception ex)
@@ -61,6 +68,45 @@ namespace Nubetico.Frontend.Components.PortalClientes
             StateHasChanged();
         }
 
+        private async Task DataGridRowDoubleClick(DataGridRowMouseEventArgs<ExternalClientInvoices> args)
+        {
+			var selectedInvoice = args.Data;
+
+			var pdfBytes = await documentsService.DownloadInvoicePDF(selectedInvoice);
+			var base64PDF = Convert.ToBase64String(pdfBytes);
+			var dataUrl = $"data:application/pdf;base64,{base64PDF}";
+
+            DialogService.Open<ShowInvoiceDialogComponent>("Visualizador PDF",
+                new Dictionary<string, object>()
+                {
+                    { "InvoiceUrl", dataUrl },
+                    { "Invoice", selectedInvoice }
+                },
+                new DialogOptions()
+                {
+                    Width = "850px",
+                    Height = "700px",
+                    Resizable = true,
+                    Draggable = true
+                });
+        }
+
+        private async void DownloadInvoiceZIP(ExternalClientInvoices invoice)
+        {
+            try
+            {
+                var zipBytes = await documentsService.DownloadInvoiceZip(invoice);
+                var fileName = $"Factura_{invoice.Folio}.zip";
+
+                using var streamRef = new DotNetStreamReference(new MemoryStream(zipBytes));
+                await JS.InvokeVoidAsync("downloadHelper", fileName, streamRef);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+
         private BadgeStyle GetBadgeColor(string estatus) => estatus switch
         {
             "PAGADA" => BadgeStyle.Info,
@@ -69,26 +115,8 @@ namespace Nubetico.Frontend.Components.PortalClientes
             _ => BadgeStyle.Light,
         };
 
-        private async Task OpenUploadXmModal()
-        {
-            var result = await DialogService.OpenAsync<UploadXmlDialogComponet>(title: "Cargar nuevo CFDI",
-            parameters: new Dictionary<string, object>() { { "ProviderData", null } },
-            options: new DialogOptions()
-            {
-                CloseDialogOnOverlayClick = true,
-                AutoFocusFirstElement = true,
-                CloseDialogOnEsc = true,
-                Width = "700px"
-            });
-
-            if (result != null && result)
-            {
-                var dataArg = new LoadDataArgs();
-                await LoadData(dataArg);
-                StateHasChanged();
-            }
-        }
-
+        private void ShowTooltip(ElementReference elementReference, TooltipOptions options = null) => tooltipService.Open(elementReference, "Descargar ZIP", options);
+        
         private static List<string> StatusList()
         {
             return
@@ -97,6 +125,17 @@ namespace Nubetico.Frontend.Components.PortalClientes
                 "PAGADA",
                 "PENDIENTE",
                 "CANCELADA"
+            ];
+        }
+
+        private static List<string> TypeList()
+        {
+            return
+            [
+                "TODAS",
+                "FACTURA",
+                "PAGO",
+                "NOTA DE CRÉDITO"
             ];
         }
         #endregion

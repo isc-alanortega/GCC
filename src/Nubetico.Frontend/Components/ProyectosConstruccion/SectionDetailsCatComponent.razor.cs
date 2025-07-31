@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Frontend.Models.Class.Core;
 using Nubetico.Frontend.Models.Static.Core;
 using Nubetico.Frontend.Pages.ProyectosConstruccion;

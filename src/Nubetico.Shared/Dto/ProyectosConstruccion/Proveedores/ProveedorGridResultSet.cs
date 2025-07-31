@@ -26,7 +26,8 @@ namespace Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores
         public decimal SaldoUSD { get; set; }
         public string CuentaContable { get; set; } = string.Empty;
         public int IdFormaPago { get; set; }
-        public int IdEstadoProveedor { get; set; }
+        public bool Habilitado { get; set; }
         public DateTime FechaAlta { get; set; }
+        public int RecordsTotal { get; set; } 
     }
 }

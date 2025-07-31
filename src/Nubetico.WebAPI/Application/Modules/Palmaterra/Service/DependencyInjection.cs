@@ -8,18 +8,19 @@ namespace Nubetico.WebAPI.Application.Modules.Palmaterra
         {
             #region SERVICES
             services.AddTransient<PalmaterraPieceworkService>();
-            #endregion
+			services.AddTransient<PalmaterraService>();
+			#endregion
 
-            #region VALIDATORS
-            //services.AddScoped<IValidator<ProjectDataDto>, ProjectDtoValidator>();
-            #endregion
+			#region VALIDATORS
+			//services.AddScoped<IValidator<ProjectDataDto>, ProjectDtoValidator>();
+			#endregion
 
-            #region MAPPERS
-            //services.AddAutoMapper(typeof(ProjectSectionProfile));
-            
-            #endregion
+			#region MAPPERS
+			//services.AddAutoMapper(typeof(ProjectSectionProfile));
 
-            return services;
+			#endregion
+
+			return services;
         }
     }
 }

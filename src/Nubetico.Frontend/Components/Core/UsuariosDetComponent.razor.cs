@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Frontend.Models.Static.Core;
 using Nubetico.Frontend.Services.Core;
 using Nubetico.Shared.Dto.Common;

@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Localization;
-using Nubetico.Frontend.Models.Enums.ProyectosCostruccion;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Frontend.Models.Static.Core;
 using Nubetico.Frontend.Services.ProyectosConstruccion;
-using Nubetico.Shared.Dto.ProyectosConstruccion;
-using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto;
-using Nubetico.Shared.Dto.ProyectosConstruccion.Supplies;
-using Radzen.Blazor;
-using Radzen;
-using Nubetico.Frontend.Components.Core.Shared;
 using Nubetico.Shared.Dto.Common;
+using Nubetico.Shared.Dto.ProyectosConstruccion;
+using Nubetico.Shared.Dto.ProyectosConstruccion.Supplies;
+using Radzen;
+using Radzen.Blazor;
 
 namespace Nubetico.Frontend.Components.ProyectosConstruccion
 {
@@ -81,10 +80,15 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
                 NotifyAcces(Localizer!["Shared.Text.ProblemOcurred"], message, NotificationSeverity.Error);
                 return;
             }
-
+            if (result.Data != null)
+            {
+                SupplyData = result.Data;
+            }
             NotifyAcces(string.Empty, Localizer!["Shared.Text.SaveSucces"], NotificationSeverity.Success);
 
             UpdateTab(state: TipoEstadoControl.Lectura);
+            this.SetNombreTabNubetico($"Insumos [{result.Data.Description}]");
+            await InvokeAsync(StateHasChanged);
         }
         #endregion
 

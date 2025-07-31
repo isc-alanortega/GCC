@@ -894,4 +894,73 @@
   <data name="Label.Invoices" xml:space="preserve">
     <value>Invoices</value>
   </data>
+  <data name="Core.Egresos" xml:space="preserve">
+    <value>Expenses</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.RFCRequired" xml:space="preserve">
+    <value>The RFC is mandatory.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.InvalidRFC" xml:space="preserve">
+    <value>The RFC is not in a valid format.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.NombreComercialRequired" xml:space="preserve">
+    <value>The trade name is required.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.RazonSocialRequired" xml:space="preserve">
+    <value>The company name is mandatory.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.TipoPersonaSATRequired" xml:space="preserve">
+    <value>You must choose whether it is a natural person or a legal entity.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.TipoProveedorRequired" xml:space="preserve">
+    <value>You must select a provider type.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.TipoRegimenFiscalRequired" xml:space="preserve">
+    <value>You must select a type of tax regime.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.RegimenFiscalRequired" xml:space="preserve">
+    <value>You must select a tax regime.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.MetodoPagoRequired" xml:space="preserve">
+    <value>You must choose a payment method.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.UsoCFDIRequired" xml:space="preserve">
+    <value>You must choose a CFDI use.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.EstadoProveedorRequired" xml:space="preserve">
+    <value>You must indicate whether the provider is enabled.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.InvalidEmail" xml:space="preserve">
+    <value>The email is not in a valid format.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.InvalidTelefono" xml:space="preserve">
+    <value>The phone number is not in a valid format.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.InvalidCelular" xml:space="preserve">
+    <value>The cell phone number is not in a valid format.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.InvalidWeb" xml:space="preserve">
+    <value>The website URL is not valid.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.LimiteCreditoMXNInvalid" xml:space="preserve">
+    <value>The credit limit in pesos cannot be negative.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.LimiteCreditoUSDInvalid" xml:space="preserve">
+    <value>The credit limit in dollars cannot be negative.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.DiasCreditoInvalid" xml:space="preserve">
+    <value>Credit days cannot be negative.</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.DiasGraciaInvalid" xml:space="preserve">
+    <value>Days of grace cannot be negative.</value>
+  </data>
+  <data name="Shared.Textos.Importe" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Shared.Textos.Grid.AgruparColumnas" xml:space="preserve">
+    <value>Drag a column header here and drop it to group by that column</value>
+  </data>
+  <data name="Core.ProyectosConstruccion.InvalidForm" xml:space="preserve">
+    <value>Review the required fields</value>
+  </data>
 </root>

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Nubetico.Shared.Dto.Core;
 using Nubetico.Shared.Dto.Common;
+using Nubetico.Shared.Dto.PortalClientes;
+using System.Net.Http.Json;
 
 
 namespace Nubetico.Frontend.Services.Core
@@ -42,6 +44,33 @@ namespace Nubetico.Frontend.Services.Core
 			var result = JsonConvert.DeserializeObject<BaseResponseDto<ExcelResult<T>?>?>(await response.Content.ReadAsStringAsync());
 
 			return result;
+		}
+
+		public async Task<byte[]> DownloadInvoicePDF(ExternalClientInvoices invoice)
+		{
+            string endpoint = "api/v1/core/documentos/Post_DescargarFacturaPDF";
+
+			var response = await _httpClient.PostAsJsonAsync(endpoint, invoice);
+			if (!response.IsSuccessStatusCode)
+			{
+                throw new Exception(await response.Content.ReadAsStringAsync());
+            }
+
+			return await response.Content.ReadAsByteArrayAsync();
+		}
+
+		public async Task<byte[]> DownloadInvoiceZip(ExternalClientInvoices invoice)
+		{
+			string endpoint = "api/v1/core/documentos/Post_DescargarFacturaZIP";
+
+			var response = await _httpClient.PostAsJsonAsync(endpoint, invoice);
+			if (!response.IsSuccessStatusCode)
+			{
+                var error = await response.Content.ReadAsStringAsync();
+                throw new InvalidOperationException($"Ocurrió un error al descargar el ZIP: {error}");
+			}
+
+			return await response.Content.ReadAsByteArrayAsync();
 		}
 	}
 }

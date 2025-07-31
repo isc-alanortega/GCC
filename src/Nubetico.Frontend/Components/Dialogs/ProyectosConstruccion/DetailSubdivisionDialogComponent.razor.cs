@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Shared.Dto.ProyectosConstruccion;
 using Radzen;
 using Radzen.Blazor;

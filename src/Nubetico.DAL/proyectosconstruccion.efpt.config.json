@@ -31,6 +31,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[ProyectosConstruccion].[Egresos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[ProyectosConstruccion].[Egresos_Partidas]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[ProyectosConstruccion].[Empleados]",
          "ObjectType": 0
       },
@@ -156,6 +164,14 @@
       },
       {
          "Name": "[ProyectosConstruccion].[vContratistas]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[ProyectosConstruccion].[vEgresos_Detalle]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[ProyectosConstruccion].[vEgresos_Partidas_Detalles]",
          "ObjectType": 3
       },
       {

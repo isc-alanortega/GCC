@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Nubetico.Shared.Dto.ProyectosConstruccion
+{
+    public class vEgresos_Partidas_DetallesDto
+    {
+        public int Id_Egreso_Partida { get; set; }
+
+        public int Id_Egreso { get; set; }
+
+        public int Id_Obra { get; set; }
+
+        public int Id_Agrupador { get; set; }
+
+        public int Id_Tipo_Trabajo { get; set; }
+
+        public string Decsripcion { get; set; }
+
+        public decimal Monto { get; set; }
+
+        public Guid? UUID_Archivo { get; set; }
+
+        public string Nota { get; set; }
+
+        public int Id_Estatus { get; set; }
+
+        public DateTime? Fecha_Revision { get; set; }
+
+        public int? Id_Usuario { get; set; }
+
+        public string Folio { get; set; }
+
+        public DateTime? Fecha { get; set; }
+
+        public string Tipo { get; set; }
+
+        public int? IdPersona { get; set; }
+
+        public string Usuario { get; set; }
+    }
+}

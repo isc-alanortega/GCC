@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components;
 using Nubetico.Frontend.Models.Static.Core;
 using Nubetico.Frontend.Models.Class.Core;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 
 namespace Nubetico.Frontend.Components.ProyectosConstruccion
 {

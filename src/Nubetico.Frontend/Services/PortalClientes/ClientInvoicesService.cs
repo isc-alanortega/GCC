@@ -27,8 +27,8 @@ namespace Nubetico.Frontend.Services.PortalClientes
             if (!string.IsNullOrWhiteSpace(filter.Folio))
                 queryParams.Add("Folio", Uri.EscapeDataString(filter.Folio));
 
-            if (!string.IsNullOrWhiteSpace(filter.BusinessName))
-                queryParams.Add("BusinessName", Uri.EscapeDataString(filter.BusinessName));
+            if (!string.IsNullOrWhiteSpace(filter.Type))
+                queryParams.Add("Type", Uri.EscapeDataString(filter.Type));
 
             if (!string.IsNullOrWhiteSpace(filter.Status))
                 queryParams.Add("Status", Uri.EscapeDataString(filter.Status));

@@ -10,7 +10,7 @@ namespace Nubetico.Shared.Dto.PortalClientes
     {
         public string? EntityContactGuid { get; set; }
         public string? Folio {  get; set; }
-        public string? BusinessName { get; set; }
+        public string? Type { get; set; }
         public string? Status { get; set; }
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }

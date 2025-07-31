@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
-using Nubetico.Frontend.Components.Core.Shared;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Frontend.Models.Class.Core;
 using Nubetico.Frontend.Models.Static.Core;
 using Nubetico.Frontend.Services.ProyectosConstruccion;
@@ -12,14 +12,15 @@ using Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores;
 using Radzen;
 using Radzen.Blazor;
 
+
 namespace Nubetico.Frontend.Components.ProyectosConstruccion
 {
     public partial class ProveedorCatComponent : NbBaseComponent
     {
-        [Inject]
-        protected IStringLocalizer<SharedResources> Localizer { get; set; }
+        [Inject] protected IStringLocalizer<SharedResources> Localizer { get; set; }
+        [Inject] protected ProveedorServices ProveedoresService { get; set; }
         private RadzenDataGrid<ProveedorGridResultSet>? GridProveedores { get; set; }
-        private List<ProveedoresDto>? ListaProveedores { get; set; }
+        private List<ProveedorGridResultSet> proveedores = new();
         private int Count { get; set; }
         private bool IsLoading { get; set; } = false;
         private int RowsPerPage { get; set; } = 10;
@@ -28,34 +29,26 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
         //private IList<InsumosDto> SelectedSupply { get; set; } = [];
         private FiltroProveedoresNubeticoGridDto Filtro { get; set; } = new FiltroProveedoresNubeticoGridDto();
         private List<BasicItemSelectDto> SelectEstadosProveedor = new List<BasicItemSelectDto>();
-
-        private List<ProveedorGridResultSet> proveedores = new();
-
-        [Inject] public ProveedorServices ProveedoresService { get; set; }
         //public bool busy { get; set; } = false;
-
-
-
         protected override async Task OnInitializedAsync()
         {
             TriggerMenuUpdate();
 
-            //ListaProveedores = new List<ProveedoresDto> { p1, p2, p3 };
-            await LoadProveedores();
+            //await LoadProveedores();
 
-
+            await RefreshGridAsync("NombreComercial asc", RowsPerPage, 0);
         }
-        private async Task LoadProveedores()
-        {
-            try
-            {
-                proveedores = await ProveedoresService.GetAllProveedoresAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al cargar proveedores: {ex.Message}");
-            }
-        }
+        //private async Task LoadProveedores()
+        //{
+        //    try
+        //    {
+        //        proveedores = await ProveedoresService.GetAllProveedoresAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error al cargar proveedores: {ex.Message}");
+        //    }
+        //}
 
         protected override List<RadzenMenuItem> GetMenuItems()
         {
@@ -165,7 +158,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
 
         private async Task AbrirDetalleProveedor(ProveedorGridResultSet proveedorSeleccionado, TipoEstadoControl estadoControl)
         {
-            string? guidUsuario = proveedorSeleccionado.UUID.ToString();
+            string? guidProveedor = proveedorSeleccionado.UUID.ToString();
             if (proveedorSeleccionado == null)
             {
                 Console.WriteLine("No se seleccionó ningún proveedor.");
@@ -186,7 +179,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
                             ? $"{MenuItemsFactory.MenuIconDictionary["editar"]}"
                             : this.IconoBase,
 
-                Text = $"{Localizer["Core.ProyectosConstruccion.Proveedor"]} [{proveedorSeleccionado.NombreComercial}]",
+                Text = $"{Localizer["Core.ProyectosConstruccion.Proveedor"]} [{result.NombreComercial}]",
                 TipoControl = typeof(ProveedorDetComponent),
                 Repetir = true
             };
@@ -195,7 +188,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
             tabNubetico.Componente = builder =>
             {
                 builder.OpenComponent(0, tabNubetico.TipoControl);
-                builder.AddAttribute(1, "GuidProveedor", guidUsuario);
+                builder.AddAttribute(1, "GuidProveedor", guidProveedor);
                 builder.AddAttribute(2, "ProveedorData", result);
                 builder.AddComponentReferenceCapture(1, instance =>
                 {
@@ -234,23 +227,18 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
         {
             IsLoading = true;
 
-            //var result = await UsuariosService.GetUsuariosPaginado(top, skip, orderBy, Filtro.Username, Filtro.Nombre, Filtro.IdEstadoUsuario);
+            var result = await ProveedoresService.GetProveedoresPaginadoAsync(top, skip, orderBy, Filtro.Nombre, Filtro.RFC);
 
-            //if (!result.Success || result.Data == null)
-            //{
-            //    IsLoading = false;
-            //    ListaUsuarios.Clear();
-            //    Count = 0;
-            //    return;
-            //}
+            if (!result.Success || result.Data == null)
+            {
+                IsLoading = false;
+                proveedores.Clear();
+                Count = 0;
+                return;
+            }
 
-            //PaginatedListDto<UsuarioNubeticoGridDto>? listaPaginada = JsonConvert.DeserializeObject<PaginatedListDto<UsuarioNubeticoGridDto>>(result.Data.ToString());
-
-            //if (listaPaginada != null)
-            //{
-            //    ListaUsuarios = listaPaginada.Data;
-            //    Count = listaPaginada.RecordsTotal;
-            //}
+            proveedores = result.Data.Data;
+            Count = result.Data.RecordsTotal;
 
             IsLoading = false;
         }

@@ -21,6 +21,10 @@ public partial class ProyectosConstruccionDbContext : DbContext
 
     public virtual DbSet<Contratistas> Contratistas { get; set; }
 
+    public virtual DbSet<Egresos> Egresos { get; set; }
+
+    public virtual DbSet<Egresos_Partidas> Egresos_Partidas { get; set; }
+
     public virtual DbSet<Empleados> Empleados { get; set; }
 
     public virtual DbSet<Fraccionamientos> Fraccionamientos { get; set; }
@@ -85,6 +89,10 @@ public partial class ProyectosConstruccionDbContext : DbContext
 
     public virtual DbSet<vContratistas> vContratistas { get; set; }
 
+    public virtual DbSet<vEgresos_Detalle> vEgresos_Detalle { get; set; }
+
+    public virtual DbSet<vEgresos_Partidas_Detalles> vEgresos_Partidas_Detalles { get; set; }
+
     public virtual DbSet<vEmpleados> vEmpleados { get; set; }
 
     public virtual DbSet<vInsumos> vInsumos { get; set; }
@@ -146,6 +154,38 @@ public partial class ProyectosConstruccionDbContext : DbContext
             entity.ToTable("Contratistas", "ProyectosConstruccion");
 
             entity.Property(e => e.Habilitado).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<Egresos>(entity =>
+        {
+            entity.HasKey(e => e.Id_Egreso);
+
+            entity.ToTable("Egresos", "ProyectosConstruccion");
+
+            entity.Property(e => e.Fecha).HasColumnType("datetime");
+            entity.Property(e => e.Folio)
+                .IsRequired()
+                .HasMaxLength(20);
+            entity.Property(e => e.Tipo)
+                .IsRequired()
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasComment("D=Destajo, G=Gasto");
+        });
+
+        modelBuilder.Entity<Egresos_Partidas>(entity =>
+        {
+            entity.HasKey(e => e.Id_Egreso_Partida);
+
+            entity.ToTable("Egresos_Partidas", "ProyectosConstruccion");
+
+            entity.Property(e => e.Decsripcion)
+                .IsRequired()
+                .HasMaxLength(500);
+            entity.Property(e => e.Fecha_Revision).HasColumnType("datetime");
+            entity.Property(e => e.Monto).HasColumnType("money");
+            entity.Property(e => e.Nota).HasMaxLength(2000);
         });
 
         modelBuilder.Entity<Empleados>(entity =>
@@ -638,6 +678,45 @@ public partial class ProyectosConstruccionDbContext : DbContext
             entity.Property(e => e.Nombres).HasMaxLength(100);
             entity.Property(e => e.PrimerApellido).HasMaxLength(100);
             entity.Property(e => e.SegundoApellido).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<vEgresos_Detalle>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vEgresos_Detalle", "ProyectosConstruccion");
+
+            entity.Property(e => e.Fecha).HasColumnType("datetime");
+            entity.Property(e => e.Folio)
+                .IsRequired()
+                .HasMaxLength(20);
+            entity.Property(e => e.Tipo)
+                .IsRequired()
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.Usuario).HasMaxLength(302);
+        });
+
+        modelBuilder.Entity<vEgresos_Partidas_Detalles>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vEgresos_Partidas_Detalles", "ProyectosConstruccion");
+
+            entity.Property(e => e.Decsripcion)
+                .IsRequired()
+                .HasMaxLength(500);
+            entity.Property(e => e.Fecha).HasColumnType("datetime");
+            entity.Property(e => e.Fecha_Revision).HasColumnType("datetime");
+            entity.Property(e => e.Folio).HasMaxLength(20);
+            entity.Property(e => e.Monto).HasColumnType("money");
+            entity.Property(e => e.Nota).HasMaxLength(2000);
+            entity.Property(e => e.Tipo)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.Usuario).HasMaxLength(302);
         });
 
         modelBuilder.Entity<vEmpleados>(entity =>

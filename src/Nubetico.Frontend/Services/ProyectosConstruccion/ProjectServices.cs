@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Nubetico.Shared.Dto.Common;
 using Nubetico.Shared.Dto.ProyectosConstruccion.Proyecto;
-using System.Collections.Generic;
 using System.Text;
-using static Nubetico.Frontend.Components.Core.Shared.NbBaseComponent;
 
 namespace Nubetico.Frontend.Services.ProyectosConstruccion
 {

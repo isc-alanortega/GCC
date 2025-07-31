@@ -1,9 +1,8 @@
 ﻿@using Nubetico.Shared.Dto.ProyectosConstruccion;
-@using Nubetico.Frontend.Components.Core.Shared;
-@using Nubetico.Frontend.Components.Shared
-@using Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores
-@using Nubetico.Frontend.Services.Core
-@using Nubetico.Shared.Dto.Core
+@using Nubetico.Frontend.Components.Shared;
+@using Nubetico.Frontend.Services.Core;
+@using Nubetico.Shared.Dto.Core;
+@using Nubetico.Shared.Dto.ProyectosConstruccion.Proveedores;
 
 @inherits NbBaseComponent
 
@@ -21,7 +20,7 @@
             </RadzenFormField>
         </RadzenColumn>
         <RadzenColumn SizeSM="3" SizeXS="12">
-            <RadzenButton Click="@(() => RefreshGridAsync("NombreCompleto asc", this.RowsPerPage, 0))" Text=@Localizer["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" IsBusy=@IsLoading BusyText="@Localizer["Shared.Textos.Buscando"]" Style="margin-top: 12px" />
+            <RadzenButton Click="@(() => RefreshGridAsync("NombreComercial asc", RowsPerPage, 0))" Text=@Localizer["Shared.Textos.Buscar"] Icon="search" ButtonStyle="ButtonStyle.Primary" IsBusy=@IsLoading BusyText="@Localizer["Shared.Textos.Buscando"]" Style="margin-top: 12px" />
         </RadzenColumn>
     </RadzenRow>
 </PanelFiltrosNubeticoComponent>
@@ -35,19 +34,18 @@
                 AllowSorting="true"
                 AllowFiltering="false"
                 AllowPaging="true"
-                PageSize="@this.RowsPerPage"
+                PageSize="@RowsPerPage"
                 PagerHorizontalAlign="HorizontalAlign.Center"
                 ShowPagingSummary="true"
                 ColumnWidth="200px"
                 SelectionMode="DataGridSelectionMode.Single"
                 TItem="ProveedorGridResultSet"
+                RowDoubleClick="DataGridRowDoubleClick"
                 @bind-Value=@ProveedoresSeleccionados>
     <Columns>
         <RadzenDataGridColumn Property="UUID" Title="ID" TextAlign="TextAlign.Center" Visible="false" />
         <RadzenDataGridColumn Property="Folio" Title="@Localizer["Shared.Textos.Folio"]" TextAlign="TextAlign.Center" />
         <RadzenDataGridColumn Property="NombreComercial" Title="@Localizer["Core.Users.FullName"]" TextAlign="TextAlign.Center" />
         <RadzenDataGridColumn Property="Rfc" Title="@Localizer["Core.ProyectosConstruccion.RFC"]" TextAlign="TextAlign.Center" />
-
     </Columns>
 </RadzenDataGrid>
-

@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
-using Nubetico.Frontend.Components.Core.Shared;
+using Newtonsoft.Json;
+using Nubetico.Frontend.Components.Shared;
 using Nubetico.Frontend.Models.Class.Core;
 using Nubetico.Frontend.Models.Static.Core;
+using Nubetico.Frontend.Services.ProyectosConstruccion;
 using Nubetico.Shared.Dto.Common;
 using Nubetico.Shared.Dto.ProyectosConstruccion;
+using Nubetico.Shared.Dto.ProyectosConstruccion.Contratistas;
 using Radzen;
 using Radzen.Blazor;
 
@@ -15,85 +18,24 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
     {
         [Inject]
         protected IStringLocalizer<SharedResources> Localizer { get; set; }
-        private RadzenDataGrid<ContratistasDto>? GridContratistas { get; set; }
-        private List<ContratistasDto>? ListaContratistas { get; set; }
+        [Inject] protected ContratistaService ContratistasService { get; set; }
+        private RadzenDataGrid<ContratistaGridResultSet> GridContratistas { get; set; }
+        private List<ContratistaGridResultSet> ListContratistas { get; set; } = new();
         private int Count { get; set; }
         private bool IsLoading { get; set; } = false;
         private int RowsPerPage { get; set; } = 10;
-        public IList<ContratistasDto> ContratistasSeleccionados { get; set; } = new List<ContratistasDto>();
+        public IList<ContratistaGridResultSet> ContratistasSeleccionados { get; set; } = [];
         private FiltroContratistasNubeticoGridDto Filtro { get; set; } = new FiltroContratistasNubeticoGridDto();
         private List<BasicItemSelectDto> SelectEstadosContratista = new List<BasicItemSelectDto>();
         public bool busy { get; set; } = false;
 
-        ContratistasDto cont1 = new ContratistasDto()
-        {
-            Folio = "CNT01",
-            EstadoContratista = "Activo",
-            IdEstadoContratista = 1,
-            Nombre = "Arq. Vergara",
-            RFC = "ARQ010101001",
-            UUID = Guid.NewGuid(),
-            CreditoPesos = "50,000",
-            CreditoDolares = "2,500",
-            RegimenFiscal = "PERSONA MORAL",
-            TieneCredito = true,
-            DiasCredito = "30",
-            DiasGracia = "5",
-            SaldoPesos = "15,000",
-            SaldoDolares = "750",
-            Web = "www.vergaraconstrucciones.com.mx",
-            Correo = "contacto@vergaraconstrucciones.com.mx",
-            CuentaContable = "0101010101010101",
-            FormaPago = "TRANSFERENCIA"
-        };
-
-        ContratistasDto cont2 = new ContratistasDto() {
-            Folio = "CNT02",
-            EstadoContratista = "Activo",
-            IdEstadoContratista = 1,
-            Nombre = "Arq. Ojeda",
-            RFC = "ARQ020202002",
-            UUID = Guid.NewGuid(),
-            CreditoPesos = "75,000",
-            CreditoDolares = "3,500",
-            RegimenFiscal = "PERSONA MORAL",
-            TieneCredito = true,
-            DiasCredito = "30",
-            DiasGracia = "5",
-            SaldoPesos = "18,000",
-            SaldoDolares = "900",
-            Web = "www.arqojeda.com",
-            Correo = "info@arqojeda.com",
-            CuentaContable = "0202020202020202",
-            FormaPago = "TRANSFERENCIA"
-        };
-
-        ContratistasDto cont3 = new ContratistasDto() {
-            Folio = "CNT03",
-            EstadoContratista = "Inactivo",
-            IdEstadoContratista = 0,
-            Nombre = "Arq. Perez",
-            RFC = "ARQ030303003",
-            UUID = Guid.NewGuid(),
-            CreditoPesos = "20,000",
-            CreditoDolares = "1,000",
-            RegimenFiscal = "PERSONA MORAL",
-            TieneCredito = true,
-            DiasCredito = "15",
-            DiasGracia = "5",
-            SaldoPesos = "10,000",
-            SaldoDolares = "500",
-            Web = "www.perezyperez.com.mx",
-            Correo = "contacto@perezyperez.com.mx",
-            CuentaContable = "0303030303030303",
-            FormaPago = "CONTADO"
-        };
+        
 
         protected override async Task OnInitializedAsync()
         {
             TriggerMenuUpdate();
 
-            ListaContratistas = new List<ContratistasDto> { cont1, cont2, cont3 };
+            await RefreshGridAsync("NombreComercial ASC", RowsPerPage, 0);
         }
 
         protected override List<RadzenMenuItem> GetMenuItems()
@@ -163,9 +105,11 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
             };
 
             this.AgregarTabNubetico(tabNubetico);
+            StateHasChanged();
+
         }
 
-        private void OnAbrirClick(MouseEventArgs args)
+        private async void OnAbrirClick(MouseEventArgs args)
         {
             if (ContratistasSeleccionados.Count == 0)
                 return;
@@ -176,7 +120,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
                 AbrirDetalleContratista(contratistaSeleccionado, TipoEstadoControl.Lectura);
         }
 
-        private void OnEditarClick(MouseEventArgs args)
+        private async void OnEditarClick(MouseEventArgs args)
         {
             if (ContratistasSeleccionados.Count == 0)
                 return;
@@ -189,7 +133,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
 
         private async Task OnRefrescarClickAsync(MouseEventArgs args)
         {
-            await RefreshGridAsync("NombreCompleto asc", this.RowsPerPage, 0);
+            await RefreshGridAsync("NombreComercial ASC", this.RowsPerPage, 0);
         }
 
         private void OnCerrarClick(MouseEventArgs args)
@@ -201,10 +145,21 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
 
         #region funciones
 
-        private void AbrirDetalleContratista(ContratistasDto contratistaSeleccionado, TipoEstadoControl estadoControl)
+        private async Task AbrirDetalleContratista(ContratistaGridResultSet contratistaSeleccionado, TipoEstadoControl estadoControl)
         {
             string? guidContratista = contratistaSeleccionado.UUID.ToString();
+            if (contratistaSeleccionado == null)
+            {
+                Console.WriteLine("No se seleccionó ningún contratista.");
+                return;
+            }
 
+            var result = await ContratistasService.GetContratistaByIdAsync(contratistaSeleccionado.IdContratista);
+            if (result == null)
+            {
+                Console.WriteLine("No se pudo obtener los detalles del contratista.");
+                return;
+            }
             // Crear instancia TabNubetico
             TabNubetico tabNubetico = new TabNubetico
             {
@@ -213,7 +168,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
                             ? MenuItemsFactory.MenuIconDictionary["editar"]
                             : this.IconoBase,
 
-                Text = $"{Localizer["Core.ProyectosConstruccion.Contratista"]} [{contratistaSeleccionado.Nombre}]",
+                Text = $"{Localizer["Core.ProyectosConstruccion.Contratista"]} [{contratistaSeleccionado.NombreComercial}]",
                 TipoControl = typeof(ContratistaDetComponent),
                 Repetir = true
             };
@@ -223,7 +178,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
             {
                 builder.OpenComponent(0, tabNubetico.TipoControl);
                 builder.AddAttribute(1, "GuidContratista", guidContratista);
-                builder.AddAttribute(2, "ContratistaData", contratistaSeleccionado);
+                builder.AddAttribute(2, "ContratistaData", result);
                 builder.AddComponentReferenceCapture(1, instance =>
                 {
                     // Asegurarnos que el componente interno instanciado hereda el componente base
@@ -245,7 +200,7 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
             this.AgregarTabNubetico(tabNubetico);
         }
 
-        private async Task DataGridRowDoubleClick(DataGridRowMouseEventArgs<ContratistasDto> args)
+        private async Task DataGridRowDoubleClick(DataGridRowMouseEventArgs<ContratistaGridResultSet> args)
         {
             if (args.Data != null)
                 AbrirDetalleContratista(args.Data, TipoEstadoControl.Lectura);
@@ -261,23 +216,19 @@ namespace Nubetico.Frontend.Components.ProyectosConstruccion
         {
             IsLoading = true;
 
-            //var result = await UsuariosService.GetUsuariosPaginado(top, skip, orderBy, Filtro.Username, Filtro.Nombre, Filtro.IdEstadoUsuario);
+            var result = await ContratistasService.GetContratistaPaginadoAsync(top, skip, orderBy, Filtro.Nombre, Filtro.RFC);
 
-            //if (!result.Success || result.Data == null)
-            //{
-            //    IsLoading = false;
-            //    ListaUsuarios.Clear();
-            //    Count = 0;
-            //    return;
-            //}
+            if (!result.Success || result.Data == null)
+            {
+                IsLoading = false;
+                ListContratistas.Clear();
+                Count = 0;
+                return;
+            }
 
-            //PaginatedListDto<UsuarioNubeticoGridDto>? listaPaginada = JsonConvert.DeserializeObject<PaginatedListDto<UsuarioNubeticoGridDto>>(result.Data.ToString());
 
-            //if (listaPaginada != null)
-            //{
-            //    ListaUsuarios = listaPaginada.Data;
-            //    Count = listaPaginada.RecordsTotal;
-            //}
+                ListContratistas = result.Data.Data;
+                Count = result.Data.RecordsTotal;
 
             IsLoading = false;
         }
