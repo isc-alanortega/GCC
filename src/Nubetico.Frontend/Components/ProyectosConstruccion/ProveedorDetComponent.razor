@@ -4,17 +4,14 @@
 @using Nubetico.Frontend.Services.Core
 @using Nubetico.Shared.Dto.Core
 @using Nubetico.Shared.Static.Core
-
-
 @using Nubetico.Shared.Dto.ProyectosConstruccion;
 @using Nubetico.Frontend.Components.Shared
 @using Nubetico.Frontend.Components.ProyectosConstruccion
-
 @inherits NbBaseComponent
 @inject NotificationService notificationService
-
 @inject GlobalBreakpointService breakpointService
 @inject IStringLocalizer<SharedResources> Localizer
+@inject DialogService dialogService
 
 <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
 	<Tabs>
@@ -37,14 +34,26 @@
 		<RadzenTabsItem Text="Insumos">
 			<RadzenPanel>
 				<HeaderTemplate>
-					<RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
-						<RadzenIcon Icon=@("\uf4df") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
-						<b>Insumos</b>
-					</RadzenText>
+					<div style="display: flex; align-items: center; width: 100%;">
+						<!-- Título con ícono -->
+						<RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+							<RadzenIcon Icon=@("\uf4df") IconColor="@Colors.Primary" class="rz-me-2 fa-light" />
+							<b>Insumos</b>
+						</RadzenText>
+
+						<!-- Botón de la derecha para añadir -->
+						<RadzenButton Icon="add"
+									  Click="@OnClickAddSupplies"
+									  Text="@Localizer["Subdivisions.Text.Add"]"
+									  Disabled="@GetDisabled()"
+									  Style="margin-left: auto; margin-right: 16px; min-width: 100px;" />
+					</div>
 				</HeaderTemplate>
+
+
 				<ChildContent>
 					<RadzenCard class="rz-mt-4">
-						<RadzenDataGrid @ref="GridInsumos"
+						<RadzenDataGrid @ref="GridProviderSupplies"
 										IsLoading="@IsLoading"
 										Count="@Count"
 										Data="@SuppliesList"
@@ -81,7 +90,7 @@
 			<ComprasCatComponent></ComprasCatComponent>
 		</RadzenTabsItem>
 
-		
+
 
 	</Tabs>
 </RadzenTabs>

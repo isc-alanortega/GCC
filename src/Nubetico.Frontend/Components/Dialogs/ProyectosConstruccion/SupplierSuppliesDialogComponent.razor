@@ -1,0 +1,73 @@
+﻿@using Nubetico.Frontend.Components.Shared
+@using Nubetico.Frontend.Services.ProyectosConstruccion
+@using Nubetico.Shared.Dto.ProyectosConstruccion
+@inject SuppliesService suppliesService
+@inject IStringLocalizer<SharedResources> Localizer
+@inject NotificationService notificationService
+@inject DialogService dialogService
+@inherits NbBaseComponent
+
+<RadzenStack>
+    @*SUPPLIES GRID*@
+    <RadzenCard class="rz-mt-2">
+        <RadzenDataGrid @ref="GridSupplies"
+                        IsLoading="@IsLoading"
+                        Count="@Count"
+                        Data="@SuppliesList"
+                        LoadData="@LoadData"
+                        AllowSorting="true"
+                        AllowPaging="true"
+                        PageSize="10"
+                        ShowPagingSummary="true"
+                        SelectionMode="DataGridSelectionMode.Multiple"
+                        TItem="InsumosDto"
+                        EmptyText="No hay resultados"
+                        Style="height: 400px; overflow: auto;"
+                        @bind-Value="@SelectedSupplies">
+            <Columns>
+                @*CHECKBOX COLUMN*@
+                <RadzenDataGridColumn TItem="InsumosDto" Width="50px" Sortable="false" Filterable="false">
+                    <HeaderTemplate>
+                        <RadzenCheckBox @bind-Value="@SelectAll"
+                                        Change="@OnSelectAllChangeCallback" />
+                    </HeaderTemplate>
+                    <Template Context="supply">
+                        <RadzenCheckBox Value="@IsSupplySelected(supply)"
+                                        Change="@((bool isChecked) => OnSupplySelectionChange(supply, isChecked))" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn Property="Code" Title="@Localizer!["Supplies.Text.Code"]" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn Property="Description" Title="@Localizer!["Shared.Textos.Description"]" TextAlign="TextAlign.Left" />
+                <RadzenDataGridColumn Property="Unit" Title="@Localizer!["Supplies.Text.Unit"]" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn Property="Type" Title="@Localizer!["Shared.Textos.Tipo"]" MinWidth="150px" TextAlign="TextAlign.Center">
+                    <Template Context="data">
+                        <RadzenBadge BadgeStyle="@GetBadgeStyle(data.Id_Type ?? 0)" Text="@data.Type" Style="text-transform: none;" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </RadzenCard>
+
+    @*BUTTONS*@
+    <RadzenStack Orientation="Orientation.Horizontal"
+                 AlignItems="AlignItems.Center"
+                 JustifyContent="JustifyContent.End"
+                 Visible="@HasSelectedSupplies"
+                 class="rz-mt-3">
+        <RadzenButton Click="OnClickAccept"
+                      Text="@Localizer["Shared.Botones.Aceptar"]"
+                      ButtonStyle="ButtonStyle.Primary"
+                      Icon="check" />
+        <RadzenButton Click="OnClickCancel"
+                      Text="@Localizer["Shared.Botones.Cancelar"]"
+                      ButtonStyle="ButtonStyle.Base"
+                      Icon="close" />
+    </RadzenStack>
+
+    @*INFO TEXT*@
+    <RadzenText TextStyle="TextStyle.Caption"
+                class="rz-mt-2"
+                Visible="@(!HasSelectedSupplies)">
+        Seleccione los insumos que puede proporcionar este proveedor
+    </RadzenText>
+</RadzenStack>
